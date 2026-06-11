@@ -153,7 +153,7 @@ function SentState({ email }: { email: string }) {
       <div className="mt-8">
         <Link
           to="/login"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-2.5 text-[13.5px] font-semibold text-black transition-all duration-200 hover:bg-white/90"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-foreground px-5 py-2.5 text-[13.5px] font-semibold text-background shadow-[0_1px_0_rgba(255,255,255,0.25)_inset,0_1px_2px_rgba(0,0,0,0.5)] transition-all duration-150 hover:bg-foreground/90"
         >
           Back to login
         </Link>
