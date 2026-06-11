@@ -57,7 +57,7 @@ export function WalletPanel({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="relative overflow-hidden rounded-2xl border border-border bg-surface/60 p-5 backdrop-blur"
+          className="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-surface/50 p-5 backdrop-blur"
         >
           <span
             aria-hidden
@@ -65,7 +65,7 @@ export function WalletPanel({
           />
           <div className="relative flex items-center justify-between">
             <span className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-              Total Saved
+              Total saved
             </span>
             <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/20 bg-primary/10">
               <TrendingDown className="h-3.5 w-3.5 text-primary" />
@@ -90,7 +90,7 @@ export function WalletPanel({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
           onClick={onViewOrders}
-          className="group relative overflow-hidden rounded-2xl border border-border bg-surface/60 p-5 text-left backdrop-blur transition-colors hover:border-muted-foreground/25"
+          className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-surface/50 p-5 text-left backdrop-blur transition-colors hover:border-muted-foreground/25"
         >
           <div className="flex items-center justify-between">
             <span className="text-[10.5px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
