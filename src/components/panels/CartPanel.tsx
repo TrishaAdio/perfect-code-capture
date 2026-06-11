@@ -59,14 +59,14 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
   return (
     <div className="mx-auto max-w-3xl pb-32">
       {/* Header */}
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-surface/60 px-3 py-1 backdrop-blur">
+      <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-surface/50 px-2.5 py-[5px] backdrop-blur-sm">
         <ShoppingCart className="h-3 w-3 text-primary" />
-        <span className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           Cart
         </span>
       </div>
-      <h1 className="mt-5 font-display text-[1.85rem] font-semibold tracking-[-0.025em] text-foreground sm:text-[2rem]">
-        Your Cart
+      <h1 className="mt-4 font-display text-[1.85rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2rem]">
+        Your cart
       </h1>
       <p className="mt-1.5 text-[13.5px] text-muted-foreground">
         {items.length === 0
@@ -92,11 +92,11 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, x: 30, scale: 0.96 }}
                     transition={{ type: "spring", stiffness: 360, damping: 28 }}
-                    className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-surface/55 p-3.5 backdrop-blur-xl sm:p-4"
+                    className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-surface/55 p-3.5 backdrop-blur-xl sm:p-4"
                   >
                     <div className="flex items-start gap-3">
                       {/* Logo */}
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-transparent">
+                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-[var(--border)] bg-gradient-to-br from-white/[0.05] to-transparent">
                         <ServiceLogo
                           src={it.image}
                           name={it.name}
@@ -132,7 +132,7 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
 
                         {/* Bottom row: qty + price */}
                         <div className="mt-3 flex items-center justify-between gap-3">
-                          <div className="inline-flex items-center rounded-full border border-white/[0.08] bg-background/60">
+                          <div className="inline-flex items-center rounded-full border border-[var(--border)] bg-background/60">
                             <button
                               type="button"
                               aria-label="Decrease"
@@ -178,7 +178,7 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
           </ul>
 
           {/* Summary */}
-          <div className="mt-5 rounded-2xl border border-white/[0.06] bg-surface/50 p-4 backdrop-blur-xl">
+          <div className="mt-5 rounded-2xl border border-[var(--border)] bg-surface/50 p-4 backdrop-blur-xl">
             <SummaryRow label="Items" value={`${totalItems}`} />
             {totalSaved > 0 && (
               <SummaryRow
@@ -187,7 +187,7 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
                 accent
               />
             )}
-            <div className="mt-3 flex items-baseline justify-between border-t border-white/[0.06] pt-3">
+            <div className="mt-3 flex items-baseline justify-between border-t border-[var(--border)] pt-3">
               <span className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Total
               </span>
@@ -219,14 +219,14 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
               onClick={handleCheckoutAll}
               disabled={checkingOut}
               aria-busy={checkingOut}
-              whileTap={checkingOut ? undefined : { scale: 0.98 }}
+              whileTap={checkingOut ? undefined : { scale: 0.985 }}
               transition={{ type: "spring", stiffness: 460, damping: 24 }}
-              className="relative flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-foreground text-[14px] font-semibold tracking-tight text-background shadow-[0_18px_50px_-18px_rgba(52,211,153,0.55),0_0_0_1px_rgba(255,255,255,0.04)_inset] disabled:opacity-80 lg:h-11"
+              className="relative flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-foreground text-[13.5px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_28px_-12px_color-mix(in_oklab,var(--primary)_55%,transparent)] disabled:opacity-80 lg:h-11"
               style={{ willChange: "transform", touchAction: "manipulation" }}
             >
               <span
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(52,211,153,0.25),transparent_60%)]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,color-mix(in_oklab,var(--primary)_20%,transparent),transparent_60%)]"
               />
               {checkingOut ? (
                 <>
@@ -236,7 +236,7 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
               ) : (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Checkout All · ₹{totalPrice.toLocaleString()}
+                  Checkout all · ₹{totalPrice.toLocaleString()}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
@@ -262,7 +262,7 @@ function SummaryRow({
       <span className="text-[12.5px] text-muted-foreground">{label}</span>
       <span
         className={`text-[13px] font-semibold tabular-nums ${
-          accent ? "text-emerald-300" : "text-foreground"
+          accent ? "text-primary" : "text-foreground"
         }`}
       >
         {value}
@@ -278,16 +278,16 @@ function EmptyCart({ onBrowse }: { onBrowse?: () => void }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="mt-10 flex flex-col items-center justify-center rounded-3xl border border-dashed border-white/[0.08] bg-surface/40 px-6 py-14 text-center backdrop-blur"
+      className="mt-10 flex flex-col items-center justify-center rounded-3xl border border-dashed border-[var(--border)] bg-surface/40 px-6 py-14 text-center backdrop-blur-sm"
     >
-      <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-white/[0.06] bg-background/60">
+      <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--border)] bg-background/60">
         <span
           aria-hidden
-          className="absolute inset-0 rounded-2xl bg-[radial-gradient(80%_80%_at_50%_50%,rgba(52,211,153,0.18),transparent_70%)]"
+          className="absolute inset-0 rounded-2xl bg-[radial-gradient(80%_80%_at_50%_50%,color-mix(in_oklab,var(--primary)_18%,transparent),transparent_70%)]"
         />
-        <ShoppingBag className="relative h-7 w-7 text-emerald-300/90" />
+        <ShoppingBag className="relative h-7 w-7 text-primary" />
       </div>
-      <h3 className="mt-5 font-display text-[17px] font-semibold tracking-tight text-foreground">
+      <h3 className="mt-5 font-display text-[17px] font-semibold tracking-[-0.02em] text-foreground">
         Your cart is empty
       </h3>
       <p className="mt-1.5 max-w-xs text-[13px] text-muted-foreground">
@@ -296,9 +296,9 @@ function EmptyCart({ onBrowse }: { onBrowse?: () => void }) {
       <button
         type="button"
         onClick={() => (onBrowse ? onBrowse() : navigate({ to: "/dashboard" }))}
-        className="mt-6 inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-foreground px-5 text-[13px] font-semibold tracking-tight text-background shadow-[0_10px_28px_-12px_color-mix(in_oklab,var(--foreground)_55%,transparent)] transition-transform active:scale-[0.97]"
+        className="mt-6 inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-foreground px-5 text-[13px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_28px_-12px_color-mix(in_oklab,var(--foreground)_55%,transparent)] transition-transform active:scale-[0.985]"
       >
-        Browse Products
+        Browse products
         <ArrowRight className="h-3.5 w-3.5" />
       </button>
     </motion.div>

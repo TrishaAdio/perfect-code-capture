@@ -181,19 +181,19 @@ function CheckoutPage() {
               style={{ filter: "drop-shadow(0 0 6px rgba(0, 255, 170, 0.2))" }}
             />
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="hidden items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-300 sm:inline-flex">
-              <ShieldCheck className="h-3 w-3" />
+          <div className="flex items-center gap-2.5">
+            <span className="hidden items-center gap-1.5 rounded-full border border-[var(--border)] bg-surface/50 px-2.5 py-[5px] text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground backdrop-blur-sm sm:inline-flex">
+              <ShieldCheck className="h-3 w-3 text-primary" />
               Secure checkout
             </span>
             {user && (
-              <span className="hidden text-xs text-muted-foreground md:inline">
+              <span className="hidden text-[12px] text-muted-foreground md:inline">
                 {user.email}
               </span>
             )}
             <button
               onClick={onLogout}
-              className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground/80 transition hover:bg-white/5"
+              className="inline-flex items-center rounded-full border border-[var(--border)] bg-surface/50 px-2.5 py-1.5 text-[12.5px] font-medium text-foreground/85 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] transition-colors hover:border-[var(--border-strong)] hover:bg-surface active:scale-[0.985]"
             >
               Sign out
             </button>
@@ -211,10 +211,10 @@ function CheckoutPage() {
         </Link>
 
         <div className="mt-6">
-          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.5rem]">
             Checkout
           </h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">
+          <p className="mt-2 text-[13.5px] text-muted-foreground">
             Review your order and complete the secure UPI payment.
           </p>
         </div>
@@ -434,8 +434,8 @@ function CheckoutPage() {
                         </span>
                       </div>
                       <span
-                        className="font-display text-2xl font-bold tracking-tight text-emerald-400 sm:text-3xl"
-                        style={{ textShadow: "0 0 24px rgba(16,185,129,0.35)" }}
+                        className="font-display text-2xl font-semibold tracking-[-0.025em] text-primary sm:text-3xl"
+                        style={{ textShadow: "0 0 24px color-mix(in oklab, var(--primary) 35%, transparent)" }}
                       >
                         ₹{total.toLocaleString()}
                       </span>
