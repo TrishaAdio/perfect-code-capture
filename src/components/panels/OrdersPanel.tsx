@@ -386,18 +386,20 @@ function StatusPill({ status }: { status: OrderStatus }) {
 
 function EmptyOrders({ onBrowse }: { onBrowse?: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-surface/40 px-6 py-16 text-center">
-      <Inbox className="h-8 w-8 text-muted-foreground/60" />
-      <p className="mt-3 text-[14px] font-semibold text-foreground">No orders yet</p>
-      <p className="mt-1 text-[12.5px] text-muted-foreground">
+    <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[var(--border)] bg-surface/40 px-6 py-16 text-center backdrop-blur-sm">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--border)] bg-background/60">
+        <Inbox className="h-6 w-6 text-muted-foreground/70" />
+      </div>
+      <p className="mt-4 font-display text-[15px] font-semibold tracking-[-0.02em] text-foreground">No orders yet</p>
+      <p className="mt-1 max-w-xs text-[12.5px] text-muted-foreground">
         Your purchases will appear here once you make your first order.
       </p>
       {onBrowse && (
         <button
           onClick={onBrowse}
-          className="mt-5 inline-flex items-center rounded-full bg-primary px-5 py-2 text-[12.5px] font-bold uppercase tracking-[0.12em] text-primary-foreground hover:bg-[var(--primary-hover)]"
+          className="mt-5 inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-foreground px-5 text-[13px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_28px_-12px_color-mix(in_oklab,var(--foreground)_55%,transparent)] transition-transform active:scale-[0.985]"
         >
-          Browse Products
+          Browse products
         </button>
       )}
     </div>
