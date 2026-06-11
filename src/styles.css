@@ -199,37 +199,111 @@
     -webkit-backdrop-filter: saturate(140%) blur(16px);
   }
 
-  /* Subtle grid pattern */
+  /* Subtle grid pattern (reduced opacity for ambient blend) */
   .grid-pattern {
     background-image:
-      linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
+      linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 80%);
   }
 
-  /* Slow drifting gradient mesh */
-  .mesh-bg {
-    background:
-      radial-gradient(60% 50% at 20% 20%, rgba(16, 185, 129, 0.10), transparent 70%),
-      radial-gradient(50% 50% at 85% 30%, rgba(107, 139, 255, 0.08), transparent 70%),
-      radial-gradient(70% 60% at 50% 100%, rgba(16, 185, 129, 0.06), transparent 70%);
-    animation: mesh-drift 22s ease-in-out infinite alternate;
-  }
-  @keyframes mesh-drift {
-    0%   { background-position: 0% 0%, 100% 0%, 50% 100%; }
-    100% { background-position: 10% 10%, 80% 20%, 60% 90%; }
-  }
+  /* Legacy local hero mesh — neutralized; ambient background handles atmosphere */
+  .mesh-bg { background: transparent; }
 
   /* Tiny soft particle dots */
   .particles-bg {
     background-image:
-      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06) 1px, transparent 2px),
-      radial-gradient(circle at 70% 60%, rgba(255,255,255,0.05) 1px, transparent 2px),
-      radial-gradient(circle at 40% 80%, rgba(255,255,255,0.04) 1px, transparent 2px),
-      radial-gradient(circle at 85% 15%, rgba(255,255,255,0.05) 1px, transparent 2px);
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.04) 1px, transparent 2px),
+      radial-gradient(circle at 70% 60%, rgba(255,255,255,0.035) 1px, transparent 2px),
+      radial-gradient(circle at 40% 80%, rgba(255,255,255,0.03) 1px, transparent 2px),
+      radial-gradient(circle at 85% 15%, rgba(255,255,255,0.035) 1px, transparent 2px);
     background-size: 220px 220px, 320px 320px, 280px 280px, 360px 360px;
   }
+
+  /* ============================================================
+     Ambient cinematic background — full-viewport, seamless blend
+     Deep noir base + emerald / teal / navy / blue glows on slow
+     GPU-accelerated transforms. Drives a faint mouse parallax via
+     --mx / --my CSS variables.
+     ============================================================ */
+  .ambient-base {
+    background:
+      radial-gradient(ellipse 120% 80% at 50% 0%, #08110f 0%, #050505 55%, #030303 100%);
+  }
+
+  .ambient-layer {
+    will-change: transform, opacity;
+    transform: translate3d(var(--mx, 0), var(--my, 0), 0);
+    filter: blur(40px) saturate(115%);
+    mix-blend-mode: screen;
+    opacity: 0.9;
+  }
+
+  /* Soft emerald glow — upper left */
+  .ambient-emerald {
+    background:
+      radial-gradient(40% 36% at 18% 20%, rgba(16, 185, 129, 0.22), rgba(16,185,129,0) 70%);
+    animation: ambient-drift-a 48s ease-in-out infinite alternate;
+  }
+
+  /* Soft blue glow — upper right */
+  .ambient-blue {
+    background:
+      radial-gradient(42% 38% at 84% 22%, rgba(56, 120, 220, 0.18), rgba(56,120,220,0) 70%);
+    animation: ambient-drift-b 56s ease-in-out infinite alternate;
+  }
+
+  /* Dark teal mid-band */
+  .ambient-teal {
+    background:
+      radial-gradient(55% 45% at 50% 55%, rgba(13, 90, 92, 0.22), rgba(13,90,92,0) 75%);
+    animation: ambient-drift-c 60s ease-in-out infinite alternate;
+  }
+
+  /* Dark navy lower wash */
+  .ambient-navy {
+    background:
+      radial-gradient(70% 55% at 50% 110%, rgba(10, 24, 54, 0.45), rgba(10,24,54,0) 75%);
+    animation: ambient-drift-d 52s ease-in-out infinite alternate;
+  }
+
+  .ambient-grid {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 35%, transparent 85%);
+  }
+
+  .ambient-vignette {
+    background:
+      radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%);
+  }
+
+  @keyframes ambient-drift-a {
+    0%   { transform: translate3d(calc(var(--mx, 0px) - 2%), calc(var(--my, 0px) - 1%), 0) scale(1); }
+    100% { transform: translate3d(calc(var(--mx, 0px) + 4%), calc(var(--my, 0px) + 3%), 0) scale(1.08); }
+  }
+  @keyframes ambient-drift-b {
+    0%   { transform: translate3d(calc(var(--mx, 0px) + 2%), calc(var(--my, 0px) - 2%), 0) scale(1.05); }
+    100% { transform: translate3d(calc(var(--mx, 0px) - 3%), calc(var(--my, 0px) + 2%), 0) scale(1); }
+  }
+  @keyframes ambient-drift-c {
+    0%   { transform: translate3d(calc(var(--mx, 0px) - 1%), calc(var(--my, 0px) + 1%), 0) scale(1.02); }
+    100% { transform: translate3d(calc(var(--mx, 0px) + 2%), calc(var(--my, 0px) - 2%), 0) scale(1.1); }
+  }
+  @keyframes ambient-drift-d {
+    0%   { transform: translate3d(calc(var(--mx, 0px) + 1%), calc(var(--my, 0px) + 1%), 0) scale(1); }
+    100% { transform: translate3d(calc(var(--mx, 0px) - 2%), calc(var(--my, 0px) - 2%), 0) scale(1.06); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-emerald, .ambient-blue, .ambient-teal, .ambient-navy {
+      animation: none;
+    }
+  }
+
 
   /* Smooth hover lift */
   .hover-lift {
