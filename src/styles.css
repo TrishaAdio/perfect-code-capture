@@ -213,6 +213,31 @@
   .shadow-soft {
     box-shadow: var(--shadow-soft);
   }
+  .shadow-hairline {
+    box-shadow: 0 0 0 1px var(--color-border);
+  }
+
+  /* Glass navbar surface */
+  .glass-nav {
+    background: color-mix(in oklab, var(--background) 72%, transparent);
+    backdrop-filter: saturate(160%) blur(18px);
+  }
+
+  /* Linear/Vercel shimmer for skeletons */
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--foreground) 4%, transparent) 0%,
+      color-mix(in oklab, var(--foreground) 8%, transparent) 50%,
+      color-mix(in oklab, var(--foreground) 4%, transparent) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s linear infinite;
+  }
 
   /* Glass navbar surface */
   .glass-nav {
