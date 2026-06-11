@@ -16,5 +16,6 @@ const updateLimiter = rateLimit({
 router.patch("/update-name", requireAuth, updateLimiter, ctrl.updateName);
 router.patch("/update-email", requireAuth, updateLimiter, ctrl.updateEmail);
 router.patch("/update-password", requireAuth, updateLimiter, ctrl.updatePassword);
+router.patch("/update-whatsapp", requireAuth, updateLimiter, ctrl.updateWhatsapp);
 
 module.exports = router;
