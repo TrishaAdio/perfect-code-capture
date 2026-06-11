@@ -1,5 +1,12 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { KeyRound, Mail, User as UserIcon } from "lucide-react";
+import { Gauge, KeyRound, Mail, Settings as SettingsIcon, User as UserIcon } from "lucide-react";
+import {
+  detectAutoLevel,
+  resolveLevel,
+  writeStoredPreference,
+  type MotionPreference,
+} from "@/lib/animation-preference";
+import { useMotionPreference } from "@/hooks/use-device-performance";
 import { toast } from "sonner";
 import {
   type AuthUser,
@@ -48,16 +55,16 @@ export function ProfilePanel({
   return (
     <div className="mx-auto max-w-3xl">
       <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-surface/50 px-2.5 py-[5px] backdrop-blur-sm">
-        <UserIcon className="h-3 w-3 text-primary" />
+        <SettingsIcon className="h-3 w-3 text-primary" />
         <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Account
+          Settings
         </span>
       </div>
       <h1 className="mt-4 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.25rem]">
-        My profile
+        Settings
       </h1>
       <p className="mt-2 text-[14px] text-muted-foreground">
-        Update your account details. Email and password changes require your current password.
+        Account preferences, security, and performance. Email and password changes require your current password.
       </p>
 
       {loading ? (
@@ -74,6 +81,7 @@ export function ProfilePanel({
           <NameSection user={user} onUserChange={onUserChange} />
           <EmailSection user={user} onUserChange={onUserChange} />
           <PasswordSection />
+          <AnimationPerformanceSection />
         </div>
       )}
     </div>
