@@ -78,23 +78,23 @@ export function Hero() {
             automated delivery — all in one trusted marketplace.
           </p>
 
-          {/* CTAs — Linear/Vercel dense style */}
+          {/* CTAs */}
           <div
-            className={`mt-9 flex w-full flex-col items-stretch justify-center gap-2.5 sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-2.5 animate-fade-up transition-opacity duration-300 ${
+            className={`mt-9 flex w-full flex-col items-stretch justify-center gap-2.5 sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-3 animate-fade-up transition-opacity duration-300 ${
               authReady ? "opacity-100" : "opacity-0"
             }`}
             style={{ animationDelay: "0.15s" }}
           >
             <Link
               to={browseTo}
-              className="group inline-flex items-center justify-center gap-1.5 rounded-[10px] bg-foreground px-4 py-2.5 text-[13.5px] font-medium tracking-[-0.01em] text-background shadow-[0_1px_0_rgba(255,255,255,0.2)_inset,0_1px_2px_rgba(0,0,0,0.5)] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-foreground/92 active:scale-[0.985]"
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-6 py-3 text-[13.5px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_1px_2px_rgba(0,0,0,0.45)] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-foreground/92 active:scale-[0.985]"
             >
               Browse Services
               <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
             <Link
               to={secondaryTo}
-              className="group inline-flex items-center justify-center gap-1.5 rounded-[10px] border border-border bg-surface/50 px-4 py-2.5 text-[13.5px] font-medium tracking-[-0.005em] text-foreground backdrop-blur-md transition-[background-color,border-color] duration-150 hover:border-[var(--border-strong)] hover:bg-surface-elevated active:scale-[0.985]"
+              className="group inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface/50 px-6 py-3 text-[13.5px] font-medium tracking-[-0.005em] text-foreground backdrop-blur-md transition-[background-color,border-color] duration-150 hover:border-[var(--border-strong)] hover:bg-surface-elevated active:scale-[0.985]"
             >
               {secondaryLabel}
               {authed && (
