@@ -92,13 +92,13 @@ function SectionShell({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-border bg-surface/60 p-6">
+    <section className="rounded-2xl border border-[var(--border)] bg-surface/50 p-6 shadow-card backdrop-blur-sm">
       <div className="flex items-start gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] bg-primary/10 text-primary">
           {icon}
         </div>
         <div>
-          <h2 className="font-display text-[1.05rem] font-semibold tracking-tight text-foreground">
+          <h2 className="font-display text-[1.05rem] font-semibold tracking-[-0.02em] text-foreground">
             {title}
           </h2>
           <p className="mt-0.5 text-[12.5px] text-muted-foreground">{description}</p>
@@ -115,12 +115,12 @@ function Field({
 }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+      <span className="mb-1.5 block text-[11.5px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </span>
       <input
         {...props}
-        className="block w-full rounded-md border border-border bg-background px-3 py-2.5 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-60"
+        className="block w-full rounded-lg border border-[var(--border)] bg-background/60 px-3 py-2.5 text-[14px] text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 hover:border-[var(--border-strong)] focus:border-primary/60 focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
       />
     </label>
   );
@@ -137,7 +137,7 @@ function SubmitButton({
     <button
       type="submit"
       disabled={loading}
-      className="inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-[13px] font-semibold text-primary-foreground transition-all hover:bg-[var(--primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center justify-center rounded-full bg-foreground px-5 py-2.5 text-[13px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_28px_-12px_color-mix(in_oklab,var(--foreground)_55%,transparent)] transition-transform active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {loading ? "Saving…" : children}
     </button>
