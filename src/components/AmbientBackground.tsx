@@ -16,6 +16,7 @@ export function AmbientBackground() {
     const el = rootRef.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (document.documentElement.classList.contains("perf-lite")) return;
 
     let raf = 0;
     let tx = 0;
