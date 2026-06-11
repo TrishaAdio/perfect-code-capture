@@ -496,6 +496,10 @@ function CheckoutPage() {
                       <Lock className="h-3 w-3 text-emerald-400/80" />
                       256-bit secure · Encrypted end-to-end
                     </p>
+                    <p className="mt-1.5 flex items-center justify-center gap-1.5 text-center text-[11px] text-emerald-300/80">
+                      <ShieldCheck className="h-3 w-3" />
+                      Replacement warranty · Refund if undelivered
+                    </p>
                   </div>
                 </motion.div>
               </div>
