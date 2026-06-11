@@ -91,12 +91,16 @@ export const Route = createFileRoute("/dashboard")({
     const p = search.panel as string | undefined;
     return { panel: VALID_PANELS.includes(p as PanelKey) ? (p as PanelKey) : "overview" };
   },
-  head: () => ({
-    meta: [
-      { title: "Dashboard — SymDeals" },
-      { name: "description", content: "Your SymDeals dashboard." },
-    ],
-  }),
+  head: ({ match }) => {
+    const panel = (match.search as { panel?: PanelKey } | undefined)?.panel;
+    const title = panel === "settings" ? "Settings — SymDeals" : "Dashboard — SymDeals";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: "Your SymDeals dashboard." },
+      ],
+    };
+  },
 });
 
 function DashboardPage() {
@@ -583,7 +587,16 @@ function DesktopSidebar({
                           }`}
                         />
                         <Icon className="relative h-3.5 w-3.5" />
-                        <span className="relative">{item.label}</span>
+                        <span className="relative">
+                          {item.label}
+                          {active && (
+                            <motion.span
+                              layoutId="sidebar-underline"
+                              className="absolute -bottom-0.5 left-0 right-0 h-px rounded-full bg-gradient-to-r from-transparent via-primary/70 to-transparent"
+                              transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                            />
+                          )}
+                        </span>
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="right" sideOffset={10}>{hint}</TooltipContent>
