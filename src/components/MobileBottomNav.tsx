@@ -201,9 +201,9 @@ export function MobileBottomNav() {
               >
                 <Icon
                   className={`h-[18px] w-[18px] transition-colors duration-300 ${
-                    active ? "text-emerald-300" : "text-muted-foreground"
+                    active ? "text-primary" : "text-muted-foreground"
                   }`}
-                  style={active ? { filter: "drop-shadow(0 0 6px rgba(52,211,153,0.45))" } : undefined}
+                  style={active ? { filter: "drop-shadow(0 0 6px color-mix(in oklab, var(--primary) 50%, transparent))" } : undefined}
                 />
                 <span className={active ? "text-foreground" : "text-muted-foreground"}>
                   {item.label}
