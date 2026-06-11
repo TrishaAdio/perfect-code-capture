@@ -612,3 +612,59 @@
     }
   }
 }
+
+@layer utilities {
+  /* ============================================================
+     Device-capability cascade.
+     Toggled by useDevicePerformance on <html>. Low-end devices get
+     the same UI minus expensive paint/composite work (large blurs,
+     ambient drifts, marquees, infinite glows).
+     ============================================================ */
+  .perf-lite .ambient-layer,
+  .perf-lite .ambient-grid {
+    animation: none !important;
+    filter: none !important;
+    opacity: 0.55;
+  }
+  .perf-lite .ambient-emerald,
+  .perf-lite .ambient-blue,
+  .perf-lite .ambient-teal,
+  .perf-lite .ambient-navy {
+    animation: none !important;
+  }
+  .perf-lite .animate-marquee-y,
+  .perf-lite .animate-pulse-soft,
+  .perf-lite .animate-float-slow,
+  .perf-lite .animate-orb-drift,
+  .perf-lite .animate-orb-drift-slow,
+  .perf-lite .animate-amount-glow,
+  .perf-lite .animate-tour-glow {
+    animation: none !important;
+  }
+  /* Replace heavy backdrop-filter with translucent fill on low-end */
+  .perf-lite .glass-nav { backdrop-filter: none; background: color-mix(in oklab, var(--background) 92%, transparent); }
+  .perf-lite [class*="backdrop-blur"] { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+  /* ============================================================
+     Shared motion primitives — GPU-only transforms, consistent
+     easing, deterministic durations. Use these instead of bespoke
+     transition strings to keep timing coherent.
+     ============================================================ */
+  .motion-press { transition: transform 140ms cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; transform: translateZ(0); }
+  .motion-press:active { transform: scale(0.97) translateZ(0); }
+
+  .motion-hover-lift { transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), border-color 220ms ease; will-change: transform; transform: translateZ(0); }
+  @media (hover: hover) { .motion-hover-lift:hover { transform: translate3d(0,-2px,0); } }
+
+  .motion-fade-in { animation: soft-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+  /* Reduce repaint cost on scroll containers */
+  .scroll-smooth-gpu {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    transform: translateZ(0);
+  }
+
+  /* Ensure no animation-induced layout shift: opacity/transform only */
+  .no-cls { contain: layout paint; }
+}
