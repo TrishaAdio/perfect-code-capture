@@ -163,6 +163,20 @@ function CheckoutPage() {
     } catch {
       /* ignore */
     }
+    // Persist WhatsApp to profile for one-tap future checkouts (fire-and-forget).
+    const trimmedWa = whatsapp.trim();
+    if (user && trimmedWa && trimmedWa !== (user.whatsapp || "")) {
+      updateWhatsapp({ whatsapp: trimmedWa })
+        .then((r) => {
+          if (r?.user) {
+            setUser(r.user);
+            updateCachedUser(r.user);
+          }
+        })
+        .catch(() => {
+          /* non-blocking */
+        });
+    }
     // Brief loading → success → navigate (premium feel)
     window.setTimeout(() => {
       setSuccess(true);
