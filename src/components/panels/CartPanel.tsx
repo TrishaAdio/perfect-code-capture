@@ -219,14 +219,14 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
               onClick={handleCheckoutAll}
               disabled={checkingOut}
               aria-busy={checkingOut}
-              whileTap={checkingOut ? undefined : { scale: 0.98 }}
+              whileTap={checkingOut ? undefined : { scale: 0.985 }}
               transition={{ type: "spring", stiffness: 460, damping: 24 }}
-              className="relative flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-foreground text-[14px] font-semibold tracking-tight text-background shadow-[0_18px_50px_-18px_rgba(52,211,153,0.55),0_0_0_1px_rgba(255,255,255,0.04)_inset] disabled:opacity-80 lg:h-11"
+              className="relative flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-foreground text-[13.5px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_28px_-12px_color-mix(in_oklab,var(--primary)_55%,transparent)] disabled:opacity-80 lg:h-11"
               style={{ willChange: "transform", touchAction: "manipulation" }}
             >
               <span
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(52,211,153,0.25),transparent_60%)]"
+                className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,color-mix(in_oklab,var(--primary)_20%,transparent),transparent_60%)]"
               />
               {checkingOut ? (
                 <>
@@ -236,7 +236,7 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
               ) : (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Checkout All · ₹{totalPrice.toLocaleString()}
+                  Checkout all · ₹{totalPrice.toLocaleString()}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
