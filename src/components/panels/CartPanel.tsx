@@ -59,14 +59,14 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
   return (
     <div className="mx-auto max-w-3xl pb-32">
       {/* Header */}
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-surface/60 px-3 py-1 backdrop-blur">
+      <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-surface/50 px-2.5 py-[5px] backdrop-blur-sm">
         <ShoppingCart className="h-3 w-3 text-primary" />
-        <span className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           Cart
         </span>
       </div>
-      <h1 className="mt-5 font-display text-[1.85rem] font-semibold tracking-[-0.025em] text-foreground sm:text-[2rem]">
-        Your Cart
+      <h1 className="mt-4 font-display text-[1.85rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2rem]">
+        Your cart
       </h1>
       <p className="mt-1.5 text-[13.5px] text-muted-foreground">
         {items.length === 0
