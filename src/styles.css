@@ -239,12 +239,7 @@
     animation: shimmer 1.6s linear infinite;
   }
 
-  /* Glass navbar surface */
-  .glass-nav {
-    background: color-mix(in oklab, var(--background) 70%, transparent);
-    backdrop-filter: saturate(140%) blur(16px);
-    -webkit-backdrop-filter: saturate(140%) blur(16px);
-  }
+
 
   /* Subtle grid pattern (reduced opacity for ambient blend) */
   .grid-pattern {
