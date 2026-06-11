@@ -167,6 +167,14 @@ export function updatePassword(input: {
   });
 }
 
+export function updateWhatsapp(input: { whatsapp: string }) {
+  return request<{ success: true; user: AuthUser }>("/api/user/update-whatsapp", {
+    method: "PATCH",
+    body: input,
+    token: getToken(),
+  });
+}
+
 export function sendOtp(): Promise<{
   success: true;
   alreadyVerified?: boolean;
