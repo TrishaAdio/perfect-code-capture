@@ -190,7 +190,7 @@ function NameSection({
     >
       <form onSubmit={onSubmit} className="grid gap-4">
         <Field
-          label="Full Name"
+          label="Full name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -199,7 +199,7 @@ function NameSection({
           autoComplete="name"
         />
         <div>
-          <SubmitButton loading={submitting}>Update Name</SubmitButton>
+          <SubmitButton loading={submitting}>Update name</SubmitButton>
         </div>
       </form>
     </SectionShell>
@@ -245,7 +245,7 @@ function EmailSection({
     >
       <form onSubmit={onSubmit} className="grid gap-4">
         <Field
-          label="New Email"
+          label="New email"
           type="email"
           value={newEmail}
           onChange={(e) => setNewEmail(e.target.value)}
@@ -255,7 +255,7 @@ function EmailSection({
           placeholder="you@example.com"
         />
         <Field
-          label="Current Password"
+          label="Current password"
           type="password"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
@@ -264,7 +264,7 @@ function EmailSection({
           placeholder="Enter your current password"
         />
         <div>
-          <SubmitButton loading={submitting}>Update Email</SubmitButton>
+          <SubmitButton loading={submitting}>Update email</SubmitButton>
         </div>
       </form>
     </SectionShell>
@@ -304,7 +304,7 @@ function PasswordSection() {
     >
       <form onSubmit={onSubmit} className="grid gap-4">
         <Field
-          label="Current Password"
+          label="Current password"
           type="password"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
@@ -312,7 +312,7 @@ function PasswordSection() {
           autoComplete="current-password"
         />
         <Field
-          label="New Password"
+          label="New password"
           type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
@@ -321,7 +321,7 @@ function PasswordSection() {
           autoComplete="new-password"
         />
         <div>
-          <SubmitButton loading={submitting}>Update Password</SubmitButton>
+          <SubmitButton loading={submitting}>Update password</SubmitButton>
         </div>
       </form>
     </SectionShell>
