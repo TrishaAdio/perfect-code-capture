@@ -13,6 +13,14 @@ const emailSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required").max(128),
 });
 
+const whatsappSchema = z.object({
+  whatsapp: z
+    .string()
+    .trim()
+    .regex(/^\+?\d{10,15}$/, "Invalid WhatsApp number")
+    .max(20),
+});
+
 const passwordSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required").max(128),
   newPassword: z
