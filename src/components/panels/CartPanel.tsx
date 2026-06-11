@@ -278,16 +278,16 @@ function EmptyCart({ onBrowse }: { onBrowse?: () => void }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="mt-10 flex flex-col items-center justify-center rounded-3xl border border-dashed border-[var(--border)] bg-surface/40 px-6 py-14 text-center backdrop-blur"
+      className="mt-10 flex flex-col items-center justify-center rounded-3xl border border-dashed border-[var(--border)] bg-surface/40 px-6 py-14 text-center backdrop-blur-sm"
     >
       <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--border)] bg-background/60">
         <span
           aria-hidden
-          className="absolute inset-0 rounded-2xl bg-[radial-gradient(80%_80%_at_50%_50%,rgba(52,211,153,0.18),transparent_70%)]"
+          className="absolute inset-0 rounded-2xl bg-[radial-gradient(80%_80%_at_50%_50%,color-mix(in_oklab,var(--primary)_18%,transparent),transparent_70%)]"
         />
-        <ShoppingBag className="relative h-7 w-7 text-emerald-300/90" />
+        <ShoppingBag className="relative h-7 w-7 text-primary" />
       </div>
-      <h3 className="mt-5 font-display text-[17px] font-semibold tracking-tight text-foreground">
+      <h3 className="mt-5 font-display text-[17px] font-semibold tracking-[-0.02em] text-foreground">
         Your cart is empty
       </h3>
       <p className="mt-1.5 max-w-xs text-[13px] text-muted-foreground">
@@ -296,9 +296,9 @@ function EmptyCart({ onBrowse }: { onBrowse?: () => void }) {
       <button
         type="button"
         onClick={() => (onBrowse ? onBrowse() : navigate({ to: "/dashboard" }))}
-        className="mt-6 inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-foreground px-5 text-[13px] font-semibold tracking-tight text-background shadow-[0_10px_28px_-12px_color-mix(in_oklab,var(--foreground)_55%,transparent)] transition-transform active:scale-[0.97]"
+        className="mt-6 inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-foreground px-5 text-[13px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_28px_-12px_color-mix(in_oklab,var(--foreground)_55%,transparent)] transition-transform active:scale-[0.985]"
       >
-        Browse Products
+        Browse products
         <ArrowRight className="h-3.5 w-3.5" />
       </button>
     </motion.div>
