@@ -262,7 +262,7 @@ function SummaryRow({
       <span className="text-[12.5px] text-muted-foreground">{label}</span>
       <span
         className={`text-[13px] font-semibold tabular-nums ${
-          accent ? "text-emerald-300" : "text-foreground"
+          accent ? "text-primary" : "text-foreground"
         }`}
       >
         {value}
