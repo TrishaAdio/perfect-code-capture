@@ -211,10 +211,10 @@ function CheckoutPage() {
         </Link>
 
         <div className="mt-6">
-          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.5rem]">
             Checkout
           </h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">
+          <p className="mt-2 text-[13.5px] text-muted-foreground">
             Review your order and complete the secure UPI payment.
           </p>
         </div>
