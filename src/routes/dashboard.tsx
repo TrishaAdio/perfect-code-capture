@@ -124,6 +124,11 @@ function DashboardPage() {
   });
 
   useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.title = panel === "settings" ? "Settings — SymDeals" : "Dashboard — SymDeals";
+  }, [panel]);
+
+  useEffect(() => {
     let cancelled = false;
     const load = async () => {
       try {
@@ -583,7 +588,16 @@ function DesktopSidebar({
                           }`}
                         />
                         <Icon className="relative h-3.5 w-3.5" />
-                        <span className="relative">{item.label}</span>
+                        <span className="relative">
+                          {item.label}
+                          {active && (
+                            <motion.span
+                              layoutId="sidebar-underline"
+                              className="absolute -bottom-0.5 left-0 right-0 h-px rounded-full bg-gradient-to-r from-transparent via-primary/70 to-transparent"
+                              transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                            />
+                          )}
+                        </span>
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="right" sideOffset={10}>{hint}</TooltipContent>
@@ -753,7 +767,7 @@ function UserBadge({ user, loading }: { user: AuthUser | null; loading: boolean 
     <Link
       to="/myprofile"
       className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface/60 text-[11.5px] font-semibold text-foreground transition-colors hover:border-muted-foreground/30"
-      aria-label="My profile"
+      aria-label="Settings"
     >
       {initial}
     </Link>

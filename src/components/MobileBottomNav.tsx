@@ -10,7 +10,7 @@ const TABS: { panel: PanelKey; label: string; Icon: typeof LayoutDashboard }[] =
   { panel: "orders",   label: "Orders",  Icon: ShoppingBag },
   { panel: "cart",     label: "Cart",    Icon: ShoppingCart },
   { panel: "support",  label: "Help",    Icon: Headphones },
-  { panel: "settings", label: "Account", Icon: User },
+  { panel: "settings", label: "Settings", Icon: User },
 ];
 
 const SPRING = { type: "spring" as const, stiffness: 380, damping: 32, mass: 0.8 };
