@@ -110,6 +110,21 @@ function ProductPage() {
       ? Math.max(0, Math.round(((realPrice - selectedPlan.price) / realPrice) * 100))
       : 0;
   const total = selectedPlan ? selectedPlan.price * quantity : 0;
+  const perMonth =
+    selectedPlan && selectedPlan.months > 1
+      ? Math.round(selectedPlan.price / selectedPlan.months)
+      : null;
+  // Best-value plan = highest %-off vs realPrice; falls back to longest duration.
+  const bestValueMonths = useMemo(() => {
+    if (plans.length === 0) return null;
+    const scored = plans.map((p) => {
+      const rp = p.realPrice && p.realPrice > p.price ? p.realPrice : p.price;
+      const pct = rp > p.price ? ((rp - p.price) / rp) * 100 : 0;
+      return { months: p.months, pct };
+    });
+    scored.sort((a, b) => b.pct - a.pct || b.months - a.months);
+    return scored[0].pct > 0 ? scored[0].months : plans[plans.length - 1].months;
+  }, [plans]);
 
   const onLogout = () => setLogoutOpen(true);
   const confirmLogout = () => {
