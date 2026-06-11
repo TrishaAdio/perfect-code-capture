@@ -27,17 +27,20 @@ function FeaturesPage() {
   return (
     <>
       <main>
-        <section className="relative overflow-hidden border-b border-border pt-32 pb-16 md:pt-40 md:pb-20">
-          <div className="absolute inset-0 bg-radial-glow" />
-          <div className="absolute inset-0 grid-pattern" />
-          <div className="relative mx-auto max-w-7xl px-6">
-            <div className="max-w-3xl">
-              <div className="label-uppercase">Platform Features</div>
-              <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.03em] text-foreground md:text-5xl lg:text-6xl leading-[1.05]">
+        <section className="relative overflow-hidden pt-32 pb-12 sm:pt-40 sm:pb-16">
+          <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-2.5 py-[5px] backdrop-blur-md">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                <span className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  Platform features
+                </span>
+              </div>
+              <h1 className="mt-5 font-display text-[2.25rem] font-semibold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-[3.25rem] sm:leading-[1.02] md:text-[3.75rem]">
                 Everything you need to{" "}
                 <span className="text-gradient">stream smarter.</span>
               </h1>
-              <p className="mt-5 max-w-xl text-[15px] leading-[1.65] text-muted-foreground md:text-base">
+              <p className="mx-auto mt-5 max-w-xl text-[14.5px] leading-[1.65] text-muted-foreground sm:text-[15.5px]">
                 A complete infrastructure for premium OTT access — engineered
                 for speed, security, and trust.
               </p>
