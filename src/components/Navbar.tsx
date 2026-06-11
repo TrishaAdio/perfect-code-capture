@@ -162,7 +162,7 @@ export function Navbar() {
                       My Orders
                     </MenuLink>
                     <MenuLink to="/myprofile" icon={User}>
-                      Profile
+                      Settings
                     </MenuLink>
                     <button
                       onClick={() => {

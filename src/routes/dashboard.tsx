@@ -753,7 +753,7 @@ function UserBadge({ user, loading }: { user: AuthUser | null; loading: boolean 
     <Link
       to="/myprofile"
       className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface/60 text-[11.5px] font-semibold text-foreground transition-colors hover:border-muted-foreground/30"
-      aria-label="My profile"
+      aria-label="Settings"
     >
       {initial}
     </Link>

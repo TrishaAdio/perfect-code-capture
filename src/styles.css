@@ -668,3 +668,30 @@
   /* Ensure no animation-induced layout shift: opacity/transform only */
   .no-cls { contain: layout paint; }
 }
+
+@layer utilities {
+  /* perf-medium — moderate cap (tone down infinite loops, keep transitions) */
+  .perf-medium .animate-marquee-y,
+  .perf-medium .animate-orb-drift,
+  .perf-medium .animate-orb-drift-slow,
+  .perf-medium .animate-amount-glow,
+  .perf-medium .animate-tour-glow,
+  .perf-medium .animate-float-slow,
+  .perf-medium .animate-pulse-soft { animation-duration: 6s; }
+  .perf-medium .ambient-layer { filter: blur(28px) saturate(110%); opacity: 0.75; }
+
+  /* perf-off — hard stop for all non-essential motion (matches reduce-motion) */
+  .perf-off *,
+  .perf-off *::before,
+  .perf-off *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .perf-off .ambient-layer,
+  .perf-off .ambient-grid { animation: none !important; filter: none !important; opacity: 0.5; }
+
+  /* perf-high — opt-in richer accent (slightly slower drift, more presence) */
+  .perf-high .ambient-layer { opacity: 1; }
+}
