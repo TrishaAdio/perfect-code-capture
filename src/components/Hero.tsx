@@ -46,23 +46,22 @@ export function Hero() {
           marketing layout, so the hero stays transparent and blends seamlessly
           into the rest of the page. */}
 
-
       <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
           {/* Status pill */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 backdrop-blur animate-fade-up">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-2.5 py-[5px] backdrop-blur-md animate-fade-up">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-50" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
             </span>
-            <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:text-[10.5px]">
+            <span className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
               Instant Automated Delivery
             </span>
           </div>
 
           {/* Headline */}
           <h1
-            className="mt-6 font-display text-[2rem] font-semibold leading-[1.08] tracking-[-0.03em] text-foreground sm:mt-7 sm:text-5xl sm:leading-[1.05] sm:tracking-[-0.035em] md:text-6xl lg:text-[4.25rem] animate-fade-up"
+            className="mt-6 font-display text-[2.25rem] font-semibold leading-[1.05] tracking-[-0.04em] text-foreground sm:mt-7 sm:text-[3.25rem] sm:leading-[1.02] md:text-[3.75rem] lg:text-[4.5rem] animate-fade-up"
             style={{ animationDelay: "0.05s" }}
           >
             <span className="text-gradient">Premium Digital Access.</span>
@@ -72,34 +71,34 @@ export function Hero() {
 
           {/* Subhead */}
           <p
-            className="mx-auto mt-5 max-w-[22rem] text-[14px] leading-[1.6] text-muted-foreground sm:mt-6 sm:max-w-xl sm:text-[15px] sm:leading-[1.65] md:text-[16px] animate-fade-up"
+            className="mx-auto mt-5 max-w-[22rem] text-[14px] leading-[1.6] text-muted-foreground sm:mt-6 sm:max-w-xl sm:text-[15.5px] sm:leading-[1.65] animate-fade-up"
             style={{ animationDelay: "0.1s" }}
           >
             Subscriptions, software, and premium services with instant
             automated delivery — all in one trusted marketplace.
           </p>
 
-          {/* CTAs */}
+          {/* CTAs — Linear/Vercel dense style */}
           <div
-            className={`mt-8 flex w-full flex-col items-stretch justify-center gap-2.5 sm:mt-9 sm:w-auto sm:flex-row sm:items-center sm:gap-3 animate-fade-up transition-opacity duration-300 ${
+            className={`mt-9 flex w-full flex-col items-stretch justify-center gap-2.5 sm:mt-10 sm:w-auto sm:flex-row sm:items-center sm:gap-2.5 animate-fade-up transition-opacity duration-300 ${
               authReady ? "opacity-100" : "opacity-0"
             }`}
             style={{ animationDelay: "0.15s" }}
           >
             <Link
               to={browseTo}
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-6 py-3.5 text-[14px] font-semibold tracking-tight text-background transition-all hover:bg-foreground/90 active:scale-[0.98] sm:py-3 sm:text-[13.5px]"
+              className="group inline-flex items-center justify-center gap-1.5 rounded-[10px] bg-foreground px-4 py-2.5 text-[13.5px] font-medium tracking-[-0.01em] text-background shadow-[0_1px_0_rgba(255,255,255,0.2)_inset,0_1px_2px_rgba(0,0,0,0.5)] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-foreground/92 active:scale-[0.985]"
             >
               Browse Services
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Link>
             <Link
               to={secondaryTo}
-              className="group inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3.5 text-[14px] font-medium tracking-tight text-foreground backdrop-blur transition-all hover:border-muted-foreground/40 hover:bg-surface-elevated active:scale-[0.98] sm:py-3 sm:text-[13.5px]"
+              className="group inline-flex items-center justify-center gap-1.5 rounded-[10px] border border-border bg-surface/50 px-4 py-2.5 text-[13.5px] font-medium tracking-[-0.005em] text-foreground backdrop-blur-md transition-[background-color,border-color] duration-150 hover:border-[var(--border-strong)] hover:bg-surface-elevated active:scale-[0.985]"
             >
               {secondaryLabel}
               {authed && (
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
               )}
             </Link>
           </div>
@@ -120,7 +119,7 @@ export function Hero() {
           className="relative mx-auto mt-14 max-w-4xl animate-fade-up sm:mt-20"
           style={{ animationDelay: "0.3s" }}
         >
-          <div className="pointer-events-none absolute -inset-8 rounded-[28px] bg-primary/5 blur-3xl" />
+          <div className="pointer-events-none absolute -inset-8 rounded-[28px] bg-primary/[0.04] blur-3xl" />
           <OttPanel />
         </div>
       </div>
