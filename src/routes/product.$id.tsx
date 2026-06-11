@@ -321,6 +321,8 @@ function ProductPage() {
                       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
                         {plans.map((p) => {
                           const active = p.months === selectedMonths;
+                          const isBest = p.months === bestValueMonths && plans.length > 1;
+                          const perMo = p.months > 1 ? Math.round(p.price / p.months) : null;
                           return (
                             <motion.button
                               key={p.months}
@@ -329,12 +331,17 @@ function ProductPage() {
                               whileTap={{ scale: 0.96 }}
                               transition={{ type: "spring", stiffness: 420, damping: 26 }}
                               className={
-                                "relative rounded-xl border px-4 py-3 text-[12.5px] font-semibold tracking-tight transition-colors " +
+                                "relative rounded-xl border px-4 py-3 text-left text-[12.5px] font-semibold tracking-tight transition-colors " +
                                 (active
                                   ? "border-primary/60 bg-primary/10 text-foreground shadow-[0_0_0_3px_color-mix(in_oklab,var(--primary)_10%,transparent)]"
                                   : "border-border bg-surface/60 text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground")
                               }
                             >
+                              {isBest && (
+                                <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[0_4px_12px_-4px_color-mix(in_oklab,var(--primary)_60%,transparent)]">
+                                  Best Value
+                                </span>
+                              )}
                               <span className="block text-[13px] font-semibold text-foreground">
                                 {p.months} {p.months === 1 ? "Month" : "Months"}
                               </span>
@@ -346,6 +353,11 @@ function ProductPage() {
                                   </span>
                                 )}
                               </span>
+                              {perMo !== null && (
+                                <span className="mt-0.5 block text-[10px] font-medium text-primary/80">
+                                  ₹{perMo.toLocaleString()}/mo
+                                </span>
+                              )}
                             </motion.button>
                           );
                         })}
