@@ -47,24 +47,30 @@ export function ProfilePanel({
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="font-display text-[2rem] font-semibold tracking-[-0.025em] text-foreground">
-        My Profile
+      <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-surface/50 px-2.5 py-[5px] backdrop-blur-sm">
+        <UserIcon className="h-3 w-3 text-primary" />
+        <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          Account
+        </span>
+      </div>
+      <h1 className="mt-4 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.25rem]">
+        My profile
       </h1>
       <p className="mt-2 text-[14px] text-muted-foreground">
         Update your account details. Email and password changes require your current password.
       </p>
 
       {loading ? (
-        <div className="mt-10 grid gap-6">
+        <div className="mt-10 grid gap-5">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-48 animate-pulse rounded-xl border border-border bg-surface/60"
+              className="h-48 animate-pulse rounded-2xl border border-[var(--border)] bg-surface/50"
             />
           ))}
         </div>
       ) : (
-        <div className="mt-10 grid gap-6">
+        <div className="mt-10 grid gap-5">
           <NameSection user={user} onUserChange={onUserChange} />
           <EmailSection user={user} onUserChange={onUserChange} />
           <PasswordSection />
