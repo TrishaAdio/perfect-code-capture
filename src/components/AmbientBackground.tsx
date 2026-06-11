@@ -51,7 +51,7 @@ export function AmbientBackground() {
     <div
       ref={rootRef}
       aria-hidden
-      className="ambient-root pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className="ambient-root pointer-events-none fixed inset-0 z-0 overflow-hidden"
     >
       {/* Deep base wash — pure noir foundation */}
       <div className="absolute inset-0 ambient-base" />
