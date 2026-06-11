@@ -7,7 +7,7 @@ import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-dvh items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
@@ -17,7 +17,7 @@ function NotFoundComponent() {
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex h-9 items-center justify-center rounded-full border border-[var(--border)] bg-foreground px-4 text-[13px] font-medium text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_1px_2px_rgba(0,0,0,0.45)] transition-[background-color,transform] hover:bg-foreground/92 active:scale-[0.985]"
           >
             Go home
           </Link>
@@ -89,9 +89,15 @@ function RootComponent() {
 
   return (
     <>
-      <div className="app-route-shell">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:inline-flex focus:h-9 focus:items-center focus:rounded-full focus:border focus:border-[var(--border)] focus:bg-surface focus:px-3 focus:text-[12px] focus:font-medium focus:text-foreground focus:shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
+      >
+        Skip to content
+      </a>
+      <main id="main" className="app-route-shell">
         <Outlet />
-      </div>
+      </main>
       <Toaster theme="dark" position="top-right" />
     </>
   );
