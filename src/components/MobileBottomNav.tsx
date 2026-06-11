@@ -156,7 +156,7 @@ export function MobileBottomNav() {
     >
       <div
         ref={containerRef}
-        className="relative flex items-center justify-around overflow-hidden rounded-[22px] border border-white/[0.08] bg-[rgba(14,16,20,0.72)] px-1.5 py-1.5 shadow-[0_1px_0_0_rgba(255,255,255,0.06)_inset,0_18px_40px_-18px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
+        className="relative flex items-center justify-around overflow-hidden rounded-[22px] border border-[var(--border)] bg-[color-mix(in_oklab,var(--background)_72%,transparent)] px-1.5 py-1.5 shadow-[0_1px_0_0_rgba(255,255,255,0.06)_inset,0_18px_40px_-18px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
         style={{ touchAction: "pan-y" }}
       >
         <span
@@ -169,9 +169,9 @@ export function MobileBottomNav() {
           style={{ x: pillX, width: pillW }}
           animate={{ scale: dragging ? 1.05 : 1 }}
           transition={SPRING}
-          className="pointer-events-none absolute top-1.5 bottom-1.5 left-0 rounded-[16px] border border-emerald-400/15 bg-white/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset,0_8px_24px_-12px_rgba(52,211,153,0.35)]"
+          className="pointer-events-none absolute top-1.5 bottom-1.5 left-0 rounded-[16px] border border-primary/20 bg-white/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset,0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_45%,transparent)]"
         >
-          <span className="absolute inset-0 rounded-[16px] bg-[radial-gradient(60%_80%_at_50%_50%,rgba(52,211,153,0.18),transparent_70%)]" />
+          <span className="absolute inset-0 rounded-[16px] bg-[radial-gradient(60%_80%_at_50%_50%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)]" />
         </motion.div>
 
         {TABS.map((item, idx) => {
