@@ -108,3 +108,19 @@ exports.updatePassword = async (req, res) => {
     return fail(res, 500, "Server error");
   }
 };
+
+exports.updateWhatsapp = async (req, res) => {
+  const parsed = whatsappSchema.safeParse(req.body);
+  if (!parsed.success)
+    return fail(res, 400, parsed.error.issues[0]?.message || "Invalid input");
+  try {
+    const user = await User.findById(req.user.sub);
+    if (!user) return fail(res, 404, "User not found");
+    user.whatsapp = parsed.data.whatsapp;
+    await user.save();
+    return res.json({ success: true, user: user.toSafeJSON() });
+  } catch (err) {
+    console.error("[updateWhatsapp]", err);
+    return fail(res, 500, "Server error");
+  }
+};
