@@ -98,14 +98,14 @@ export function OrdersPanel({ onBrowse }: { onBrowse?: () => void }) {
 
   return (
     <div>
-      <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1">
+      <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-surface/50 px-2.5 py-[5px] backdrop-blur-sm">
         <ShoppingBag className="h-3 w-3 text-primary" />
-        <span className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          Your Orders
+        <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          Your orders
         </span>
       </div>
-      <h1 className="mt-5 font-display text-[2rem] font-semibold tracking-[-0.025em] text-foreground">
-        My Orders
+      <h1 className="mt-4 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.25rem]">
+        My orders
       </h1>
       <p className="mt-2 text-[14px] text-muted-foreground">
         Track and manage all your SymDeals purchases.
