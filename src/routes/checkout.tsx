@@ -434,8 +434,8 @@ function CheckoutPage() {
                         </span>
                       </div>
                       <span
-                        className="font-display text-2xl font-bold tracking-tight text-emerald-400 sm:text-3xl"
-                        style={{ textShadow: "0 0 24px rgba(16,185,129,0.35)" }}
+                        className="font-display text-2xl font-semibold tracking-[-0.025em] text-primary sm:text-3xl"
+                        style={{ textShadow: "0 0 24px color-mix(in oklab, var(--primary) 35%, transparent)" }}
                       >
                         ₹{total.toLocaleString()}
                       </span>
