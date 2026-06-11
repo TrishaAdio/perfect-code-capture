@@ -11,9 +11,11 @@ function MarketingLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#050505]">
       <AmbientBackground />
-      <Navbar />
+      <div className="relative z-10">
+        <Navbar />
+      </div>
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={pathname}
