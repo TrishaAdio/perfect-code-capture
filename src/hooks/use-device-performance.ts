@@ -1,43 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  applyLevel,
+  readStoredPreference,
+  resolveLevel,
+  type MotionPreference,
+} from "@/lib/animation-preference";
 
 /**
- * Detects low-end devices and toggles a `perf-lite` class on <html>.
- * CSS uses that class to disable expensive effects (blur, large radial
- * glows, infinite animations). Runs once on mount, idempotent.
- *
- * Signals considered:
- *  - prefers-reduced-motion        → always lite
- *  - navigator.deviceMemory < 4    → lite
- *  - navigator.hardwareConcurrency < 4 → lite
- *  - Network: saveData or 2g/slow-2g → lite
- *  - Coarse pointer + small viewport (mobile) → lite by default
+ * Mount-once: resolves the stored MotionPreference (or auto-detects) and
+ * applies the matching `perf-*` class to <html>. Listens for cross-component
+ * preference changes so the entire UI updates without a reload.
  */
 export function useDevicePerformance() {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const root = document.documentElement;
+    const apply = () => applyLevel(resolveLevel(readStoredPreference()));
+    apply();
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const nav = navigator as Navigator & {
-      deviceMemory?: number;
-      connection?: { saveData?: boolean; effectiveType?: string };
+    const onChange = () => apply();
+    window.addEventListener("symdeals:motion-changed", onChange);
+    const mm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    mm.addEventListener?.("change", onChange);
+    return () => {
+      window.removeEventListener("symdeals:motion-changed", onChange);
+      mm.removeEventListener?.("change", onChange);
     };
-    const lowMemory = typeof nav.deviceMemory === "number" && nav.deviceMemory < 4;
-    const lowCpu =
-      typeof navigator.hardwareConcurrency === "number" &&
-      navigator.hardwareConcurrency > 0 &&
-      navigator.hardwareConcurrency < 4;
-    const conn = nav.connection;
-    const slowNet =
-      !!conn &&
-      (conn.saveData === true ||
-        conn.effectiveType === "2g" ||
-        conn.effectiveType === "slow-2g");
-    const coarseSmall =
-      window.matchMedia("(pointer: coarse)").matches && window.innerWidth < 768;
-
-    const lite = reduceMotion || lowMemory || lowCpu || slowNet || coarseSmall;
-    root.classList.toggle("perf-lite", lite);
-    root.classList.toggle("perf-rich", !lite);
   }, []);
+}
+
+/** Reactive accessor for components that need to render based on the preference. */
+export function useMotionPreference(): [MotionPreference, (p: MotionPreference) => void] {
+  const [pref, setPref] = useState<MotionPreference>(() => readStoredPreference());
+
+  useEffect(() => {
+    const onChange = (e: Event) => {
+      const detail = (e as CustomEvent<MotionPreference>).detail;
+      if (detail) setPref(detail);
+      else setPref(readStoredPreference());
+    };
+    window.addEventListener("symdeals:motion-changed", onChange);
+    return () => window.removeEventListener("symdeals:motion-changed", onChange);
+  }, []);
+
+  return [pref, setPref];
 }
