@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
+import { AmbientBackground } from "@/components/AmbientBackground";
 
 export const Route = createFileRoute("/_marketing")({
   component: MarketingLayout,
@@ -11,6 +12,7 @@ function MarketingLayout() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background">
+      <AmbientBackground />
       <Navbar />
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
@@ -26,3 +28,4 @@ function MarketingLayout() {
     </div>
   );
 }
+

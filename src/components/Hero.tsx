@@ -42,12 +42,10 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24 md:pt-44 md:pb-32">
-      {/* Background layers — subtle gradient mesh + grid + particles */}
-      <div className="pointer-events-none absolute inset-0 mesh-bg" />
-      <div className="pointer-events-none absolute inset-0 grid-pattern opacity-60" />
-      <div className="pointer-events-none absolute inset-0 particles-bg opacity-40" />
-      {/* Edge fade */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
+      {/* Background atmosphere is rendered globally by AmbientBackground in the
+          marketing layout, so the hero stays transparent and blends seamlessly
+          into the rest of the page. */}
+
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
