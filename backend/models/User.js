@@ -80,6 +80,7 @@ userSchema.methods.toSafeJSON = function () {
     id: this._id.toString(),
     name: this.name,
     email: this.email,
+    whatsapp: this.whatsapp || null,
     isVerified: !!this.isVerified,
     createdAt: this.createdAt,
   };
