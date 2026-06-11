@@ -338,48 +338,26 @@ function PasswordSection() {
 
 /* ---------- Animation & Performance ---------- */
 
-const MOTION_OPTIONS: {
-  value: MotionPreference;
+const MOTION_LEVELS: {
+  value: Exclude<MotionPreference, "auto">;
   label: string;
   blurb: string;
-  bullets: string[];
 }[] = [
-  {
-    value: "high",
-    label: "High",
-    blurb: "Rich animations, premium transitions, enhanced parallax.",
-    bullets: ["Advanced micro-interactions", "Intended for powerful devices"],
-  },
-  {
-    value: "smooth",
-    label: "Smooth",
-    blurb: "Balanced experience with premium animations.",
-    bullets: ["Optimized performance", "Recommended for most users"],
-  },
-  {
-    value: "medium",
-    label: "Medium",
-    blurb: "Lightweight animations and fast interactions.",
-    bullets: ["Reduced visual effects", "Best compatibility"],
-  },
-  {
-    value: "minimal",
-    label: "Minimal",
-    blurb: "Very subtle animations, faster perceived performance.",
-    bullets: ["Designed for low-end devices"],
-  },
-  {
-    value: "off",
-    label: "Off",
-    blurb: "Disable all non-essential animations.",
-    bullets: ["Respects accessibility preferences"],
-  },
+  { value: "off",     label: "Off",     blurb: "Disable all non-essential animations." },
+  { value: "minimal", label: "Minimal", blurb: "Very subtle motion, faster perceived performance." },
+  { value: "medium",  label: "Medium",  blurb: "Lightweight animations and fast interactions." },
+  { value: "smooth",  label: "Smooth",  blurb: "Balanced premium animations." },
+  { value: "high",    label: "High",    blurb: "Rich animations and enhanced parallax." },
 ];
 
 function AnimationPerformanceSection() {
   const [pref, setPref] = useMotionPreference();
   const auto = detectAutoLevel();
   const effective = resolveLevel(pref);
+  const isAuto = pref === "auto";
+  const activeIdx = Math.max(0, MOTION_LEVELS.findIndex((l) => l.value === effective));
+  const current = MOTION_LEVELS[activeIdx];
+  const fillPct = MOTION_LEVELS.length === 1 ? 0 : (activeIdx / (MOTION_LEVELS.length - 1)) * 100;
 
   const choose = (next: MotionPreference) => {
     setPref(next);
@@ -390,83 +368,106 @@ function AnimationPerformanceSection() {
     <SectionShell
       icon={<Gauge className="h-4 w-4" />}
       title="Animation & Performance"
-      description={`Currently ${pref === "auto" ? `Auto (${auto})` : effective}. Applies instantly across the app.`}
+      description="Drag the slider to set how much motion the app uses. Applies instantly."
     >
-      <div className="grid gap-2.5">
+      {/* Auto pill */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-[12px] text-muted-foreground">
+          {isAuto ? (
+            <>Automatic — using <span className="text-foreground font-medium">{auto}</span> on this device.</>
+          ) : (
+            <>Manual — currently <span className="text-foreground font-medium">{current.label}</span>.</>
+          )}
+        </div>
         <button
           type="button"
-          onClick={() => choose("auto")}
-          aria-pressed={pref === "auto"}
-          className={`group flex items-start justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-[border-color,background-color] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            pref === "auto"
-              ? "border-[color:var(--primary)]/40 bg-primary/[0.06]"
-              : "border-[var(--border)] bg-background/40 hover:border-[var(--border-strong)]"
+          onClick={() => choose(isAuto ? effective : "auto")}
+          aria-pressed={isAuto}
+          className={`inline-flex h-7 items-center rounded-full border px-3 text-[11.5px] font-medium transition-[border-color,background-color,color] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isAuto
+              ? "border-[color:var(--primary)]/40 bg-primary/[0.10] text-foreground"
+              : "border-[var(--border)] bg-background/40 text-muted-foreground hover:border-[var(--border-strong)] hover:text-foreground"
           }`}
         >
-          <div>
-            <div className="text-[13.5px] font-semibold text-foreground">Automatic</div>
-            <div className="mt-0.5 text-[12px] text-muted-foreground">
-              Detect device capability and pick the best level ({auto}).
-            </div>
-          </div>
-          <Indicator selected={pref === "auto"} />
+          {isAuto ? "Auto on" : "Use Auto"}
         </button>
+      </div>
 
-        {MOTION_OPTIONS.map((opt) => {
-          const selected = pref === opt.value;
-          return (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => choose(opt.value)}
-              aria-pressed={selected}
-              className={`group flex items-start justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-[border-color,background-color] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                selected
-                  ? "border-[color:var(--primary)]/40 bg-primary/[0.06]"
-                  : "border-[var(--border)] bg-background/40 hover:border-[var(--border-strong)]"
+      {/* Slider */}
+      <div className="mt-5">
+        <div className="relative h-9 select-none">
+          {/* Track */}
+          <div className="absolute left-2 right-2 top-1/2 h-[6px] -translate-y-1/2 rounded-full border border-[var(--border)] bg-surface/60" />
+          {/* Fill */}
+          <div
+            className="absolute left-2 top-1/2 h-[6px] -translate-y-1/2 rounded-full bg-gradient-to-r from-[color:color-mix(in_oklab,var(--primary)_55%,transparent)] to-[color:var(--primary)] transition-[width] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ width: `calc((100% - 16px) * ${fillPct / 100})` }}
+            aria-hidden
+          />
+          {/* Stops */}
+          <div className="absolute left-2 right-2 top-1/2 flex -translate-y-1/2 items-center justify-between">
+            {MOTION_LEVELS.map((lvl, i) => {
+              const reached = i <= activeIdx;
+              const isCurrent = i === activeIdx;
+              return (
+                <button
+                  key={lvl.value}
+                  type="button"
+                  onClick={() => choose(lvl.value)}
+                  aria-label={lvl.label}
+                  aria-pressed={isCurrent}
+                  className="group relative flex h-9 w-9 items-center justify-center"
+                >
+                  <span
+                    className={`block rounded-full border transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                      isCurrent
+                        ? "h-[18px] w-[18px] border-[color:var(--primary)] bg-background shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_18%,transparent)]"
+                        : reached
+                        ? "h-[10px] w-[10px] border-[color:var(--primary)]/60 bg-[color:color-mix(in_oklab,var(--primary)_70%,transparent)]"
+                        : "h-[8px] w-[8px] border-[var(--border-strong)] bg-surface"
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+          {/* Native range — invisible, captures drag */}
+          <input
+            type="range"
+            min={0}
+            max={MOTION_LEVELS.length - 1}
+            step={1}
+            value={activeIdx}
+            onChange={(e) => choose(MOTION_LEVELS[Number(e.target.value)].value)}
+            aria-label="Animation level"
+            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          />
+        </div>
+        {/* Stop labels */}
+        <div className="mt-2 flex items-center justify-between px-[2px] text-[10.5px] font-medium uppercase tracking-[0.1em] text-muted-foreground/70">
+          {MOTION_LEVELS.map((lvl, i) => (
+            <span
+              key={lvl.value}
+              className={`w-9 text-center transition-colors ${
+                i === activeIdx ? "text-foreground" : ""
               }`}
             >
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[13.5px] font-semibold text-foreground">{opt.label}</span>
-                  {opt.value === "medium" && (
-                    <span className="rounded-full border border-[var(--border)] bg-surface/60 px-1.5 py-px text-[9.5px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                      Default
-                    </span>
-                  )}
-                </div>
-                <div className="mt-0.5 text-[12px] text-muted-foreground">{opt.blurb}</div>
-                <ul className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11.5px] text-muted-foreground/85">
-                  {opt.bullets.map((b) => (
-                    <li key={b} className="before:mr-1 before:text-muted-foreground/40 before:content-['•']">{b}</li>
-                  ))}
-                </ul>
-              </div>
-              <Indicator selected={selected} />
-            </button>
-          );
-        })}
+              {lvl.label}
+            </span>
+          ))}
+        </div>
       </div>
-      <p className="mt-4 text-[11.5px] text-muted-foreground/80">
-        Your preference is saved on this device and respected on every page. Pages that need essential motion (loaders, alerts) stay active.
+
+      {/* Description for current level */}
+      <div className="mt-4 rounded-xl border border-[var(--border)] bg-background/40 px-3.5 py-3 text-[12.5px] text-muted-foreground">
+        <span className="font-medium text-foreground">{current.label}.</span>{" "}
+        {current.blurb}
+      </div>
+
+      <p className="mt-3 text-[11.5px] text-muted-foreground/80">
+        Saved on this device. Essential motion (loaders, alerts) stays active. Respects your system's reduce-motion preference.
       </p>
     </SectionShell>
   );
 }
 
-function Indicator({ selected }: { selected: boolean }) {
-  return (
-    <span
-      aria-hidden
-      className={`mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors duration-150 ${
-        selected ? "border-[color:var(--primary)] bg-primary/15" : "border-[var(--border-strong)] bg-transparent"
-      }`}
-    >
-      <span
-        className={`h-1.5 w-1.5 rounded-full bg-primary transition-transform duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          selected ? "scale-100" : "scale-0"
-        }`}
-      />
-    </span>
-  );
-}
