@@ -95,9 +95,9 @@ function RootComponent() {
       >
         Skip to content
       </a>
-      <main id="main" className="app-route-shell">
+      <div id="main" className="app-route-shell">
         <Outlet />
-      </main>
+      </div>
       <Toaster theme="dark" position="top-right" />
     </>
   );
