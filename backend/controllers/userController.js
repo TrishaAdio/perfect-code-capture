@@ -13,6 +13,14 @@ const emailSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required").max(128),
 });
 
+const whatsappSchema = z.object({
+  whatsapp: z
+    .string()
+    .trim()
+    .regex(/^\+?\d{10,15}$/, "Invalid WhatsApp number")
+    .max(20),
+});
+
 const passwordSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required").max(128),
   newPassword: z
@@ -97,6 +105,22 @@ exports.updatePassword = async (req, res) => {
     return res.json({ success: true });
   } catch (err) {
     console.error("[updatePassword]", err);
+    return fail(res, 500, "Server error");
+  }
+};
+
+exports.updateWhatsapp = async (req, res) => {
+  const parsed = whatsappSchema.safeParse(req.body);
+  if (!parsed.success)
+    return fail(res, 400, parsed.error.issues[0]?.message || "Invalid input");
+  try {
+    const user = await User.findById(req.user.sub);
+    if (!user) return fail(res, 404, "User not found");
+    user.whatsapp = parsed.data.whatsapp;
+    await user.save();
+    return res.json({ success: true, user: user.toSafeJSON() });
+  } catch (err) {
+    console.error("[updateWhatsapp]", err);
     return fail(res, 500, "Server error");
   }
 };

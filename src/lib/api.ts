@@ -31,6 +31,7 @@ export type AuthUser = {
   id: string;
   name: string;
   email: string;
+  whatsapp?: string | null;
   isVerified?: boolean;
   createdAt?: string;
   totalSaved?: number;
@@ -160,6 +161,14 @@ export function updatePassword(input: {
   newPassword: string;
 }) {
   return request<{ success: true }>("/api/user/update-password", {
+    method: "PATCH",
+    body: input,
+    token: getToken(),
+  });
+}
+
+export function updateWhatsapp(input: { whatsapp: string }) {
+  return request<{ success: true; user: AuthUser }>("/api/user/update-whatsapp", {
     method: "PATCH",
     body: input,
     token: getToken(),

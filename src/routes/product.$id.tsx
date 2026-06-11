@@ -110,6 +110,21 @@ function ProductPage() {
       ? Math.max(0, Math.round(((realPrice - selectedPlan.price) / realPrice) * 100))
       : 0;
   const total = selectedPlan ? selectedPlan.price * quantity : 0;
+  const perMonth =
+    selectedPlan && selectedPlan.months > 1
+      ? Math.round(selectedPlan.price / selectedPlan.months)
+      : null;
+  // Best-value plan = highest %-off vs realPrice; falls back to longest duration.
+  const bestValueMonths = useMemo(() => {
+    if (plans.length === 0) return null;
+    const scored = plans.map((p) => {
+      const rp = p.realPrice && p.realPrice > p.price ? p.realPrice : p.price;
+      const pct = rp > p.price ? ((rp - p.price) / rp) * 100 : 0;
+      return { months: p.months, pct };
+    });
+    scored.sort((a, b) => b.pct - a.pct || b.months - a.months);
+    return scored[0].pct > 0 ? scored[0].months : plans[plans.length - 1].months;
+  }, [plans]);
 
   const onLogout = () => setLogoutOpen(true);
   const confirmLogout = () => {
@@ -284,6 +299,16 @@ function ProductPage() {
                   {savedAmount > 0 && (
                     <p className="-mt-1 text-[12.5px] font-medium text-emerald-300/90">
                       You save ₹{savedAmount.toLocaleString()}
+                      {perMonth !== null && (
+                        <span className="ml-2 text-muted-foreground">
+                          · just ₹{perMonth.toLocaleString()}/mo
+                        </span>
+                      )}
+                    </p>
+                  )}
+                  {savedAmount === 0 && perMonth !== null && (
+                    <p className="-mt-1 text-[12.5px] font-medium text-muted-foreground">
+                      Just ₹{perMonth.toLocaleString()}/mo
                     </p>
                   )}
 
@@ -296,6 +321,8 @@ function ProductPage() {
                       <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
                         {plans.map((p) => {
                           const active = p.months === selectedMonths;
+                          const isBest = p.months === bestValueMonths && plans.length > 1;
+                          const perMo = p.months > 1 ? Math.round(p.price / p.months) : null;
                           return (
                             <motion.button
                               key={p.months}
@@ -304,12 +331,17 @@ function ProductPage() {
                               whileTap={{ scale: 0.96 }}
                               transition={{ type: "spring", stiffness: 420, damping: 26 }}
                               className={
-                                "relative rounded-xl border px-4 py-3 text-[12.5px] font-semibold tracking-tight transition-colors " +
+                                "relative rounded-xl border px-4 py-3 text-left text-[12.5px] font-semibold tracking-tight transition-colors " +
                                 (active
                                   ? "border-primary/60 bg-primary/10 text-foreground shadow-[0_0_0_3px_color-mix(in_oklab,var(--primary)_10%,transparent)]"
                                   : "border-border bg-surface/60 text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground")
                               }
                             >
+                              {isBest && (
+                                <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-primary-foreground shadow-[0_4px_12px_-4px_color-mix(in_oklab,var(--primary)_60%,transparent)]">
+                                  Best Value
+                                </span>
+                              )}
                               <span className="block text-[13px] font-semibold text-foreground">
                                 {p.months} {p.months === 1 ? "Month" : "Months"}
                               </span>
@@ -321,6 +353,11 @@ function ProductPage() {
                                   </span>
                                 )}
                               </span>
+                              {perMo !== null && (
+                                <span className="mt-0.5 block text-[10px] font-medium text-primary/80">
+                                  ₹{perMo.toLocaleString()}/mo
+                                </span>
+                              )}
                             </motion.button>
                           );
                         })}
@@ -374,6 +411,10 @@ function ProductPage() {
                     </motion.button>
                     <BuyButton total={total} buying={buying} onClick={handleBuy} />
                   </div>
+                  <p className="hidden items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground md:flex">
+                    <ShieldCheck className="h-3 w-3 text-primary" />
+                    Replacement warranty · Refund if undelivered · Delivered in ~2–5 min
+                  </p>
 
                   {/* Important note */}
                   <div className="relative overflow-hidden rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4">
@@ -572,7 +613,7 @@ function ProductPage() {
                 <div className="font-display text-[15px] font-semibold tracking-tight text-foreground">
                   ₹{total.toLocaleString()}
                   <span className="ml-1 text-[10.5px] font-medium text-muted-foreground">
-                    · {selectedPlan.months}m × {quantity}
+                    {perMonth !== null ? `· ₹${perMonth.toLocaleString()}/mo` : `· ${selectedPlan.months}m × ${quantity}`}
                   </span>
                 </div>
               </div>

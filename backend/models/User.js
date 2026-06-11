@@ -31,6 +31,17 @@ const userSchema = new mongoose.Schema(
     googleId: { type: String, index: true, sparse: true, unique: true },
     avatar: { type: String, default: null },
     isVerified: { type: Boolean, default: false },
+    // Optional contact number — saved at checkout so repeat purchases prefill.
+    whatsapp: {
+      type: String,
+      default: null,
+      trim: true,
+      maxlength: 20,
+      validate: {
+        validator: (v) => v == null || v === "" || /^\+?\d{10,15}$/.test(v),
+        message: "Invalid WhatsApp number",
+      },
+    },
     otp: { type: String, select: false },
     otpExpiry: { type: Date, select: false },
     otpLastSentAt: { type: Date, select: false },
@@ -69,6 +80,7 @@ userSchema.methods.toSafeJSON = function () {
     id: this._id.toString(),
     name: this.name,
     email: this.email,
+    whatsapp: this.whatsapp || null,
     isVerified: !!this.isVerified,
     createdAt: this.createdAt,
   };
