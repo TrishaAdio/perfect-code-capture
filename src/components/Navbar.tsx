@@ -183,13 +183,13 @@ export function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="rounded-full px-3 py-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  className="rounded-md px-2.5 py-1.5 text-[12.5px] font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Log in
                 </Link>
                 <Link
                   to="/signup"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-[12px] font-semibold tracking-tight text-background transition-all hover:bg-foreground/90"
+                  className="inline-flex items-center gap-1 rounded-[8px] bg-foreground px-3 py-1.5 text-[12.5px] font-medium tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_1px_2px_rgba(0,0,0,0.45)] transition-[background-color,transform] duration-150 hover:bg-foreground/92 active:scale-[0.985]"
                 >
                   Get Started
                 </Link>
