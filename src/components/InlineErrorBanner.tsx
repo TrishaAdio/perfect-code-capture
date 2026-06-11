@@ -33,7 +33,7 @@ export function InlineErrorBanner({ message, onDismiss, autoDismissMs = 6000 }: 
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.18, ease: "easeOut" }}
-          className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-[12px] font-medium text-destructive"
+          className="flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-[12px] font-medium text-destructive shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]"
         >
           <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span className="min-w-0 flex-1 leading-snug">{message}</span>

@@ -3,38 +3,37 @@ import { motion } from "framer-motion";
 import symdealsLogo from "@/assets/symdeals-logo.png";
 
 /**
- * Resend-style single-centered auth layout.
- * - Pure black background with soft abstract gradient
- * - Single centered card, no split screen, no marketing panel
+ * Linear/Vercel-grade single-centered auth layout.
+ * - Deep black bg with subtle emerald ambient (matches site)
+ * - Single centered card, hairline borders, crisp focus rings
  */
 export function AuthShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black text-white antialiased">
-      {/* Abstract soft gradient backdrop */}
+    <div className="relative min-h-screen overflow-hidden bg-background text-foreground antialiased">
+      {/* Ambient backdrop — matches homepage atmosphere */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(1100px 700px at 100% 0%, rgba(255,255,255,0.10), transparent 60%), radial-gradient(900px 600px at 0% 100%, rgba(255,255,255,0.06), transparent 60%), radial-gradient(700px 500px at 50% 50%, rgba(255,255,255,0.02), transparent 70%)",
+            "radial-gradient(900px 600px at 85% -10%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 60%), radial-gradient(800px 600px at 0% 110%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 65%)",
         }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.5]"
+        className="pointer-events-none absolute inset-0 opacity-[0.35] mix-blend-screen"
         style={{
           background:
-            "radial-gradient(ellipse at 85% 10%, rgba(180,180,180,0.18), transparent 55%), radial-gradient(ellipse at 10% 90%, rgba(120,120,120,0.10), transparent 55%)",
-          mixBlendMode: "screen",
+            "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.05), transparent 55%)",
         }}
       />
 
-      {/* Top bar — just a back-home link */}
+      {/* Top bar — back-home link */}
       <header className="relative z-10">
         <div className="mx-auto flex max-w-6xl items-center px-6 py-6">
           <Link
             to="/"
-            className="flex items-center gap-1.5 text-[13px] font-medium text-white/60 transition-colors hover:text-white"
+            className="flex items-center gap-1.5 rounded-md text-[12.5px] font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <span aria-hidden>‹</span> Home
           </Link>
@@ -43,13 +42,13 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
 
       <main className="relative z-10 flex min-h-[calc(100vh-80px)] w-full items-start justify-center px-5 pb-16 pt-6 sm:pt-10">
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="w-full max-w-[400px]"
         >
           <div className="mb-8 flex justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.6)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--border)] bg-surface/60 shadow-card backdrop-blur-sm">
               <img
                 src={symdealsLogo}
                 alt="SymDeals"
@@ -89,10 +88,10 @@ export function GoogleButton({
       type="button"
       onClick={onClick}
       disabled={loading}
-      className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2.5 text-[13.5px] font-medium text-white transition-all duration-200 hover:border-white/20 hover:bg-white/[0.07] active:bg-white/[0.05] disabled:opacity-70"
+      className="group flex w-full items-center justify-center gap-2.5 rounded-lg border border-[var(--border)] bg-surface/60 px-4 py-2.5 text-[13.5px] font-medium text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-all duration-150 hover:border-[var(--border-strong)] hover:bg-surface/80 active:scale-[0.99] disabled:opacity-70"
     >
       {loading ? (
-        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-foreground/30 border-t-foreground" />
       ) : (
         <GoogleIcon className="h-[18px] w-[18px]" />
       )}
@@ -104,9 +103,9 @@ export function GoogleButton({
 export function AuthDivider({ label = "or" }: { label?: string }) {
   return (
     <div className="my-5 flex items-center gap-3">
-      <div className="h-px flex-1 bg-white/10" />
-      <span className="text-[12px] text-white/40">{label}</span>
-      <div className="h-px flex-1 bg-white/10" />
+      <div className="h-px flex-1 bg-[var(--border)]" />
+      <span className="text-[11.5px] uppercase tracking-[0.08em] text-muted-foreground">{label}</span>
+      <div className="h-px flex-1 bg-[var(--border)]" />
     </div>
   );
 }
@@ -139,14 +138,14 @@ export function PremiumField({
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between">
-        <label className="text-[12.5px] font-medium text-white/70">{label}</label>
+        <label className="text-[12px] font-medium text-foreground/75">{label}</label>
         {trailingLink ?? (error && (
-          <span className="text-[11.5px] font-medium text-red-400/90">{error}</span>
+          <span className="text-[11.5px] font-medium text-destructive">{error}</span>
         ))}
       </div>
       <div
-        className={`group relative flex items-center rounded-lg border bg-white/[0.03] transition-colors duration-150 focus-within:border-white/30 focus-within:bg-white/[0.05] ${
-          error ? "border-red-500/50" : "border-white/10 hover:border-white/20"
+        className={`group relative flex items-center rounded-lg border bg-surface/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all duration-150 focus-within:border-primary/60 focus-within:bg-surface/70 focus-within:ring-2 focus-within:ring-primary/25 ${
+          error ? "border-destructive/60" : "border-[var(--border)] hover:border-[var(--border-strong)]"
         }`}
       >
         <input
@@ -157,12 +156,12 @@ export function PremiumField({
           autoComplete={autoComplete}
           autoFocus={autoFocus}
           placeholder={placeholder}
-          className="w-full bg-transparent px-3.5 py-2.5 text-[14px] text-white placeholder:text-white/30 focus:outline-none"
+          className="w-full bg-transparent px-3.5 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
         />
         {rightAdornment && <div className="pr-3">{rightAdornment}</div>}
       </div>
       {trailingLink && error && (
-        <p className="mt-1.5 text-[11.5px] font-medium text-red-400/90">{error}</p>
+        <p className="mt-1.5 text-[11.5px] font-medium text-destructive">{error}</p>
       )}
     </div>
   );
@@ -186,11 +185,11 @@ export function PrimaryButton({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      whileTap={{ scale: 0.99 }}
-      className="mt-1 flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-[13.5px] font-semibold text-black transition-all duration-200 hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/30 disabled:text-black/60"
+      whileTap={{ scale: 0.985 }}
+      className="mt-1 flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-4 py-2.5 text-[13.5px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.25)_inset,0_1px_2px_rgba(0,0,0,0.5)] transition-all duration-150 hover:bg-foreground/90 disabled:cursor-not-allowed disabled:bg-foreground/30 disabled:text-background/60 disabled:shadow-none"
     >
       {loading ? (
-        <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" />
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-background/30 border-t-background" />
       ) : null}
       <span>{children}</span>
     </motion.button>
