@@ -613,7 +613,7 @@ function ProductPage() {
                 <div className="font-display text-[15px] font-semibold tracking-tight text-foreground">
                   ₹{total.toLocaleString()}
                   <span className="ml-1 text-[10.5px] font-medium text-muted-foreground">
-                    · {selectedPlan.months}m × {quantity}
+                    {perMonth !== null ? `· ₹${perMonth.toLocaleString()}/mo` : `· ${selectedPlan.months}m × ${quantity}`}
                   </span>
                 </div>
               </div>
