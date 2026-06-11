@@ -299,6 +299,16 @@ function ProductPage() {
                   {savedAmount > 0 && (
                     <p className="-mt-1 text-[12.5px] font-medium text-emerald-300/90">
                       You save ₹{savedAmount.toLocaleString()}
+                      {perMonth !== null && (
+                        <span className="ml-2 text-muted-foreground">
+                          · just ₹{perMonth.toLocaleString()}/mo
+                        </span>
+                      )}
+                    </p>
+                  )}
+                  {savedAmount === 0 && perMonth !== null && (
+                    <p className="-mt-1 text-[12.5px] font-medium text-muted-foreground">
+                      Just ₹{perMonth.toLocaleString()}/mo
                     </p>
                   )}
 
