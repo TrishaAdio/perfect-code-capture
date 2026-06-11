@@ -23,6 +23,8 @@ import {
   fetchMe,
   fetchProduct,
   getToken,
+  updateCachedUser,
+  updateWhatsapp,
 } from "@/lib/api";
 import { LogoutConfirmDialog } from "@/components/LogoutConfirmDialog";
 
