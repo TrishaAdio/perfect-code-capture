@@ -436,7 +436,7 @@ function CheckoutPage() {
                     <div className="space-y-2">
                       <Row label="Subtotal" value={`₹${subtotal.toLocaleString()}`} />
                       <Row label="Quantity" value={String(quantity)} muted />
-                      <Row label="Delivery" value="Instant · WhatsApp" muted />
+                      <Row label="Delivery" value="~2–5 min · WhatsApp" muted />
                     </div>
 
                     <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
