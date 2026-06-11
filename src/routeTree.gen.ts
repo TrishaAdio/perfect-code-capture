@@ -9,12 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PayRouteImport } from './routes/pay'
+import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as MyprofileRouteImport } from './routes/myprofile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as MarketingRouteImport } from './routes/_marketing'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing.index'
+import { Route as ResetPasswordTokenRouteImport } from './routes/reset-password.$token'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as MarketingSupportRouteImport } from './routes/_marketing.support'
@@ -23,6 +30,31 @@ import { Route as MarketingFeaturesRouteImport } from './routes/_marketing.featu
 import { Route as MarketingFaqRouteImport } from './routes/_marketing.faq'
 import { Route as AuthGoogleSuccessRouteImport } from './routes/auth.google.success'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayRoute = PayRouteImport.update({
+  id: '/pay',
+  path: '/pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyprofileRoute = MyprofileRouteImport.update({
+  id: '/myprofile',
+  path: '/myprofile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -51,6 +83,16 @@ const MarketingIndexRoute = MarketingIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MarketingRoute,
+} as any)
+const ResetPasswordTokenRoute = ResetPasswordTokenRouteImport.update({
+  id: '/reset-password/$token',
+  path: '/reset-password/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
@@ -94,12 +136,19 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/myprofile': typeof MyprofileRoute
+  '/orders': typeof OrdersRoute
+  '/pay': typeof PayRoute
+  '/privacy': typeof PrivacyRoute
+  '/signup': typeof SignupRoute
   '/faq': typeof MarketingFaqRoute
   '/features': typeof MarketingFeaturesRoute
   '/how-it-works': typeof MarketingHowItWorksRoute
   '/support': typeof MarketingSupportRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/product/$id': typeof ProductIdRoute
+  '/reset-password/$token': typeof ResetPasswordTokenRoute
   '/auth/google/success': typeof AuthGoogleSuccessRoute
 }
 export interface FileRoutesByTo {
@@ -107,12 +156,19 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/myprofile': typeof MyprofileRoute
+  '/orders': typeof OrdersRoute
+  '/pay': typeof PayRoute
+  '/privacy': typeof PrivacyRoute
+  '/signup': typeof SignupRoute
   '/faq': typeof MarketingFaqRoute
   '/features': typeof MarketingFeaturesRoute
   '/how-it-works': typeof MarketingHowItWorksRoute
   '/support': typeof MarketingSupportRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/product/$id': typeof ProductIdRoute
+  '/reset-password/$token': typeof ResetPasswordTokenRoute
   '/': typeof MarketingIndexRoute
   '/auth/google/success': typeof AuthGoogleSuccessRoute
 }
@@ -123,12 +179,19 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/myprofile': typeof MyprofileRoute
+  '/orders': typeof OrdersRoute
+  '/pay': typeof PayRoute
+  '/privacy': typeof PrivacyRoute
+  '/signup': typeof SignupRoute
   '/_marketing/faq': typeof MarketingFaqRoute
   '/_marketing/features': typeof MarketingFeaturesRoute
   '/_marketing/how-it-works': typeof MarketingHowItWorksRoute
   '/_marketing/support': typeof MarketingSupportRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/product/$id': typeof ProductIdRoute
+  '/reset-password/$token': typeof ResetPasswordTokenRoute
   '/_marketing/': typeof MarketingIndexRoute
   '/auth/google/success': typeof AuthGoogleSuccessRoute
 }
@@ -140,12 +203,19 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/forgot-password'
     | '/login'
+    | '/myprofile'
+    | '/orders'
+    | '/pay'
+    | '/privacy'
+    | '/signup'
     | '/faq'
     | '/features'
     | '/how-it-works'
     | '/support'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/product/$id'
+    | '/reset-password/$token'
     | '/auth/google/success'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -153,12 +223,19 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/forgot-password'
     | '/login'
+    | '/myprofile'
+    | '/orders'
+    | '/pay'
+    | '/privacy'
+    | '/signup'
     | '/faq'
     | '/features'
     | '/how-it-works'
     | '/support'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/product/$id'
+    | '/reset-password/$token'
     | '/'
     | '/auth/google/success'
   id:
@@ -168,12 +245,19 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/forgot-password'
     | '/login'
+    | '/myprofile'
+    | '/orders'
+    | '/pay'
+    | '/privacy'
+    | '/signup'
     | '/_marketing/faq'
     | '/_marketing/features'
     | '/_marketing/how-it-works'
     | '/_marketing/support'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/product/$id'
+    | '/reset-password/$token'
     | '/_marketing/'
     | '/auth/google/success'
   fileRoutesById: FileRoutesById
@@ -184,13 +268,55 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  MyprofileRoute: typeof MyprofileRoute
+  OrdersRoute: typeof OrdersRoute
+  PayRoute: typeof PayRoute
+  PrivacyRoute: typeof PrivacyRoute
+  SignupRoute: typeof SignupRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  ProductIdRoute: typeof ProductIdRoute
+  ResetPasswordTokenRoute: typeof ResetPasswordTokenRoute
   AuthGoogleSuccessRoute: typeof AuthGoogleSuccessRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pay': {
+      id: '/pay'
+      path: '/pay'
+      fullPath: '/pay'
+      preLoaderRoute: typeof PayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/myprofile': {
+      id: '/myprofile'
+      path: '/myprofile'
+      fullPath: '/myprofile'
+      preLoaderRoute: typeof MyprofileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -232,6 +358,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof MarketingIndexRouteImport
       parentRoute: typeof MarketingRoute
+    }
+    '/reset-password/$token': {
+      id: '/reset-password/$token'
+      path: '/reset-password/$token'
+      fullPath: '/reset-password/$token'
+      preLoaderRoute: typeof ResetPasswordTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
       id: '/admin/login'
@@ -311,8 +451,15 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  MyprofileRoute: MyprofileRoute,
+  OrdersRoute: OrdersRoute,
+  PayRoute: PayRoute,
+  PrivacyRoute: PrivacyRoute,
+  SignupRoute: SignupRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminLoginRoute: AdminLoginRoute,
+  ProductIdRoute: ProductIdRoute,
+  ResetPasswordTokenRoute: ResetPasswordTokenRoute,
   AuthGoogleSuccessRoute: AuthGoogleSuccessRoute,
 }
 export const routeTree = rootRouteImport
