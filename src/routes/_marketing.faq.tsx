@@ -41,48 +41,50 @@ const faqs = [
 function FaqPage() {
   return (
     <>
-      <main className="mx-auto max-w-3xl px-6 pt-32 pb-16 md:pt-40">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1">
-          <HelpCircle className="h-3 w-3 text-primary" />
-          <span className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            Help Center
-          </span>
+      <main className="mx-auto max-w-3xl px-5 pt-32 pb-20 sm:px-6 sm:pt-40">
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-2.5 py-[5px] backdrop-blur-md">
+            <HelpCircle className="h-3 w-3 text-primary" />
+            <span className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              Help center
+            </span>
+          </div>
+          <h1 className="mt-5 font-display text-[2rem] font-semibold tracking-[-0.035em] text-foreground sm:text-[2.75rem] sm:leading-[1.05]">
+            Frequently asked questions
+          </h1>
+          <p className="mx-auto mt-4 max-w-md text-[14.5px] leading-[1.65] text-muted-foreground sm:text-[15.5px]">
+            Everything you need to know about SymDeals.
+          </p>
         </div>
-        <h1 className="mt-5 font-display text-[2rem] font-bold tracking-[-0.02em] text-foreground md:text-[2.5rem]">
-          Frequently Asked Questions
-        </h1>
-        <p className="mt-2 text-[14px] text-muted-foreground">
-          Everything you need to know about SymDeals.
-        </p>
 
-        <div className="mt-10 space-y-4">
+        <div className="mt-12 space-y-3">
           {faqs.map((item) => (
             <details
               key={item.q}
-              className="group rounded-lg border border-border bg-surface px-5 py-4 transition-colors hover:border-muted-foreground/30"
+              className="group rounded-xl border border-border bg-surface/60 px-5 py-4 transition-colors duration-200 hover:border-[var(--border-strong)]"
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-[14.5px] font-semibold text-foreground">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-[14px] font-semibold tracking-[-0.005em] text-foreground">
                 {item.q}
-                <span className="text-muted-foreground transition-transform group-open:rotate-45">
+                <span className="text-muted-foreground transition-transform duration-200 group-open:rotate-45">
                   +
                 </span>
               </summary>
-              <p className="mt-3 text-[13.5px] leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-[13px] leading-[1.65] text-muted-foreground">
                 {item.a}
               </p>
             </details>
           ))}
         </div>
 
-        <div className="mt-10 rounded-lg border border-border bg-surface p-6 text-center">
+        <div className="mt-12 rounded-2xl border border-border bg-surface/60 p-7 text-center">
           <p className="text-[13.5px] text-muted-foreground">
             Still have questions?
           </p>
           <Link
             to="/support"
-            className="mt-3 inline-flex items-center rounded-full bg-primary px-5 py-2 text-[12.5px] font-bold uppercase tracking-[0.12em] text-primary-foreground hover:bg-[var(--primary-hover)]"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-foreground px-5 py-2 text-[12.5px] font-semibold tracking-[-0.005em] text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_1px_2px_rgba(0,0,0,0.45)] transition-[background-color,transform] duration-150 hover:bg-foreground/92 active:scale-[0.985]"
           >
-            Contact Support
+            Contact support
           </Link>
         </div>
       </main>
