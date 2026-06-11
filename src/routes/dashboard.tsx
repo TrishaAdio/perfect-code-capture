@@ -124,6 +124,11 @@ function DashboardPage() {
   });
 
   useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.title = panel === "settings" ? "Settings — SymDeals" : "Dashboard — SymDeals";
+  }, [panel]);
+
+  useEffect(() => {
     let cancelled = false;
     const load = async () => {
       try {
