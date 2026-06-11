@@ -411,6 +411,10 @@ function ProductPage() {
                     </motion.button>
                     <BuyButton total={total} buying={buying} onClick={handleBuy} />
                   </div>
+                  <p className="hidden items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground md:flex">
+                    <ShieldCheck className="h-3 w-3 text-primary" />
+                    Replacement warranty · Refund if undelivered · Delivered in ~2–5 min
+                  </p>
 
                   {/* Important note */}
                   <div className="relative overflow-hidden rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4">
