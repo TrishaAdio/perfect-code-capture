@@ -91,16 +91,12 @@ export const Route = createFileRoute("/dashboard")({
     const p = search.panel as string | undefined;
     return { panel: VALID_PANELS.includes(p as PanelKey) ? (p as PanelKey) : "overview" };
   },
-  head: ({ match }) => {
-    const panel = (match.search as { panel?: PanelKey } | undefined)?.panel;
-    const title = panel === "settings" ? "Settings — SymDeals" : "Dashboard — SymDeals";
-    return {
-      meta: [
-        { title },
-        { name: "description", content: "Your SymDeals dashboard." },
-      ],
-    };
-  },
+  head: () => ({
+    meta: [
+      { title: "Dashboard — SymDeals" },
+      { name: "description", content: "Your SymDeals dashboard." },
+    ],
+  }),
 });
 
 function DashboardPage() {
