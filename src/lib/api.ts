@@ -31,6 +31,7 @@ export type AuthUser = {
   id: string;
   name: string;
   email: string;
+  whatsapp?: string | null;
   isVerified?: boolean;
   createdAt?: string;
   totalSaved?: number;
