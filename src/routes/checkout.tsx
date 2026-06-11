@@ -91,6 +91,7 @@ function CheckoutPage() {
         if (cancelled) return;
         setUser(me.user);
         if (me.user.email) setEmail(me.user.email);
+        if (me.user.whatsapp) setWhatsapp(me.user.whatsapp);
         setProduct(p.product);
         const sorted = [...p.product.plans].sort((a, b) => a.months - b.months);
         const chosen =
