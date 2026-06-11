@@ -92,11 +92,11 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, x: 30, scale: 0.96 }}
                     transition={{ type: "spring", stiffness: 360, damping: 28 }}
-                    className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-surface/55 p-3.5 backdrop-blur-xl sm:p-4"
+                    className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-surface/55 p-3.5 backdrop-blur-xl sm:p-4"
                   >
                     <div className="flex items-start gap-3">
                       {/* Logo */}
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-white/[0.06] bg-gradient-to-br from-white/[0.05] to-transparent">
+                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-[var(--border)] bg-gradient-to-br from-white/[0.05] to-transparent">
                         <ServiceLogo
                           src={it.image}
                           name={it.name}
@@ -132,7 +132,7 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
 
                         {/* Bottom row: qty + price */}
                         <div className="mt-3 flex items-center justify-between gap-3">
-                          <div className="inline-flex items-center rounded-full border border-white/[0.08] bg-background/60">
+                          <div className="inline-flex items-center rounded-full border border-[var(--border)] bg-background/60">
                             <button
                               type="button"
                               aria-label="Decrease"
@@ -178,7 +178,7 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
           </ul>
 
           {/* Summary */}
-          <div className="mt-5 rounded-2xl border border-white/[0.06] bg-surface/50 p-4 backdrop-blur-xl">
+          <div className="mt-5 rounded-2xl border border-[var(--border)] bg-surface/50 p-4 backdrop-blur-xl">
             <SummaryRow label="Items" value={`${totalItems}`} />
             {totalSaved > 0 && (
               <SummaryRow
@@ -187,7 +187,7 @@ export function CartPanel({ onBrowse }: { onBrowse?: () => void }) {
                 accent
               />
             )}
-            <div className="mt-3 flex items-baseline justify-between border-t border-white/[0.06] pt-3">
+            <div className="mt-3 flex items-baseline justify-between border-t border-[var(--border)] pt-3">
               <span className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 Total
               </span>
@@ -278,9 +278,9 @@ function EmptyCart({ onBrowse }: { onBrowse?: () => void }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="mt-10 flex flex-col items-center justify-center rounded-3xl border border-dashed border-white/[0.08] bg-surface/40 px-6 py-14 text-center backdrop-blur"
+      className="mt-10 flex flex-col items-center justify-center rounded-3xl border border-dashed border-[var(--border)] bg-surface/40 px-6 py-14 text-center backdrop-blur"
     >
-      <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-white/[0.06] bg-background/60">
+      <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--border)] bg-background/60">
         <span
           aria-hidden
           className="absolute inset-0 rounded-2xl bg-[radial-gradient(80%_80%_at_50%_50%,rgba(52,211,153,0.18),transparent_70%)]"
