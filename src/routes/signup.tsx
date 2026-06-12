@@ -1,10 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { OtpVerifyModal } from "@/components/OtpVerifyModal";
 import { signup as apiSignup, isLoggedIn, saveSession, googleAuthUrl } from "@/lib/api";
 import { InlineErrorBanner } from "@/components/InlineErrorBanner";
-import { OnboardingLoader } from "@/components/OnboardingLoader";
 import {
   AuthShell,
   AuthDivider,
