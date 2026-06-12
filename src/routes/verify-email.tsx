@@ -8,7 +8,7 @@ import {
   updateCachedUser,
   isLoggedIn,
 } from "@/lib/api";
-import envelopeVideo from "@/assets/verify-envelope-v2.mp4.asset.json";
+import envelopeVideo from "@/assets/verify-envelope-v3.mp4.asset.json";
 
 const searchSchema = z.object({
   next: z.string().optional(),
