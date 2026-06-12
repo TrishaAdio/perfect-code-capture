@@ -312,6 +312,8 @@ function ProductPage() {
                     </p>
                   )}
 
+                  {product && <LiveActivity productId={product.id} />}
+
                   {/* Duration */}
                   {plans.length > 0 && (
                     <div>
