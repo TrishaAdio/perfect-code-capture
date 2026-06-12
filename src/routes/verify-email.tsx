@@ -190,177 +190,177 @@ function VerifyEmailPage() {
     <div
       className={`relative min-h-[100svh] w-full overflow-hidden bg-[#04060a] text-white perf-${perf}`}
     >
-      {/* Unified scene background — atmosphere + envelope video, full bleed */}
+      {/* Ambient scene — atmosphere only. Envelope sits inline in the column. */}
       <AmbientAtmosphere />
-      <EnvelopeScene stage={stage} />
 
-      {/* Single continuous environment. No split, no seam. */}
-      <div className="relative z-10 grid min-h-[100svh] grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
-        {/* LEFT — brand caption only; the envelope lives in the scene behind everything */}
-        <section className="relative flex min-h-[44svh] flex-col justify-end px-6 pb-10 pt-16 lg:min-h-[100svh] lg:px-14 lg:pb-14 lg:pt-0">
-          <div className="pointer-events-none max-w-[440px] lg:mt-auto">
-            <p className="text-[11.5px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">
+      {/* Single centered column */}
+      <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[480px] flex-col items-center justify-center px-5 py-10 text-center sm:px-6">
+        {success ? (
+          <SuccessState />
+        ) : (
+          <>
+            {/* Hero envelope — small, intentional, centered */}
+            <EnvelopeHero stage={stage} />
+
+            {/* Eyebrow */}
+            <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-300/90 animate-fade-in">
+              <ShieldCheck className="h-3 w-3" />
               Account security
+            </div>
+
+            <h1 className="mt-4 font-display text-[30px] font-semibold leading-[1.05] tracking-[-0.028em] text-white sm:text-[36px] animate-fade-in">
+              Verify your email
+            </h1>
+            <p className="mx-auto mt-3 max-w-[400px] text-[13.5px] leading-[1.6] text-white/55 animate-fade-in">
+              Enter the secure 6-digit code we sent to{" "}
+              <span className="font-semibold text-white">
+                {email || "your inbox"}
+              </span>
+              .
             </p>
-            <h2 className="mt-3 font-display text-[28px] font-semibold leading-[1.08] tracking-[-0.025em] text-white sm:text-[32px]">
-              Secure your account.
-            </h2>
-            <p className="mt-3 max-w-[420px] text-[13.5px] leading-[1.65] text-white/55">
-              Verify your email to activate orders, receive delivery notifications, access account features, and protect your purchases.
-            </p>
-          </div>
-        </section>
 
-        {/* RIGHT — verification card floats over the same scene, no panel, no divider */}
-        <section className="relative flex items-center justify-center px-5 pb-14 pt-4 sm:px-8 lg:px-14 lg:py-10">
-          <div className="relative w-full max-w-[440px]">
+            {/* Premium OTP glass container */}
+            <div className="otp-glass relative mt-7 w-full overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-5 backdrop-blur-xl sm:p-6 animate-fade-in">
+              {/* Inner emerald glow */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(120% 80% at 50% -20%, rgba(16,185,129,0.18), transparent 60%)",
+                }}
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 -top-px h-px"
+                style={{
+                  background:
+                    "linear-gradient(to right, transparent, rgba(110,231,183,0.6), transparent)",
+                }}
+              />
 
-            {success ? (
-              <SuccessState />
-            ) : (
-              <>
-                <div className="mb-7 flex items-center gap-3 animate-fade-in">
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-emerald-400/25 bg-emerald-400/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-                    <Mail className="h-4.5 w-4.5 text-emerald-300" />
-                  </div>
-                  <span className="text-[12px] font-semibold uppercase tracking-[0.18em] text-white/45">
-                    Verification
-                  </span>
-                </div>
-
-                <h1 className="font-display text-[34px] font-semibold leading-[1.05] tracking-[-0.028em] text-white sm:text-[38px] animate-fade-in">
-                  Secure your account
-                </h1>
-                <p className="mt-3 text-[14px] leading-[1.6] text-white/55 animate-fade-in">
-                  We've sent a secure 6-digit code to{" "}
-                  <span className="font-semibold text-white">
-                    {email || "your inbox"}
-                  </span>
-                  . Enter it below to activate orders, delivery updates, and account protections.
-                </p>
-
-                <div
-                  className={`mt-8 grid grid-cols-6 gap-2 sm:gap-2.5 ${shake ? "animate-otp-shake" : ""}`}
-                  onPaste={(e) => {
-                    const text = (e.clipboardData.getData("text") || "").replace(/\D/g, "");
-                    if (text.length >= 1) {
-                      e.preventDefault();
-                      setDigit(0, text);
-                    }
-                  }}
-                >
-                  {digits.map((d, i) => {
-                    const filled = !!d;
-                    const isFocus = focusIdx === i;
-                    return (
-                      <div key={i} className="relative">
-                        {isFocus && (
-                          <span
-                            aria-hidden
-                            className="otp-glow absolute -inset-[3px] rounded-[14px]"
-                          />
-                        )}
-                        <input
-                          ref={(el) => {
-                            inputsRef.current[i] = el;
-                          }}
-                          type="text"
-                          inputMode="numeric"
-                          autoComplete="one-time-code"
-                          maxLength={6}
-                          value={d}
-                          onChange={(e) => setDigit(i, e.target.value)}
-                          onKeyDown={(e) => onKeyDown(i, e)}
-                          onFocus={() => setFocusIdx(i)}
-                          onBlur={() => setFocusIdx((c) => (c === i ? null : c))}
-                          disabled={verifying}
-                          aria-label={`Digit ${i + 1}`}
-                          className={`otp-cell relative z-10 h-14 w-full rounded-xl border bg-white/[0.03] text-center font-display text-[22px] font-semibold tabular-nums text-white outline-none backdrop-blur-sm transition-[transform,box-shadow,border-color,background-color,color] duration-200 sm:h-16 sm:text-[24px] ${
-                            error
-                              ? "border-red-400/60 shadow-[0_0_0_4px_rgba(248,113,113,0.10)]"
-                              : isFocus
-                                ? "border-emerald-400/70 bg-emerald-400/[0.08] scale-[1.06]"
-                                : filled
-                                  ? "border-emerald-400/30 bg-emerald-400/[0.04] text-emerald-100"
-                                  : "border-white/10 hover:border-white/25"
-                          } ${popIdx === i ? "otp-pop" : ""}`}
+              <div
+                className={`relative grid grid-cols-6 gap-2 sm:gap-2.5 ${shake ? "animate-otp-shake" : ""}`}
+                onPaste={(e) => {
+                  const text = (e.clipboardData.getData("text") || "").replace(/\D/g, "");
+                  if (text.length >= 1) {
+                    e.preventDefault();
+                    setDigit(0, text);
+                  }
+                }}
+              >
+                {digits.map((d, i) => {
+                  const filled = !!d;
+                  const isFocus = focusIdx === i;
+                  return (
+                    <div key={i} className="relative">
+                      {isFocus && (
+                        <span
+                          aria-hidden
+                          className="otp-glow absolute -inset-[3px] rounded-[14px]"
                         />
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-5 min-h-[24px]">
-                  {error && (
-                    <div className="flex items-center gap-2 text-[12.5px] font-medium text-red-300 animate-fade-in">
-                      <AlertCircle className="h-3.5 w-3.5" />
-                      {error}
+                      )}
+                      <input
+                        ref={(el) => {
+                          inputsRef.current[i] = el;
+                        }}
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        maxLength={6}
+                        value={d}
+                        onChange={(e) => setDigit(i, e.target.value)}
+                        onKeyDown={(e) => onKeyDown(i, e)}
+                        onFocus={() => setFocusIdx(i)}
+                        onBlur={() => setFocusIdx((c) => (c === i ? null : c))}
+                        disabled={verifying}
+                        aria-label={`Digit ${i + 1}`}
+                        className={`otp-cell relative z-10 h-14 w-full rounded-xl border bg-white/[0.03] text-center font-display text-[22px] font-semibold tabular-nums text-white outline-none backdrop-blur-sm transition-[transform,box-shadow,border-color,background-color,color] duration-200 sm:h-16 sm:text-[24px] ${
+                          error
+                            ? "border-red-400/60 shadow-[0_0_0_4px_rgba(248,113,113,0.10)]"
+                            : isFocus
+                              ? "border-emerald-400/70 bg-emerald-400/[0.08] scale-[1.06]"
+                              : filled
+                                ? "border-emerald-400/30 bg-emerald-400/[0.04] text-emerald-100"
+                                : "border-white/10 hover:border-white/25"
+                        } ${popIdx === i ? "otp-pop" : ""}`}
+                      />
                     </div>
+                  );
+                })}
+              </div>
+
+              <div className="relative mt-4 min-h-[20px] text-left">
+                {error && (
+                  <div className="flex items-center gap-2 text-[12.5px] font-medium text-red-300 animate-fade-in">
+                    <AlertCircle className="h-3.5 w-3.5" />
+                    {error}
+                  </div>
+                )}
+                {info && !error && (
+                  <div className="flex items-center gap-2 text-[12.5px] font-medium text-emerald-300 animate-fade-in">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    {info}
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={verify}
+                disabled={code.length !== 6 || verifying}
+                className={`verify-btn group relative mt-2 inline-flex h-14 w-full items-center justify-center overflow-hidden rounded-2xl text-[14px] font-semibold tracking-tight text-emerald-950 transition-all duration-300 active:scale-[0.99] disabled:cursor-not-allowed disabled:text-white/35 ${
+                  code.length === 6 && !verifying
+                    ? "verify-btn-ready hover:-translate-y-[1px]"
+                    : ""
+                }`}
+              >
+                <span className="verify-btn-bg absolute inset-0" />
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                <span className="relative flex items-center gap-2">
+                  {stage === "verifying" ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Verifying…
+                    </>
+                  ) : stage === "opening" || stage === "complete" ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4" />
+                      Verified
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="h-4 w-4" />
+                      Verify email
+                    </>
                   )}
-                  {info && !error && (
-                    <div className="flex items-center gap-2 text-[12.5px] font-medium text-emerald-300 animate-fade-in">
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      {info}
-                    </div>
-                  )}
-                </div>
+                </span>
+              </button>
+            </div>
 
-                <button
-                  type="button"
-                  onClick={verify}
-                  disabled={code.length !== 6 || verifying}
-                  className={`verify-btn group relative mt-3 inline-flex h-14 w-full items-center justify-center overflow-hidden rounded-2xl text-[14px] font-semibold tracking-tight text-emerald-950 transition-all duration-300 active:scale-[0.99] disabled:cursor-not-allowed disabled:text-white/35 ${
-                    code.length === 6 && !verifying
-                      ? "verify-btn-ready hover:-translate-y-[1px]"
-                      : ""
-                  }`}
-                >
-                  <span className="verify-btn-bg absolute inset-0" />
-                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-                  <span className="relative flex items-center gap-2">
-                    {stage === "verifying" ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Verifying…
-                      </>
-                    ) : stage === "opening" || stage === "complete" ? (
-                      <>
-                        <CheckCircle2 className="h-4 w-4" />
-                        Verified
-                      </>
-                    ) : (
-                      <>
-                        <ShieldCheck className="h-4 w-4" />
-                        Verify email
-                      </>
-                    )}
-                  </span>
-                </button>
+            <div className="mt-5 flex items-center justify-center gap-2 text-[12.5px]">
+              <span className="text-white/40">Didn't get the code?</span>
+              <button
+                type="button"
+                onClick={resend}
+                disabled={resendIn > 0 || resending}
+                className="font-semibold text-emerald-300 transition-colors hover:text-emerald-200 disabled:cursor-not-allowed disabled:text-white/30"
+              >
+                {resending
+                  ? "Sending…"
+                  : resendIn > 0
+                    ? `Resend in ${resendIn}s`
+                    : "Resend code"}
+              </button>
+            </div>
 
-                <div className="mt-6 flex items-center justify-between text-[12.5px]">
-                  <span className="text-white/40">Didn't get the code?</span>
-                  <button
-                    type="button"
-                    onClick={resend}
-                    disabled={resendIn > 0 || resending}
-                    className="font-semibold text-emerald-300 transition-colors hover:text-emerald-200 disabled:cursor-not-allowed disabled:text-white/30"
-                  >
-                    {resending
-                      ? "Sending…"
-                      : resendIn > 0
-                        ? `Resend in ${resendIn}s`
-                        : "Resend code"}
-                  </button>
-                </div>
-
-                <p className="mt-10 text-center text-[11px] text-white/30">
-                  Code expires in 10 minutes · Protected by SymDeals security
-                </p>
-              </>
-            )}
-          </div>
-        </section>
+            <p className="mt-8 text-[11px] text-white/30">
+              Code expires in 10 minutes · Protected by SymDeals security
+            </p>
+          </>
+        )}
       </div>
+
 
       <style>{`
         @keyframes otp-shake {
