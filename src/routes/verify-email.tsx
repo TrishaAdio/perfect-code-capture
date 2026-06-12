@@ -6,8 +6,8 @@ import {
   sendOtp as apiSendOtp,
   verifyOtp as apiVerifyOtp,
   updateCachedUser,
-  isLoggedIn,
 } from "@/lib/api";
+import { requireUnverifiedBeforeLoad } from "@/lib/auth-guard";
 import envelopeVideo from "@/assets/verify-envelope-v4.mp4.asset.json";
 
 const searchSchema = z.object({
@@ -15,6 +15,8 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/verify-email")({
+  ssr: false,
+  beforeLoad: requireUnverifiedBeforeLoad,
   validateSearch: searchSchema,
   component: VerifyEmailPage,
   head: () => ({
@@ -78,10 +80,6 @@ function VerifyEmailPage() {
   const perf = useMemo(getPerf, []);
 
   useEffect(() => {
-    if (!isLoggedIn()) {
-      navigate({ to: "/login" });
-      return;
-    }
     setEmail(getCachedEmail());
     setTimeout(() => inputsRef.current[0]?.focus(), 120);
     // eslint-disable-next-line react-hooks/exhaustive-deps

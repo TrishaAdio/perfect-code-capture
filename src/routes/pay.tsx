@@ -14,10 +14,13 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { API_BASE, createOrder, createPaymentInvoice } from "@/lib/api";
+import { requireAuthBeforeLoad } from "@/lib/auth-guard";
 import symdealsLogo from "@/assets/symdeals-logo.png";
 import paymentSuccessSfx from "@/assets/payment-success.mp3";
 
 export const Route = createFileRoute("/pay")({
+  ssr: false,
+  beforeLoad: requireAuthBeforeLoad,
   component: PayPage,
   head: () => ({
     meta: [

@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { requireAuthBeforeLoad } from "@/lib/auth-guard";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, LayoutGroup } from "framer-motion";
 import { OrdersPanel } from "@/components/panels/OrdersPanel";
@@ -86,6 +87,8 @@ const VALID_PANELS: PanelKey[] = ["overview", "browse", "orders", "cart", "suppo
 
 
 export const Route = createFileRoute("/dashboard")({
+  ssr: false,
+  beforeLoad: requireAuthBeforeLoad,
   component: DashboardPage,
   validateSearch: (search: Record<string, unknown>): { panel: PanelKey } => {
     const p = search.panel as string | undefined;

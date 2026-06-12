@@ -28,7 +28,11 @@ import {
 } from "@/lib/api";
 import { LogoutConfirmDialog } from "@/components/LogoutConfirmDialog";
 
+import { requireAuthBeforeLoad } from "@/lib/auth-guard";
+
 export const Route = createFileRoute("/checkout")({
+  ssr: false,
+  beforeLoad: requireAuthBeforeLoad,
   component: CheckoutPage,
   head: () => ({
     meta: [
