@@ -8,7 +8,7 @@ import {
   updateCachedUser,
   isLoggedIn,
 } from "@/lib/api";
-import envelopeVideo from "@/assets/verify-envelope.mp4.asset.json";
+import envelopeVideo from "@/assets/verify-envelope-v2.mp4.asset.json";
 
 const searchSchema = z.object({
   next: z.string().optional(),
@@ -190,40 +190,31 @@ function VerifyEmailPage() {
     <div
       className={`relative min-h-[100svh] w-full overflow-hidden bg-[#04060a] text-white perf-${perf}`}
     >
+      {/* Unified scene background — atmosphere + envelope video, full bleed */}
       <AmbientAtmosphere />
+      <EnvelopeScene stage={stage} />
 
-      <div className="relative z-10 grid min-h-[100svh] grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
-        {/* LEFT — Envelope centerpiece */}
-        <section className="relative isolate flex min-h-[52svh] items-center justify-center overflow-hidden px-6 pt-14 pb-6 lg:min-h-[100svh] lg:px-12 lg:pt-0 lg:pb-0">
-          <EnvelopeStage stage={stage} />
-
-          <div className="pointer-events-none absolute bottom-10 left-10 right-10 z-20 hidden lg:block">
-            <div className="max-w-[440px]">
-              <p className="text-[11.5px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">
-                Account security
-              </p>
-              <h2 className="mt-3 font-display text-[32px] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
-                Secure your account.
-              </h2>
-              <p className="mt-3 max-w-[420px] text-[13.5px] leading-[1.65] text-white/55">
-                Verify your email to activate orders, receive delivery notifications, access account features, and protect your purchases.
-              </p>
-            </div>
+      {/* Single continuous environment. No split, no seam. */}
+      <div className="relative z-10 grid min-h-[100svh] grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
+        {/* LEFT — brand caption only; the envelope lives in the scene behind everything */}
+        <section className="relative flex min-h-[44svh] flex-col justify-end px-6 pb-10 pt-16 lg:min-h-[100svh] lg:px-14 lg:pb-14 lg:pt-0">
+          <div className="pointer-events-none max-w-[440px] lg:mt-auto">
+            <p className="text-[11.5px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">
+              Account security
+            </p>
+            <h2 className="mt-3 font-display text-[28px] font-semibold leading-[1.08] tracking-[-0.025em] text-white sm:text-[32px]">
+              Secure your account.
+            </h2>
+            <p className="mt-3 max-w-[420px] text-[13.5px] leading-[1.65] text-white/55">
+              Verify your email to activate orders, receive delivery notifications, access account features, and protect your purchases.
+            </p>
           </div>
         </section>
 
-        {/* RIGHT — Verification card. No hard divider — seamless blend. */}
-        <section className="relative flex items-center justify-center px-5 py-12 sm:px-8 lg:px-14 lg:py-10">
-          {/* Blend layer that softens the seam from the envelope side */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 -left-40 hidden lg:block"
-            style={{
-              background:
-                "radial-gradient(120% 90% at 0% 50%, rgba(16,185,129,0.10) 0%, rgba(4,6,10,0) 55%)",
-            }}
-          />
+        {/* RIGHT — verification card floats over the same scene, no panel, no divider */}
+        <section className="relative flex items-center justify-center px-5 pb-14 pt-4 sm:px-8 lg:px-14 lg:py-10">
           <div className="relative w-full max-w-[440px]">
+
             {success ? (
               <SuccessState />
             ) : (
@@ -522,10 +513,26 @@ function VerifyEmailPage() {
           animation: verify-check-draw 0.55s cubic-bezier(.65,0,.35,1) 0.2s forwards;
         }
 
+        /* Slow drifting light rays across the page */
+        @keyframes env-rays-drift {
+          0%, 100% { transform: translate3d(-4%, 0, 0) rotate(0deg); opacity: .55; }
+          50%      { transform: translate3d(4%, -2%, 0) rotate(6deg);  opacity: .9; }
+        }
+        .env-rays { animation: env-rays-drift 28s ease-in-out infinite; will-change: transform, opacity; }
+
+        /* Breathing fog */
+        @keyframes env-fog-breathe {
+          0%, 100% { opacity: 1; }
+          50%      { opacity: 0.85; }
+        }
+        .env-fog { animation: env-fog-breathe 9s ease-in-out infinite; }
+
         /* Perf tiers */
         .perf-low .verify-particle,
         .perf-low .verify-aurora,
         .perf-low .env-shine,
+        .perf-low .env-rays,
+        .perf-low .env-fog,
         .perf-low .env-pulse { animation: none !important; }
         .perf-low .env-float { animation-duration: 12s; }
         .perf-low .otp-glow  { animation: none !important; }
@@ -534,7 +541,7 @@ function VerifyEmailPage() {
 
         @media (prefers-reduced-motion: reduce) {
           .verify-orb-1, .verify-orb-2, .verify-orb-3,
-          .verify-particle, .verify-aurora,
+          .verify-particle, .verify-aurora, .env-rays, .env-fog,
           .env-float, .env-pulse, .env-shine, .otp-glow,
           .animate-otp-shake { animation: none !important; }
         }
@@ -543,30 +550,40 @@ function VerifyEmailPage() {
   );
 }
 
+
 /* ─────────────── Envelope centerpiece ─────────────── */
 
-function EnvelopeStage({ stage }: { stage: "idle" | "verifying" | "opening" | "complete" }) {
+/**
+ * EnvelopeScene — full-bleed cinematic background.
+ *
+ * The MP4 is rendered as part of the scene itself (not a panel). A radial
+ * mask removes the rectangle, screen-blend mode fuses it with the page,
+ * and emerald spill gradients extend the light across the entire viewport
+ * so the envelope appears to be casting onto the OTP side.
+ */
+function EnvelopeScene({ stage }: { stage: "idle" | "verifying" | "opening" | "complete" }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const innerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // Mouse-follow parallax (rAF throttled) — applied to the video shell
+  // Mouse parallax across the WHOLE page — the scene reacts as one
   useEffect(() => {
-    const wrap = wrapRef.current;
+    const wrap = wrapRef.current?.parentElement; // listen on the page
     const inner = innerRef.current;
     if (!wrap || !inner) return;
     let raf = 0;
-    let tx = 0, rx = 0, ry = 0;
+    let tx = 0, ty = 0, rx = 0, ry = 0;
     const onMove = (e: MouseEvent) => {
       const r = wrap.getBoundingClientRect();
       const cx = (e.clientX - r.left) / r.width - 0.5;
       const cy = (e.clientY - r.top) / r.height - 0.5;
-      tx = cx * 10;
-      rx = cy * -3;
-      ry = cx * 4;
+      tx = cx * 18;
+      ty = cy * 10;
+      rx = cy * -2.5;
+      ry = cx * 3.5;
       if (!raf) {
         raf = requestAnimationFrame(() => {
-          inner.style.transform = `translate3d(${tx}px, 0, 0) rotateX(${rx}deg) rotateY(${ry}deg)`;
+          inner.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotateX(${rx}deg) rotateY(${ry}deg)`;
           raf = 0;
         });
       }
@@ -583,7 +600,6 @@ function EnvelopeStage({ stage }: { stage: "idle" | "verifying" | "opening" | "c
     };
   }, []);
 
-  // Ensure autoplay even when the browser blocks the attribute
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -598,28 +614,39 @@ function EnvelopeStage({ stage }: { stage: "idle" | "verifying" | "opening" | "c
   return (
     <div
       ref={wrapRef}
-      className="env-stage relative flex h-full w-full items-center justify-center"
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-[1] overflow-hidden"
+      style={{ perspective: "1600px" }}
     >
-      {/* Soft emerald halo behind the video */}
+      {/* Massive emerald halo behind the envelope — fills the scene */}
       <div
-        aria-hidden
-        className="env-pulse pointer-events-none absolute h-[72vmin] w-[72vmin] rounded-full"
+        className="env-pulse absolute"
         style={{
+          left: "calc(35% - 45vmin)",
+          top: "calc(50% - 45vmin)",
+          width: "90vmin",
+          height: "90vmin",
           background:
-            "radial-gradient(closest-side, rgba(16,185,129,0.40), rgba(16,185,129,0.06) 55%, transparent 72%)",
-          filter: "blur(28px)",
+            "radial-gradient(closest-side, rgba(16,185,129,0.45), rgba(16,185,129,0.10) 45%, transparent 72%)",
+          filter: "blur(40px)",
+          mixBlendMode: "screen",
         }}
       />
 
-      {/* Video shell — masked, no rectangle, no border */}
+      {/* Video — anchored on the left third on desktop, top on mobile.
+          Sized so its mask edge passes through the page rather than ending. */}
       <div
         ref={innerRef}
-        className="env-float relative"
+        className="env-float absolute"
         style={{
-          width: "min(720px, 92%)",
+          left: "5%",
+          top: "50%",
+          transform: "translate(0, -50%)",
+          width: "min(900px, 70vw)",
           aspectRatio: "1 / 1",
           transformStyle: "preserve-3d",
-          transition: "transform 600ms cubic-bezier(.2,.7,.2,1)",
+          transition: "transform 700ms cubic-bezier(.2,.7,.2,1)",
+          willChange: "transform",
         }}
       >
         <video
@@ -632,88 +659,81 @@ function EnvelopeStage({ stage }: { stage: "idle" | "verifying" | "opening" | "c
           preload="auto"
           disablePictureInPicture
           disableRemotePlayback
-          aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover"
           style={{
-            // Soft radial mask so the rectangle disappears into the page
             WebkitMaskImage:
-              "radial-gradient(closest-side at 50% 50%, #000 55%, rgba(0,0,0,0.6) 72%, transparent 92%)",
+              "radial-gradient(closest-side at 50% 50%, #000 38%, rgba(0,0,0,0.55) 60%, transparent 88%)",
             maskImage:
-              "radial-gradient(closest-side at 50% 50%, #000 55%, rgba(0,0,0,0.6) 72%, transparent 92%)",
-            filter: `saturate(1.08) contrast(1.04) ${
-              opened ? "brightness(1.35)" : "brightness(1)"
+              "radial-gradient(closest-side at 50% 50%, #000 38%, rgba(0,0,0,0.55) 60%, transparent 88%)",
+            mixBlendMode: "screen",
+            filter: `saturate(1.1) contrast(1.05) ${
+              opened ? "brightness(1.5)" : "brightness(1.05)"
             }`,
-            transition: "filter 700ms ease-out",
+            transition: "filter 800ms ease-out",
             backfaceVisibility: "hidden",
             willChange: "transform, filter",
           }}
         />
 
-        {/* Emerald lighting overlay — sits on top, blends video with brand */}
+        {/* Light burst on success */}
         <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{
-            background:
-              "radial-gradient(60% 50% at 50% 55%, rgba(16,185,129,0.18) 0%, transparent 70%)",
-            mixBlendMode: "screen",
-          }}
-        />
-        {/* Reflection sweep */}
-        <span
-          aria-hidden
-          className="env-shine pointer-events-none absolute inset-y-0 left-0 w-1/2"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)",
-            mixBlendMode: "screen",
-          }}
-        />
-
-        {/* Expanding light burst on success */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[55%] w-[55%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
+            width: "70%",
+            height: "70%",
             background:
               "radial-gradient(closest-side, rgba(167,243,208,0.85), rgba(16,185,129,0.35) 35%, transparent 70%)",
-            filter: "blur(24px)",
+            filter: "blur(28px)",
             opacity: opened ? 1 : 0,
-            transform: opened ? "scale(1.8)" : "scale(0.6)",
+            transform: `translate(-50%, -50%) scale(${opened ? 1.8 : 0.6})`,
             transition: "opacity 700ms ease, transform 900ms ease",
             mixBlendMode: "screen",
           }}
         />
       </div>
 
-      {/* Atmospheric blend layers — fade the video into the page edges */}
+      {/* Volumetric light rays — reach across into the OTP side */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
+        className="env-rays absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(4,6,10,0.85) 100%)",
+            "conic-gradient(from 200deg at 30% 50%, transparent 0deg, rgba(16,185,129,0.10) 25deg, transparent 60deg, transparent 360deg)",
+          mixBlendMode: "screen",
+          filter: "blur(40px)",
         }}
       />
+
+      {/* Emerald spill cast — extends envelope light across the entire page */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 lg:block"
+        className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to left, rgba(4,6,10,1) 0%, rgba(4,6,10,0) 100%)",
+            "radial-gradient(60% 80% at 35% 50%, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0.06) 35%, transparent 70%)",
+          mixBlendMode: "screen",
         }}
       />
+
+      {/* Atmospheric fog — soft veil unifying foreground and background */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-32 lg:hidden"
+        className="env-fog absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(4,6,10,0) 0%, rgba(4,6,10,1) 100%)",
+            "radial-gradient(80% 60% at 50% 60%, rgba(8,18,16,0.0) 0%, rgba(4,6,10,0.45) 70%, rgba(4,6,10,0.85) 100%)",
+        }}
+      />
+
+      {/* Bottom unifying gradient — kills any horizon line */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-1/3"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(4,6,10,0) 0%, rgba(4,6,10,0.6) 100%)",
         }}
       />
     </div>
   );
 }
+
 
 /* ─────────────── Atmosphere ─────────────── */
 
