@@ -65,9 +65,6 @@ function SignupPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [otpOpen, setOtpOpen] = useState(false);
-  const [signedUpEmail, setSignedUpEmail] = useState<string>("");
-  const [showOnboardingLoader, setShowOnboardingLoader] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn()) navigate({ to: "/dashboard" });
@@ -100,8 +97,7 @@ function SignupPage() {
         password: form.password,
       });
       saveSession(res);
-      setSignedUpEmail(res.user.email);
-      setOtpOpen(true);
+      navigate({ to: "/verify-email", search: { next: "/dashboard" } });
     } catch (err) {
       setSubmitError(
         err instanceof Error && err.message ? err.message : "Signup failed. Please try again.",
