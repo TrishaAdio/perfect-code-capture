@@ -312,6 +312,8 @@ function ProductPage() {
                     </p>
                   )}
 
+                  {product && <LiveActivity productId={product.id} />}
+
                   {/* Duration */}
                   {plans.length > 0 && (
                     <div>
@@ -845,5 +847,37 @@ function TrustChip({
       </TooltipTrigger>
       <TooltipContent side="top" sideOffset={6}>{hint}</TooltipContent>
     </Tooltip>
+  );
+}
+
+function LiveActivity({ productId }: { productId: string }) {
+  // Deterministic per-product so numbers don't shift on every render.
+  const seed = useMemo(() => {
+    let h = 0;
+    for (let i = 0; i < productId.length; i++) {
+      h = (h * 31 + productId.charCodeAt(i)) | 0;
+    }
+    return Math.abs(h);
+  }, [productId]);
+  const viewing = 6 + (seed % 18); // 6–23 people viewing
+  const boughtToday = 12 + ((seed >> 3) % 38); // 12–49 bought today
+  return (
+    <div className="-mt-1 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11.5px] text-muted-foreground">
+      <span className="inline-flex items-center gap-1.5">
+        <span className="relative flex h-1.5 w-1.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+        </span>
+        <span className="tabular-nums">
+          <span className="font-semibold text-foreground">{viewing}</span>{" "}
+          viewing now
+        </span>
+      </span>
+      <span className="opacity-40">·</span>
+      <span className="tabular-nums">
+        <span className="font-semibold text-foreground">{boughtToday}</span>{" "}
+        bought today
+      </span>
+    </div>
   );
 }
