@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/Hero";
+import { SocialProofStats } from "@/components/SocialProofStats";
 import { Categories } from "@/components/Categories";
 import { HomeFeatures } from "@/components/HomeFeatures";
 import { TrustedBy } from "@/components/TrustedBy";
@@ -34,6 +35,7 @@ function Index() {
     <>
       <main>
         <Hero />
+        <SocialProofStats />
         <Categories />
         <HomeFeatures />
         <TrustedBy />
