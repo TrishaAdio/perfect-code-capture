@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PayRouteImport } from './routes/pay'
@@ -30,6 +31,11 @@ import { Route as MarketingFeaturesRouteImport } from './routes/_marketing.featu
 import { Route as MarketingFaqRouteImport } from './routes/_marketing.faq'
 import { Route as AuthGoogleSuccessRouteImport } from './routes/auth.google.success'
 
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/pay': typeof PayRoute
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/faq': typeof MarketingFaqRoute
   '/features': typeof MarketingFeaturesRoute
   '/how-it-works': typeof MarketingHowItWorksRoute
@@ -161,6 +168,7 @@ export interface FileRoutesByTo {
   '/pay': typeof PayRoute
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/faq': typeof MarketingFaqRoute
   '/features': typeof MarketingFeaturesRoute
   '/how-it-works': typeof MarketingHowItWorksRoute
@@ -184,6 +192,7 @@ export interface FileRoutesById {
   '/pay': typeof PayRoute
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/_marketing/faq': typeof MarketingFaqRoute
   '/_marketing/features': typeof MarketingFeaturesRoute
   '/_marketing/how-it-works': typeof MarketingHowItWorksRoute
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/pay'
     | '/privacy'
     | '/signup'
+    | '/verify-email'
     | '/faq'
     | '/features'
     | '/how-it-works'
@@ -228,6 +238,7 @@ export interface FileRouteTypes {
     | '/pay'
     | '/privacy'
     | '/signup'
+    | '/verify-email'
     | '/faq'
     | '/features'
     | '/how-it-works'
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/pay'
     | '/privacy'
     | '/signup'
+    | '/verify-email'
     | '/_marketing/faq'
     | '/_marketing/features'
     | '/_marketing/how-it-works'
@@ -273,6 +285,7 @@ export interface RootRouteChildren {
   PayRoute: typeof PayRoute
   PrivacyRoute: typeof PrivacyRoute
   SignupRoute: typeof SignupRoute
+  VerifyEmailRoute: typeof VerifyEmailRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminLoginRoute: typeof AdminLoginRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -282,6 +295,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -456,6 +476,7 @@ const rootRouteChildren: RootRouteChildren = {
   PayRoute: PayRoute,
   PrivacyRoute: PrivacyRoute,
   SignupRoute: SignupRoute,
+  VerifyEmailRoute: VerifyEmailRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminLoginRoute: AdminLoginRoute,
   ProductIdRoute: ProductIdRoute,

@@ -1,10 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { OtpVerifyModal } from "@/components/OtpVerifyModal";
 import { signup as apiSignup, isLoggedIn, saveSession, googleAuthUrl } from "@/lib/api";
 import { InlineErrorBanner } from "@/components/InlineErrorBanner";
-import { OnboardingLoader } from "@/components/OnboardingLoader";
 import {
   AuthShell,
   AuthDivider,
@@ -67,9 +65,6 @@ function SignupPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [otpOpen, setOtpOpen] = useState(false);
-  const [signedUpEmail, setSignedUpEmail] = useState<string>("");
-  const [showOnboardingLoader, setShowOnboardingLoader] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn()) navigate({ to: "/dashboard" });
@@ -102,8 +97,7 @@ function SignupPage() {
         password: form.password,
       });
       saveSession(res);
-      setSignedUpEmail(res.user.email);
-      setOtpOpen(true);
+      navigate({ to: "/verify-email", search: { next: "/dashboard" } });
     } catch (err) {
       setSubmitError(
         err instanceof Error && err.message ? err.message : "Signup failed. Please try again.",
@@ -217,28 +211,6 @@ function SignupPage() {
         </p>
       </AuthShell>
 
-      <OtpVerifyModal
-        open={otpOpen}
-        email={signedUpEmail}
-        autoSend={false}
-        onClose={() => {
-          setOtpOpen(false);
-          setShowOnboardingLoader(true);
-        }}
-        onVerified={() => {
-          setOtpOpen(false);
-          setShowOnboardingLoader(true);
-        }}
-        onSkip={() => {
-          setOtpOpen(false);
-          setShowOnboardingLoader(true);
-        }}
-      />
-
-      <OnboardingLoader
-        open={showOnboardingLoader}
-        onComplete={() => navigate({ to: "/dashboard" })}
-      />
     </>
   );
 }
