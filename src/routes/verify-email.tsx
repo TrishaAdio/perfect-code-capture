@@ -15,6 +15,8 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/verify-email")({
+  ssr: false,
+  beforeLoad: requireUnverifiedBeforeLoad,
   validateSearch: searchSchema,
   component: VerifyEmailPage,
   head: () => ({
