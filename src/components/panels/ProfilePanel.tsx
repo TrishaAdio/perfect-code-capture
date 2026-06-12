@@ -522,3 +522,41 @@ function AnimationPerformanceSection() {
   );
 }
 
+/* ---------- Danger Zone ---------- */
+
+function DangerZoneSection({ user }: { user: AuthUser | null }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <section className="rounded-2xl border border-red-500/25 bg-red-500/[0.03] p-6 shadow-card backdrop-blur-sm">
+      <div className="flex items-start gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-red-500/30 bg-red-500/10 text-red-400">
+          <AlertTriangle className="h-4 w-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 className="font-display text-[1.05rem] font-semibold tracking-[-0.02em] text-foreground">
+            Delete Account
+          </h2>
+          <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted-foreground">
+            Deleting your account is permanent. All account data, order history, preferences, and access to SymDeals services will be removed.
+          </p>
+        </div>
+      </div>
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[12px] text-muted-foreground/80">
+          Signed in as <span className="text-foreground font-medium">{user?.email ?? "—"}</span>
+        </p>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center justify-center gap-1.5 rounded-full border border-red-500/40 bg-red-500/10 px-4 py-2.5 text-[13px] font-semibold text-red-300 transition-colors hover:border-red-500/60 hover:bg-red-500/15 hover:text-red-200 active:scale-[0.985]"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          Delete account…
+        </button>
+      </div>
+      <DeleteAccountDialog open={open} onClose={() => setOpen(false)} user={user} />
+    </section>
+  );
+}
+
+
