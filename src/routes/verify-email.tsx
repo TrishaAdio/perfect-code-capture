@@ -365,26 +365,29 @@ function VerifyEmailPage() {
         }
         .otp-pop { animation: otp-pop 0.22s cubic-bezier(.34,1.56,.64,1) both; }
 
-        /* Verify button — emerald gradient + soft shadow */
+        /* Verify button — refined white surface with soft emerald glow */
         .verify-btn-bg {
-          background: linear-gradient(180deg, #34d399 0%, #10b981 55%, #059669 100%);
+          background: linear-gradient(180deg, #ffffff 0%, #f3f5f4 100%);
           box-shadow:
-            0 18px 60px -18px rgba(16,185,129,0.7),
-            inset 0 1px 0 rgba(255,255,255,0.55),
-            inset 0 -1px 0 rgba(0,0,0,0.12);
+            0 1px 0 rgba(255,255,255,0.6) inset,
+            0 -1px 0 rgba(0,0,0,0.04) inset,
+            0 10px 30px -12px rgba(16,185,129,0.35),
+            0 2px 10px -2px rgba(0,0,0,0.4);
           transition: filter .3s ease, box-shadow .3s ease;
         }
         .verify-btn-ready:hover .verify-btn-bg {
-          filter: brightness(1.06);
+          filter: brightness(1.02);
           box-shadow:
-            0 24px 80px -18px rgba(16,185,129,0.9),
-            inset 0 1px 0 rgba(255,255,255,0.65),
-            inset 0 -1px 0 rgba(0,0,0,0.12);
+            0 1px 0 rgba(255,255,255,0.7) inset,
+            0 -1px 0 rgba(0,0,0,0.04) inset,
+            0 16px 40px -12px rgba(16,185,129,0.55),
+            0 6px 18px -4px rgba(0,0,0,0.45);
         }
         .verify-btn:disabled .verify-btn-bg {
-          background: rgba(255,255,255,0.07);
+          background: rgba(255,255,255,0.06);
           box-shadow: none;
         }
+
 
         /* Atmosphere */
         @keyframes verify-orb-drift {
