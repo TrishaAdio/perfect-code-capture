@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Gauge, KeyRound, Mail, Settings as SettingsIcon, User as UserIcon } from "lucide-react";
+import { AlertTriangle, Gauge, KeyRound, Mail, Settings as SettingsIcon, Trash2, User as UserIcon } from "lucide-react";
 import {
   detectAutoLevel,
   resolveLevel,
@@ -16,6 +16,7 @@ import {
   updateName,
   updatePassword,
 } from "@/lib/api";
+import { DeleteAccountDialog } from "@/components/DeleteAccountDialog";
 
 export function ProfilePanel({
   initialUser,
@@ -77,13 +78,63 @@ export function ProfilePanel({
           ))}
         </div>
       ) : (
-        <div className="mt-10 grid gap-5">
-          <NameSection user={user} onUserChange={onUserChange} />
-          <EmailSection user={user} onUserChange={onUserChange} />
-          <PasswordSection />
-          <AnimationPerformanceSection />
+        <div className="mt-10 grid gap-8">
+          <SectionGroup label="Account">
+            <NameSection user={user} onUserChange={onUserChange} />
+            <EmailSection user={user} onUserChange={onUserChange} />
+          </SectionGroup>
+
+          <SectionGroup label="Security">
+            <PasswordSection />
+          </SectionGroup>
+
+          <SectionGroup label="Animation & Performance">
+            <AnimationPerformanceSection />
+          </SectionGroup>
+
+          <SectionGroup label="Danger Zone" tone="danger">
+            <DangerZoneSection user={user} />
+          </SectionGroup>
         </div>
       )}
+    </div>
+  );
+}
+
+function SectionGroup({
+  label,
+  tone = "default",
+  children,
+}: {
+  label: string;
+  tone?: "default" | "danger";
+  children: React.ReactNode;
+}) {
+  const isDanger = tone === "danger";
+  return (
+    <div className="grid gap-4">
+      <div className="flex items-center gap-2">
+        <span
+          className={`inline-block h-1.5 w-1.5 rounded-full ${
+            isDanger ? "bg-red-500/80" : "bg-primary/70"
+          }`}
+        />
+        <h3
+          className={`text-[10.5px] font-semibold uppercase tracking-[0.18em] ${
+            isDanger ? "text-red-400/90" : "text-muted-foreground"
+          }`}
+        >
+          {label}
+        </h3>
+        <div
+          className={`h-px flex-1 ${
+            isDanger
+              ? "bg-gradient-to-r from-red-500/30 to-transparent"
+              : "bg-[var(--border)]"
+          }`}
+        />
+      </div>
+      <div className="grid gap-5">{children}</div>
     </div>
   );
 }
