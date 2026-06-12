@@ -87,6 +87,8 @@ const VALID_PANELS: PanelKey[] = ["overview", "browse", "orders", "cart", "suppo
 
 
 export const Route = createFileRoute("/dashboard")({
+  ssr: false,
+  beforeLoad: requireAuthBeforeLoad,
   component: DashboardPage,
   validateSearch: (search: Record<string, unknown>): { panel: PanelKey } => {
     const p = search.panel as string | undefined;
