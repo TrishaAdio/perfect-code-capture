@@ -45,7 +45,7 @@ import {
   type NoticeType,
 } from "@/lib/api";
 import { LogoutConfirmDialog } from "@/components/LogoutConfirmDialog";
-import { OtpVerifyModal } from "@/components/OtpVerifyModal";
+
 import { OnboardingTour } from "@/components/OnboardingTour";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { ServiceLogo } from "@/components/ServiceLogo";
@@ -107,7 +107,7 @@ function DashboardPage() {
   const [loadingMe, setLoadingMe] = useState(true);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [logoutOpen, setLogoutOpen] = useState(false);
-  const [otpOpen, setOtpOpen] = useState(false);
+  
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("All");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -325,7 +325,7 @@ function DashboardPage() {
               ) : !loadingMe && user && user.isVerified === false && !bannerDismissed ? (
                 <VerifyBanner
                   key="verify-banner"
-                  onVerify={() => setOtpOpen(true)}
+                  onVerify={() => navigate({ to: "/verify-email", search: { next: "/dashboard" } })}
                   onDismiss={() => setBannerDismissed(true)}
                 />
               ) : null}
@@ -484,16 +484,6 @@ function DashboardPage() {
         onConfirm={confirmLogout}
       />
 
-      <OtpVerifyModal
-        open={otpOpen}
-        email={user?.email || ""}
-        autoSend={true}
-        onClose={() => setOtpOpen(false)}
-        onVerified={() => {
-          setOtpOpen(false);
-          setUser((u) => (u ? { ...u, isVerified: true } : u));
-        }}
-      />
 
       <SearchOverlay
         open={searchOpen}
