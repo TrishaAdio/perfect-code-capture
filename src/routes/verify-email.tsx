@@ -190,40 +190,31 @@ function VerifyEmailPage() {
     <div
       className={`relative min-h-[100svh] w-full overflow-hidden bg-[#04060a] text-white perf-${perf}`}
     >
+      {/* Unified scene background — atmosphere + envelope video, full bleed */}
       <AmbientAtmosphere />
+      <EnvelopeScene stage={stage} />
 
-      <div className="relative z-10 grid min-h-[100svh] grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
-        {/* LEFT — Envelope centerpiece */}
-        <section className="relative isolate flex min-h-[52svh] items-center justify-center overflow-hidden px-6 pt-14 pb-6 lg:min-h-[100svh] lg:px-12 lg:pt-0 lg:pb-0">
-          <EnvelopeStage stage={stage} />
-
-          <div className="pointer-events-none absolute bottom-10 left-10 right-10 z-20 hidden lg:block">
-            <div className="max-w-[440px]">
-              <p className="text-[11.5px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">
-                Account security
-              </p>
-              <h2 className="mt-3 font-display text-[32px] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
-                Secure your account.
-              </h2>
-              <p className="mt-3 max-w-[420px] text-[13.5px] leading-[1.65] text-white/55">
-                Verify your email to activate orders, receive delivery notifications, access account features, and protect your purchases.
-              </p>
-            </div>
+      {/* Single continuous environment. No split, no seam. */}
+      <div className="relative z-10 grid min-h-[100svh] grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
+        {/* LEFT — brand caption only; the envelope lives in the scene behind everything */}
+        <section className="relative flex min-h-[44svh] flex-col justify-end px-6 pb-10 pt-16 lg:min-h-[100svh] lg:px-14 lg:pb-14 lg:pt-0">
+          <div className="pointer-events-none max-w-[440px] lg:mt-auto">
+            <p className="text-[11.5px] font-semibold uppercase tracking-[0.22em] text-emerald-300/80">
+              Account security
+            </p>
+            <h2 className="mt-3 font-display text-[28px] font-semibold leading-[1.08] tracking-[-0.025em] text-white sm:text-[32px]">
+              Secure your account.
+            </h2>
+            <p className="mt-3 max-w-[420px] text-[13.5px] leading-[1.65] text-white/55">
+              Verify your email to activate orders, receive delivery notifications, access account features, and protect your purchases.
+            </p>
           </div>
         </section>
 
-        {/* RIGHT — Verification card. No hard divider — seamless blend. */}
-        <section className="relative flex items-center justify-center px-5 py-12 sm:px-8 lg:px-14 lg:py-10">
-          {/* Blend layer that softens the seam from the envelope side */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 -left-40 hidden lg:block"
-            style={{
-              background:
-                "radial-gradient(120% 90% at 0% 50%, rgba(16,185,129,0.10) 0%, rgba(4,6,10,0) 55%)",
-            }}
-          />
+        {/* RIGHT — verification card floats over the same scene, no panel, no divider */}
+        <section className="relative flex items-center justify-center px-5 pb-14 pt-4 sm:px-8 lg:px-14 lg:py-10">
           <div className="relative w-full max-w-[440px]">
+
             {success ? (
               <SuccessState />
             ) : (
