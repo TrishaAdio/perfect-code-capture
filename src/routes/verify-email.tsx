@@ -554,51 +554,14 @@ function VerifyEmailPage() {
 /* ─────────────── Envelope centerpiece ─────────────── */
 
 /**
- * EnvelopeScene — full-bleed cinematic background.
+ * EnvelopeHero — small inline cinematic header above the OTP card.
  *
- * The MP4 is rendered as part of the scene itself (not a panel). A radial
- * mask removes the rectangle, screen-blend mode fuses it with the page,
- * and emerald spill gradients extend the light across the entire viewport
- * so the envelope appears to be casting onto the OTP side.
+ * The MP4 plays inside a radial-masked, screen-blended frame with an
+ * emerald halo and a slow floating motion. It supports the form rather
+ * than competing with it.
  */
-function EnvelopeScene({ stage }: { stage: "idle" | "verifying" | "opening" | "complete" }) {
-  const wrapRef = useRef<HTMLDivElement | null>(null);
-  const innerRef = useRef<HTMLDivElement | null>(null);
+function EnvelopeHero({ stage }: { stage: "idle" | "verifying" | "opening" | "complete" }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  // Mouse parallax across the WHOLE page — the scene reacts as one
-  useEffect(() => {
-    const wrap = wrapRef.current?.parentElement; // listen on the page
-    const inner = innerRef.current;
-    if (!wrap || !inner) return;
-    let raf = 0;
-    let tx = 0, ty = 0, rx = 0, ry = 0;
-    const onMove = (e: MouseEvent) => {
-      const r = wrap.getBoundingClientRect();
-      const cx = (e.clientX - r.left) / r.width - 0.5;
-      const cy = (e.clientY - r.top) / r.height - 0.5;
-      tx = cx * 18;
-      ty = cy * 10;
-      rx = cy * -2.5;
-      ry = cx * 3.5;
-      if (!raf) {
-        raf = requestAnimationFrame(() => {
-          inner.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotateX(${rx}deg) rotateY(${ry}deg)`;
-          raf = 0;
-        });
-      }
-    };
-    const onLeave = () => {
-      inner.style.transform = `translate3d(0,0,0) rotateX(0) rotateY(0)`;
-    };
-    wrap.addEventListener("mousemove", onMove);
-    wrap.addEventListener("mouseleave", onLeave);
-    return () => {
-      wrap.removeEventListener("mousemove", onMove);
-      wrap.removeEventListener("mouseleave", onLeave);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -613,41 +576,25 @@ function EnvelopeScene({ stage }: { stage: "idle" | "verifying" | "opening" | "c
 
   return (
     <div
-      ref={wrapRef}
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-[1] overflow-hidden"
-      style={{ perspective: "1600px" }}
+      className="relative mx-auto flex items-center justify-center"
+      style={{ width: "min(260px, 62vw)", aspectRatio: "1 / 1" }}
     >
-      {/* Massive emerald halo behind the envelope — fills the scene */}
+      {/* Halo spill — extends slightly beyond the frame for ambient lighting */}
       <div
-        className="env-pulse absolute"
+        className="env-pulse pointer-events-none absolute -inset-10 rounded-full"
         style={{
-          left: "calc(35% - 45vmin)",
-          top: "calc(50% - 45vmin)",
-          width: "90vmin",
-          height: "90vmin",
           background:
-            "radial-gradient(closest-side, rgba(16,185,129,0.45), rgba(16,185,129,0.10) 45%, transparent 72%)",
-          filter: "blur(40px)",
+            "radial-gradient(closest-side, rgba(16,185,129,0.40), rgba(16,185,129,0.08) 50%, transparent 75%)",
+          filter: "blur(24px)",
           mixBlendMode: "screen",
         }}
       />
 
-      {/* Video — anchored on the left third on desktop, top on mobile.
-          Sized so its mask edge passes through the page rather than ending. */}
+      {/* Floating video frame */}
       <div
-        ref={innerRef}
-        className="env-float absolute"
-        style={{
-          left: "5%",
-          top: "50%",
-          transform: "translate(0, -50%)",
-          width: "min(900px, 70vw)",
-          aspectRatio: "1 / 1",
-          transformStyle: "preserve-3d",
-          transition: "transform 700ms cubic-bezier(.2,.7,.2,1)",
-          willChange: "transform",
-        }}
+        className="env-float relative h-full w-full"
+        style={{ willChange: "transform" }}
       >
         <video
           ref={videoRef}
@@ -662,20 +609,19 @@ function EnvelopeScene({ stage }: { stage: "idle" | "verifying" | "opening" | "c
           className="absolute inset-0 h-full w-full object-cover"
           style={{
             WebkitMaskImage:
-              "radial-gradient(closest-side at 50% 50%, #000 38%, rgba(0,0,0,0.55) 60%, transparent 88%)",
+              "radial-gradient(closest-side at 50% 50%, #000 50%, rgba(0,0,0,0.6) 72%, transparent 92%)",
             maskImage:
-              "radial-gradient(closest-side at 50% 50%, #000 38%, rgba(0,0,0,0.55) 60%, transparent 88%)",
+              "radial-gradient(closest-side at 50% 50%, #000 50%, rgba(0,0,0,0.6) 72%, transparent 92%)",
             mixBlendMode: "screen",
             filter: `saturate(1.1) contrast(1.05) ${
               opened ? "brightness(1.5)" : "brightness(1.05)"
             }`,
             transition: "filter 800ms ease-out",
             backfaceVisibility: "hidden",
-            willChange: "transform, filter",
           }}
         />
 
-        {/* Light burst on success */}
+        {/* Success light burst */}
         <div
           className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{
@@ -683,7 +629,7 @@ function EnvelopeScene({ stage }: { stage: "idle" | "verifying" | "opening" | "c
             height: "70%",
             background:
               "radial-gradient(closest-side, rgba(167,243,208,0.85), rgba(16,185,129,0.35) 35%, transparent 70%)",
-            filter: "blur(28px)",
+            filter: "blur(22px)",
             opacity: opened ? 1 : 0,
             transform: `translate(-50%, -50%) scale(${opened ? 1.8 : 0.6})`,
             transition: "opacity 700ms ease, transform 900ms ease",
@@ -691,48 +637,10 @@ function EnvelopeScene({ stage }: { stage: "idle" | "verifying" | "opening" | "c
           }}
         />
       </div>
-
-      {/* Volumetric light rays — reach across into the OTP side */}
-      <div
-        className="env-rays absolute inset-0"
-        style={{
-          background:
-            "conic-gradient(from 200deg at 30% 50%, transparent 0deg, rgba(16,185,129,0.10) 25deg, transparent 60deg, transparent 360deg)",
-          mixBlendMode: "screen",
-          filter: "blur(40px)",
-        }}
-      />
-
-      {/* Emerald spill cast — extends envelope light across the entire page */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(60% 80% at 35% 50%, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0.06) 35%, transparent 70%)",
-          mixBlendMode: "screen",
-        }}
-      />
-
-      {/* Atmospheric fog — soft veil unifying foreground and background */}
-      <div
-        className="env-fog absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(80% 60% at 50% 60%, rgba(8,18,16,0.0) 0%, rgba(4,6,10,0.45) 70%, rgba(4,6,10,0.85) 100%)",
-        }}
-      />
-
-      {/* Bottom unifying gradient — kills any horizon line */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-1/3"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(4,6,10,0) 0%, rgba(4,6,10,0.6) 100%)",
-        }}
-      />
     </div>
   );
 }
+
 
 
 /* ─────────────── Atmosphere ─────────────── */
