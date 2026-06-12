@@ -631,7 +631,6 @@ function EnvelopeStage({ stage }: { stage: "idle" | "verifying" | "opening" | "c
           playsInline
           preload="auto"
           disablePictureInPicture
-          // @ts-expect-error - non-standard but useful on iOS
           disableRemotePlayback
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover"
