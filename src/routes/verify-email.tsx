@@ -6,8 +6,8 @@ import {
   sendOtp as apiSendOtp,
   verifyOtp as apiVerifyOtp,
   updateCachedUser,
-  isLoggedIn,
 } from "@/lib/api";
+import { requireUnverifiedBeforeLoad } from "@/lib/auth-guard";
 import envelopeVideo from "@/assets/verify-envelope-v4.mp4.asset.json";
 
 const searchSchema = z.object({
