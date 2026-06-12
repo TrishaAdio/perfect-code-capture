@@ -287,6 +287,10 @@ function OrderCard({
               )}
             </div>
 
+            {!completed && !failed && (
+              <DeliveryProgress createdAt={order.createdAt} />
+            )}
+
             <div
               className={`mt-4 flex items-start gap-2.5 rounded-xl border p-3 text-[12px] ${
                 completed
@@ -380,6 +384,44 @@ function StatusPill({ status }: { status: OrderStatus }) {
         <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-400" />
       </span>
       Delivery in Progress
+    </div>
+  );
+}
+
+function DeliveryProgress({ createdAt }: { createdAt?: string }) {
+  const TARGET_MS = 5 * 60 * 1000; // 5 min ETA window
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  if (!createdAt) return null;
+  const started = new Date(createdAt).getTime();
+  if (isNaN(started)) return null;
+  const elapsed = Math.max(0, now - started);
+  const pct = Math.min(98, Math.round((elapsed / TARGET_MS) * 100));
+  const remainingMs = Math.max(0, TARGET_MS - elapsed);
+  const overdue = elapsed > TARGET_MS;
+  const mm = Math.floor(remainingMs / 60000);
+  const ss = Math.floor((remainingMs % 60000) / 1000);
+  const eta = overdue
+    ? "Finalizing — almost there"
+    : `~${mm}:${ss.toString().padStart(2, "0")} remaining`;
+  return (
+    <div className="mt-4 rounded-xl border border-amber-400/20 bg-amber-400/[0.04] p-3">
+      <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-200/90">
+        <span className="inline-flex items-center gap-1.5">
+          <Loader2 className="h-3 w-3 animate-spin" />
+          Delivering access
+        </span>
+        <span className="tabular-nums text-amber-200/70">{eta}</span>
+      </div>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-amber-400/10">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-amber-400/70 to-amber-300 transition-[width] duration-1000 ease-out"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
     </div>
   );
 }
