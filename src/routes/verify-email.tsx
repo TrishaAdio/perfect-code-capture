@@ -1,13 +1,14 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
-import { CheckCircle2, Loader2, Mail, ShieldCheck, AlertCircle, Sparkles } from "lucide-react";
+import { CheckCircle2, Loader2, Mail, ShieldCheck, AlertCircle } from "lucide-react";
 import {
   sendOtp as apiSendOtp,
   verifyOtp as apiVerifyOtp,
   updateCachedUser,
   isLoggedIn,
 } from "@/lib/api";
+import envelopeVideo from "@/assets/verify-envelope.mp4.asset.json";
 
 const searchSchema = z.object({
   next: z.string().optional(),
@@ -547,35 +548,31 @@ function VerifyEmailPage() {
 function EnvelopeStage({ stage }: { stage: "idle" | "verifying" | "opening" | "complete" }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const innerRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // Mouse-follow parallax (rAF throttled)
+  // Mouse-follow parallax (rAF throttled) — applied to the video shell
   useEffect(() => {
     const wrap = wrapRef.current;
     const inner = innerRef.current;
     if (!wrap || !inner) return;
     let raf = 0;
-    let tx = 0, ty = 0, rx = 8, ry = -10;
+    let tx = 0, rx = 0, ry = 0;
     const onMove = (e: MouseEvent) => {
       const r = wrap.getBoundingClientRect();
       const cx = (e.clientX - r.left) / r.width - 0.5;
       const cy = (e.clientY - r.top) / r.height - 0.5;
-      tx = cx * 16;
-      ty = cy * -10;
-      rx = 8 + cy * -10;
-      ry = -10 + cx * 14;
+      tx = cx * 10;
+      rx = cy * -3;
+      ry = cx * 4;
       if (!raf) {
         raf = requestAnimationFrame(() => {
-          inner.style.setProperty("--px", `${tx}px`);
-          inner.style.setProperty("--rx", `${rx}deg`);
-          inner.style.setProperty("--ry", `${ry}deg`);
+          inner.style.transform = `translate3d(${tx}px, 0, 0) rotateX(${rx}deg) rotateY(${ry}deg)`;
           raf = 0;
         });
       }
     };
     const onLeave = () => {
-      inner.style.setProperty("--px", `0px`);
-      inner.style.setProperty("--rx", `8deg`);
-      inner.style.setProperty("--ry", `-10deg`);
+      inner.style.transform = `translate3d(0,0,0) rotateX(0) rotateY(0)`;
     };
     wrap.addEventListener("mousemove", onMove);
     wrap.addEventListener("mouseleave", onLeave);
@@ -586,139 +583,134 @@ function EnvelopeStage({ stage }: { stage: "idle" | "verifying" | "opening" | "c
     };
   }, []);
 
+  // Ensure autoplay even when the browser blocks the attribute
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.playsInline = true;
+    const p = v.play();
+    if (p && typeof p.catch === "function") p.catch(() => undefined);
+  }, []);
+
   const opened = stage === "opening" || stage === "complete";
 
   return (
-    <div ref={wrapRef} className="env-stage relative flex h-full w-full items-center justify-center">
-      {/* Soft halo behind envelope */}
+    <div
+      ref={wrapRef}
+      className="env-stage relative flex h-full w-full items-center justify-center"
+    >
+      {/* Soft emerald halo behind the video */}
       <div
         aria-hidden
-        className="env-pulse pointer-events-none absolute h-[60vmin] w-[60vmin] rounded-full"
+        className="env-pulse pointer-events-none absolute h-[72vmin] w-[72vmin] rounded-full"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(16,185,129,0.35), rgba(16,185,129,0.05) 55%, transparent 70%)",
-          filter: "blur(20px)",
+            "radial-gradient(closest-side, rgba(16,185,129,0.40), rgba(16,185,129,0.06) 55%, transparent 72%)",
+          filter: "blur(28px)",
         }}
       />
 
+      {/* Video shell — masked, no rectangle, no border */}
       <div
         ref={innerRef}
-        className={`env-float relative ${opened ? "env-open" : ""}`}
+        className="env-float relative"
         style={{
-          width: "min(420px, 78vw)",
-          aspectRatio: "1.55 / 1",
+          width: "min(720px, 92%)",
+          aspectRatio: "1 / 1",
           transformStyle: "preserve-3d",
+          transition: "transform 600ms cubic-bezier(.2,.7,.2,1)",
         }}
       >
-        {/* Light escaping (visible when opened) */}
+        <video
+          ref={videoRef}
+          src={envelopeVideo.url}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          disableRemotePlayback
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{
+            // Soft radial mask so the rectangle disappears into the page
+            WebkitMaskImage:
+              "radial-gradient(closest-side at 50% 50%, #000 55%, rgba(0,0,0,0.6) 72%, transparent 92%)",
+            maskImage:
+              "radial-gradient(closest-side at 50% 50%, #000 55%, rgba(0,0,0,0.6) 72%, transparent 92%)",
+            filter: `saturate(1.08) contrast(1.04) ${
+              opened ? "brightness(1.35)" : "brightness(1)"
+            }`,
+            transition: "filter 700ms ease-out",
+            backfaceVisibility: "hidden",
+            willChange: "transform, filter",
+          }}
+        />
+
+        {/* Emerald lighting overlay — sits on top, blends video with brand */}
         <div
           aria-hidden
-          className="env-light pointer-events-none absolute left-1/2 top-0 -translate-x-1/2"
+          className="pointer-events-none absolute inset-0"
           style={{
-            width: "120%",
-            height: "120%",
+            background:
+              "radial-gradient(60% 50% at 50% 55%, rgba(16,185,129,0.18) 0%, transparent 70%)",
+            mixBlendMode: "screen",
+          }}
+        />
+        {/* Reflection sweep */}
+        <span
+          aria-hidden
+          className="env-shine pointer-events-none absolute inset-y-0 left-0 w-1/2"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)",
+            mixBlendMode: "screen",
+          }}
+        />
+
+        {/* Expanding light burst on success */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[55%] w-[55%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{
             background:
               "radial-gradient(closest-side, rgba(167,243,208,0.85), rgba(16,185,129,0.35) 35%, transparent 70%)",
-            filter: "blur(20px)",
+            filter: "blur(24px)",
+            opacity: opened ? 1 : 0,
+            transform: opened ? "scale(1.8)" : "scale(0.6)",
+            transition: "opacity 700ms ease, transform 900ms ease",
+            mixBlendMode: "screen",
           }}
         />
-
-        {/* Envelope body */}
-        <div
-          className="absolute inset-0 overflow-hidden rounded-[18px] border border-white/10"
-          style={{
-            background:
-              "linear-gradient(160deg, #0f1c19 0%, #0a1410 55%, #06100d 100%)",
-            boxShadow:
-              "0 40px 120px -30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.06)",
-          }}
-        >
-          {/* Reflection sweep */}
-          <span
-            aria-hidden
-            className="env-shine pointer-events-none absolute -inset-y-4 left-0 w-1/3"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent)",
-            }}
-          />
-          {/* Inner emerald glow */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(120% 80% at 50% 120%, rgba(16,185,129,0.30), transparent 60%)",
-            }}
-          />
-
-          {/* Letter peeking out */}
-          <div
-            className="env-letter absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[36%] rounded-[10px] border border-white/10 bg-gradient-to-b from-white/95 to-white/80 px-5 py-4 text-emerald-900 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)]"
-            style={{ width: "78%", opacity: opened ? 1 : 0.92 }}
-          >
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
-                SymDeals
-              </span>
-            </div>
-            <div className="mt-2 h-[6px] w-[70%] rounded-full bg-emerald-900/15" />
-            <div className="mt-1.5 h-[6px] w-[55%] rounded-full bg-emerald-900/10" />
-            <div className="mt-3 flex items-center gap-1.5">
-              {[0, 1, 2, 3, 4, 5].map((i) => (
-                <span
-                  key={i}
-                  className="h-5 w-5 rounded-md bg-emerald-900/10 text-center text-[10px] font-bold leading-5 text-emerald-900/60"
-                >
-                  •
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Envelope flap (top triangle) */}
-        <div
-          className="env-flap absolute inset-x-0 top-0 origin-top"
-          style={{
-            height: "62%",
-            background:
-              "linear-gradient(160deg, #14322a 0%, #0b1f1a 100%)",
-            clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-            borderTopLeftRadius: 18,
-            borderTopRightRadius: 18,
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
-          }}
-        />
-        {/* Front pocket (V shape) */}
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0"
-          style={{
-            height: "60%",
-            background:
-              "linear-gradient(180deg, rgba(8,16,14,0.0) 0%, rgba(8,16,14,0.95) 60%)",
-            clipPath: "polygon(0 35%, 50% 0, 100% 35%, 100% 100%, 0 100%)",
-            borderBottomLeftRadius: 18,
-            borderBottomRightRadius: 18,
-          }}
-        />
-
-        {/* Wax-style seal */}
-        <div
-          className="absolute left-1/2 top-[58%] -translate-x-1/2 grid h-9 w-9 place-items-center rounded-full text-emerald-950"
-          style={{
-            background:
-              "radial-gradient(circle at 30% 30%, #6ee7b7, #10b981 55%, #047857)",
-            boxShadow:
-              "0 8px 22px -6px rgba(16,185,129,0.7), inset 0 1px 0 rgba(255,255,255,0.5)",
-            opacity: opened ? 0 : 1,
-            transition: "opacity 400ms ease",
-          }}
-        >
-          <ShieldCheck className="h-4 w-4" />
-        </div>
       </div>
+
+      {/* Atmospheric blend layers — fade the video into the page edges */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(4,6,10,0.85) 100%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 lg:block"
+        style={{
+          background:
+            "linear-gradient(to left, rgba(4,6,10,1) 0%, rgba(4,6,10,0) 100%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-32 lg:hidden"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(4,6,10,0) 0%, rgba(4,6,10,1) 100%)",
+        }}
+      />
     </div>
   );
 }
