@@ -80,10 +80,6 @@ function VerifyEmailPage() {
   const perf = useMemo(getPerf, []);
 
   useEffect(() => {
-    if (!isLoggedIn()) {
-      navigate({ to: "/login" });
-      return;
-    }
     setEmail(getCachedEmail());
     setTimeout(() => inputsRef.current[0]?.focus(), 120);
     // eslint-disable-next-line react-hooks/exhaustive-deps
