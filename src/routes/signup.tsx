@@ -211,28 +211,6 @@ function SignupPage() {
         </p>
       </AuthShell>
 
-      <OtpVerifyModal
-        open={otpOpen}
-        email={signedUpEmail}
-        autoSend={false}
-        onClose={() => {
-          setOtpOpen(false);
-          setShowOnboardingLoader(true);
-        }}
-        onVerified={() => {
-          setOtpOpen(false);
-          setShowOnboardingLoader(true);
-        }}
-        onSkip={() => {
-          setOtpOpen(false);
-          setShowOnboardingLoader(true);
-        }}
-      />
-
-      <OnboardingLoader
-        open={showOnboardingLoader}
-        onComplete={() => navigate({ to: "/dashboard" })}
-      />
     </>
   );
 }
