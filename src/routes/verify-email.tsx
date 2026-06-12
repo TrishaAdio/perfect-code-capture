@@ -556,7 +556,7 @@ function EnvelopeHero({ stage }: { stage: "idle" | "verifying" | "opening" | "co
     <div
       aria-hidden
       className="relative mx-auto flex items-center justify-center"
-      style={{ width: "min(260px, 62vw)", aspectRatio: "1 / 1" }}
+      style={{ width: "min(340px, 72vw)", aspectRatio: "1 / 1" }}
     >
       {/* Halo spill — extends slightly beyond the frame for ambient lighting */}
       <div
