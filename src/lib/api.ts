@@ -33,6 +33,8 @@ export type AuthUser = {
   email: string;
   whatsapp?: string | null;
   isVerified?: boolean;
+  hasPassword?: boolean;
+  provider?: "google" | "password";
   createdAt?: string;
   totalSaved?: number;
 };
@@ -170,6 +172,17 @@ export function updatePassword(input: {
 export function updateWhatsapp(input: { whatsapp: string }) {
   return request<{ success: true; user: AuthUser }>("/api/user/update-whatsapp", {
     method: "PATCH",
+    body: input,
+    token: getToken(),
+  });
+}
+
+export function deleteAccount(input: {
+  currentPassword?: string;
+  confirmText?: string;
+}): Promise<{ success: true }> {
+  return request("/api/account/delete", {
+    method: "DELETE",
     body: input,
     token: getToken(),
   });
