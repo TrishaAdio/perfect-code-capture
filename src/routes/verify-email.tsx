@@ -1,13 +1,14 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
-import { CheckCircle2, Loader2, Mail, ShieldCheck, AlertCircle, Sparkles } from "lucide-react";
+import { CheckCircle2, Loader2, Mail, ShieldCheck, AlertCircle } from "lucide-react";
 import {
   sendOtp as apiSendOtp,
   verifyOtp as apiVerifyOtp,
   updateCachedUser,
   isLoggedIn,
 } from "@/lib/api";
+import envelopeVideo from "@/assets/verify-envelope.mp4.asset.json";
 
 const searchSchema = z.object({
   next: z.string().optional(),
