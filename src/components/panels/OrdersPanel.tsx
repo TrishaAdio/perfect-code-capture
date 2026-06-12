@@ -287,6 +287,10 @@ function OrderCard({
               )}
             </div>
 
+            {!completed && !failed && (
+              <DeliveryProgress createdAt={order.createdAt} />
+            )}
+
             <div
               className={`mt-4 flex items-start gap-2.5 rounded-xl border p-3 text-[12px] ${
                 completed
