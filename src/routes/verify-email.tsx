@@ -513,10 +513,26 @@ function VerifyEmailPage() {
           animation: verify-check-draw 0.55s cubic-bezier(.65,0,.35,1) 0.2s forwards;
         }
 
+        /* Slow drifting light rays across the page */
+        @keyframes env-rays-drift {
+          0%, 100% { transform: translate3d(-4%, 0, 0) rotate(0deg); opacity: .55; }
+          50%      { transform: translate3d(4%, -2%, 0) rotate(6deg);  opacity: .9; }
+        }
+        .env-rays { animation: env-rays-drift 28s ease-in-out infinite; will-change: transform, opacity; }
+
+        /* Breathing fog */
+        @keyframes env-fog-breathe {
+          0%, 100% { opacity: 1; }
+          50%      { opacity: 0.85; }
+        }
+        .env-fog { animation: env-fog-breathe 9s ease-in-out infinite; }
+
         /* Perf tiers */
         .perf-low .verify-particle,
         .perf-low .verify-aurora,
         .perf-low .env-shine,
+        .perf-low .env-rays,
+        .perf-low .env-fog,
         .perf-low .env-pulse { animation: none !important; }
         .perf-low .env-float { animation-duration: 12s; }
         .perf-low .otp-glow  { animation: none !important; }
@@ -525,7 +541,7 @@ function VerifyEmailPage() {
 
         @media (prefers-reduced-motion: reduce) {
           .verify-orb-1, .verify-orb-2, .verify-orb-3,
-          .verify-particle, .verify-aurora,
+          .verify-particle, .verify-aurora, .env-rays, .env-fog,
           .env-float, .env-pulse, .env-shine, .otp-glow,
           .animate-otp-shake { animation: none !important; }
         }
@@ -533,6 +549,7 @@ function VerifyEmailPage() {
     </div>
   );
 }
+
 
 /* ─────────────── Envelope centerpiece ─────────────── */
 
