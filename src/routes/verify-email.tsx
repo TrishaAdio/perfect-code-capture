@@ -203,7 +203,7 @@ function VerifyEmailPage() {
             <EnvelopeHero stage={stage} />
 
             {/* Title */}
-            <h1 className="mt-4 font-display text-[34px] font-semibold leading-[1.05] tracking-[-0.03em] text-white sm:text-[40px] animate-fade-in">
+            <h1 className="mt-4 font-serif-display text-[44px] font-normal leading-[1.02] tracking-[-0.02em] text-white sm:text-[56px] animate-fade-in">
               Verify your email
             </h1>
 
