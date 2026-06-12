@@ -33,6 +33,7 @@ const paymentRoutes = require("./routes/payments");
 const orderRoutes = require("./routes/orders");
 const noticeRoutes = require("./routes/notices");
 const cartRoutes = require("./routes/cart");
+const accountRoutes = require("./routes/account");
 
 function getTrustProxySetting() {
   // Pinned to a single hop by default. Set TRUST_PROXY explicitly when running
@@ -240,6 +241,7 @@ function buildApp() {
   app.use("/api/orders", orderRoutes);
   app.use("/api/notices", noticeRoutes);
   app.use("/api/cart", cartRoutes);
+  app.use("/api/account", accountRoutes);
 
   app.use((_req, res) =>
     res.status(404).json({ success: false, message: "Not found" })

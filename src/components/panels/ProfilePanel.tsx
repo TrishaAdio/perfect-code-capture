@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Gauge, KeyRound, Mail, Settings as SettingsIcon, User as UserIcon } from "lucide-react";
+import { AlertTriangle, Gauge, KeyRound, Mail, Settings as SettingsIcon, Trash2, User as UserIcon } from "lucide-react";
 import {
   detectAutoLevel,
   resolveLevel,
@@ -16,6 +16,7 @@ import {
   updateName,
   updatePassword,
 } from "@/lib/api";
+import { DeleteAccountDialog } from "@/components/DeleteAccountDialog";
 
 export function ProfilePanel({
   initialUser,
@@ -77,13 +78,63 @@ export function ProfilePanel({
           ))}
         </div>
       ) : (
-        <div className="mt-10 grid gap-5">
-          <NameSection user={user} onUserChange={onUserChange} />
-          <EmailSection user={user} onUserChange={onUserChange} />
-          <PasswordSection />
-          <AnimationPerformanceSection />
+        <div className="mt-10 grid gap-8">
+          <SectionGroup label="Account">
+            <NameSection user={user} onUserChange={onUserChange} />
+            <EmailSection user={user} onUserChange={onUserChange} />
+          </SectionGroup>
+
+          <SectionGroup label="Security">
+            <PasswordSection />
+          </SectionGroup>
+
+          <SectionGroup label="Animation & Performance">
+            <AnimationPerformanceSection />
+          </SectionGroup>
+
+          <SectionGroup label="Danger Zone" tone="danger">
+            <DangerZoneSection user={user} />
+          </SectionGroup>
         </div>
       )}
+    </div>
+  );
+}
+
+function SectionGroup({
+  label,
+  tone = "default",
+  children,
+}: {
+  label: string;
+  tone?: "default" | "danger";
+  children: React.ReactNode;
+}) {
+  const isDanger = tone === "danger";
+  return (
+    <div className="grid gap-4">
+      <div className="flex items-center gap-2">
+        <span
+          className={`inline-block h-1.5 w-1.5 rounded-full ${
+            isDanger ? "bg-red-500/80" : "bg-primary/70"
+          }`}
+        />
+        <h3
+          className={`text-[10.5px] font-semibold uppercase tracking-[0.18em] ${
+            isDanger ? "text-red-400/90" : "text-muted-foreground"
+          }`}
+        >
+          {label}
+        </h3>
+        <div
+          className={`h-px flex-1 ${
+            isDanger
+              ? "bg-gradient-to-r from-red-500/30 to-transparent"
+              : "bg-[var(--border)]"
+          }`}
+        />
+      </div>
+      <div className="grid gap-5">{children}</div>
     </div>
   );
 }
@@ -470,4 +521,42 @@ function AnimationPerformanceSection() {
     </SectionShell>
   );
 }
+
+/* ---------- Danger Zone ---------- */
+
+function DangerZoneSection({ user }: { user: AuthUser | null }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <section className="rounded-2xl border border-red-500/25 bg-red-500/[0.03] p-6 shadow-card backdrop-blur-sm">
+      <div className="flex items-start gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-red-500/30 bg-red-500/10 text-red-400">
+          <AlertTriangle className="h-4 w-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 className="font-display text-[1.05rem] font-semibold tracking-[-0.02em] text-foreground">
+            Delete Account
+          </h2>
+          <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted-foreground">
+            Deleting your account is permanent. All account data, order history, preferences, and access to SymDeals services will be removed.
+          </p>
+        </div>
+      </div>
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[12px] text-muted-foreground/80">
+          Signed in as <span className="text-foreground font-medium">{user?.email ?? "—"}</span>
+        </p>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center justify-center gap-1.5 rounded-full border border-red-500/40 bg-red-500/10 px-4 py-2.5 text-[13px] font-semibold text-red-300 transition-colors hover:border-red-500/60 hover:bg-red-500/15 hover:text-red-200 active:scale-[0.985]"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          Delete account…
+        </button>
+      </div>
+      <DeleteAccountDialog open={open} onClose={() => setOpen(false)} user={user} />
+    </section>
+  );
+}
+
 

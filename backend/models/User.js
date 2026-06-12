@@ -82,6 +82,8 @@ userSchema.methods.toSafeJSON = function () {
     email: this.email,
     whatsapp: this.whatsapp || null,
     isVerified: !!this.isVerified,
+    hasPassword: !this.googleId,
+    provider: this.googleId ? "google" : "password",
     createdAt: this.createdAt,
   };
 };
