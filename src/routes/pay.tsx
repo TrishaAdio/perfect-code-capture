@@ -610,8 +610,8 @@ function PayPage() {
                 <h2 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   Order summary
                 </h2>
-                <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                  <Sparkles className="h-3 w-3 text-emerald-400/80" />
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#22C55E]">
+                  <Sparkles className="h-3 w-3" />
                   Digital delivery
                 </span>
               </div>
