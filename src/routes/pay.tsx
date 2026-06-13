@@ -417,83 +417,105 @@ function PayPage() {
   if (paid && invoice && celebrating) {
     const finalAmountNum = paid.amount ?? invoice.unique_amount;
     const oid = orderId || invoice.invoice_id;
+    const ringSize = 56;
+    const ringRadius = 24;
+    const ringCirc = 2 * Math.PI * ringRadius;
+    const progress = countdown / COUNTDOWN_SECONDS;
     return (
-      <div className="relative min-h-screen overflow-hidden bg-background">
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-x-0 top-0 mx-auto h-[560px] max-w-3xl bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.18),transparent_70%)]" />
-          <div className="animate-orb-drift absolute left-1/2 top-[20%] h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-emerald-500/15 blur-[120px]" />
-        </div>
+      <div className="relative min-h-screen overflow-hidden bg-[#0A0A0A] text-white">
+        {/* Deep radial vignette — pure CSS */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34,197,94,0.10), transparent 60%), radial-gradient(ellipse 100% 80% at 50% 100%, rgba(10,10,10,1), transparent 60%), radial-gradient(ellipse at center, #0F0F10 0%, #060606 100%)",
+          }}
+        />
+        <ConfettiCanvas />
 
-        <main className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col items-center justify-center px-6 py-12 text-center">
-          {/* Big animated check */}
-          <div className="relative mx-auto flex h-32 w-32 items-center justify-center">
-            <span className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/30" />
-            <span
-              className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/18"
-              style={{ animationDelay: "0.25s" }}
-            />
-            <span
-              className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/10"
-              style={{ animationDelay: "0.5s" }}
-            />
-            <div className="animate-success-pop relative flex h-24 w-24 items-center justify-center rounded-full border border-emerald-300/55 bg-[radial-gradient(circle_at_30%_25%,rgba(110,231,183,0.5),rgba(16,185,129,0.15)_70%)] text-emerald-300 shadow-[0_0_0_6px_rgba(16,185,129,0.08),0_0_60px_-4px_rgba(16,185,129,0.85)]">
-              <Check className="h-14 w-14 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" strokeWidth={2.6} />
-            </div>
-          </div>
+        <main className="relative mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6 py-12 text-center">
+          {/* Stroke-draw checkmark */}
+          <AnimatedCheck size={120} />
 
-          <h1
-            className="animate-success-stagger mt-8 font-display text-[2.1rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.5rem]"
-            style={{ animationDelay: "0.2s" }}
-          >
+          <h1 className="mt-9 text-[36px] font-bold leading-[1.05] tracking-[-0.025em] text-white sm:text-[40px]">
             Payment Successful
           </h1>
-          <p
-            className="animate-success-stagger mt-3 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground"
-            style={{ animationDelay: "0.3s" }}
-          >
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-            Your payment has been verified securely via UPI
-          </p>
 
-          {/* Amount + Order ID */}
+          {/* Verified pill with pulsing green dot */}
+          <span className="animate-success-stagger mt-5 inline-flex items-center gap-2 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-3 py-1.5" style={{ animationDelay: "0.35s" }}>
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inset-0 animate-ping rounded-full bg-[#22C55E]/70" />
+              <span className="relative h-2 w-2 rounded-full bg-[#22C55E] shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+            </span>
+            <span className="text-[12px] font-medium tracking-tight text-[#22C55E]">
+              Verified via UPI
+            </span>
+          </span>
+
+          {/* Glassmorphism amount card */}
           <div
-            className="animate-success-stagger mt-8 w-full rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 backdrop-blur-sm"
-            style={{ animationDelay: "0.4s" }}
+            className="animate-success-stagger mt-8 w-full rounded-2xl p-7"
+            style={{
+              animationDelay: "0.45s",
+              background: "rgba(255,255,255,0.05)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.08)",
+            }}
           >
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Amount paid
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-white/45">
+              Amount Paid
             </p>
-            <p className="mt-1.5 font-display text-[2.4rem] font-semibold leading-none tracking-[-0.02em] text-foreground">
-              <span className="text-emerald-300/90">₹</span>
-              {finalAmountNum.toFixed(2)}
+            <p className="mt-2 text-[48px] font-bold leading-none tracking-[-0.03em] text-white">
+              ₹{finalAmountNum.toFixed(2)}
             </p>
-            <div className="mt-5 flex items-center justify-between border-t border-white/[0.05] pt-4">
-              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="mt-6 flex items-center justify-between border-t border-white/[0.08] pt-4">
+              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/45">
                 Order ID
               </span>
-              <span className="font-mono text-[12px] text-foreground/90">{oid}</span>
+              <span className="font-mono text-[12.5px] text-white/90">{oid}</span>
             </div>
           </div>
 
-          {/* Countdown */}
-          <div
-            className="animate-success-stagger mt-8 flex flex-col items-center"
-            style={{ animationDelay: "0.55s" }}
-          >
-            <p className="text-[12.5px] text-muted-foreground">
-              Redirecting to order preparation…
-            </p>
-            <div
-              key={countdown}
-              className="animate-countdown-pop mt-3 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] font-display text-[1.4rem] font-semibold tabular-nums text-emerald-300"
-            >
-              {countdown}
+          {/* Countdown with circular progress ring */}
+          <div className="animate-success-stagger mt-10 flex flex-col items-center" style={{ animationDelay: "0.6s" }}>
+            <div className="relative" style={{ width: ringSize, height: ringSize }}>
+              <svg width={ringSize} height={ringSize} className="-rotate-90">
+                <circle
+                  cx={ringSize / 2}
+                  cy={ringSize / 2}
+                  r={ringRadius}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.08)"
+                  strokeWidth="2"
+                />
+                <circle
+                  cx={ringSize / 2}
+                  cy={ringSize / 2}
+                  r={ringRadius}
+                  fill="none"
+                  stroke="#22C55E"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeDasharray={ringCirc}
+                  strokeDashoffset={ringCirc * (1 - progress)}
+                  style={{ transition: "stroke-dashoffset 1s linear" }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[16px] font-semibold tabular-nums text-white">{countdown}</span>
+              </div>
             </div>
+            <p className="mt-3 text-[12.5px] text-white/55">
+              Redirecting in {countdown}…
+            </p>
           </div>
         </main>
       </div>
     );
   }
+
+
 
   // ------------- Success view -------------
   if (paid && invoice) {
