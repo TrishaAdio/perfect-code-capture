@@ -102,13 +102,14 @@ function PayPage() {
   const [waClickedAt, setWaClickedAt] = useState<Date | null>(null);
   const [now, setNow] = useState<Date>(() => new Date());
   const [celebrating, setCelebrating] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(6);
+  const COUNTDOWN_SECONDS = 6;
 
   // Show the celebration screen first when payment is confirmed, then auto-advance
   useEffect(() => {
     if (!paid) return;
     setCelebrating(true);
-    setCountdown(3);
+    setCountdown(COUNTDOWN_SECONDS);
     const tick = setInterval(() => {
       setCountdown((c) => {
         if (c <= 1) {
@@ -416,83 +417,105 @@ function PayPage() {
   if (paid && invoice && celebrating) {
     const finalAmountNum = paid.amount ?? invoice.unique_amount;
     const oid = orderId || invoice.invoice_id;
+    const ringSize = 56;
+    const ringRadius = 24;
+    const ringCirc = 2 * Math.PI * ringRadius;
+    const progress = countdown / COUNTDOWN_SECONDS;
     return (
-      <div className="relative min-h-screen overflow-hidden bg-background">
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-x-0 top-0 mx-auto h-[560px] max-w-3xl bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.18),transparent_70%)]" />
-          <div className="animate-orb-drift absolute left-1/2 top-[20%] h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-emerald-500/15 blur-[120px]" />
-        </div>
+      <div className="relative min-h-screen overflow-hidden bg-[#0A0A0A] text-white">
+        {/* Deep radial vignette — pure CSS */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34,197,94,0.10), transparent 60%), radial-gradient(ellipse 100% 80% at 50% 100%, rgba(10,10,10,1), transparent 60%), radial-gradient(ellipse at center, #0F0F10 0%, #060606 100%)",
+          }}
+        />
+        <ConfettiCanvas />
 
-        <main className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col items-center justify-center px-6 py-12 text-center">
-          {/* Big animated check */}
-          <div className="relative mx-auto flex h-32 w-32 items-center justify-center">
-            <span className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/30" />
-            <span
-              className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/18"
-              style={{ animationDelay: "0.25s" }}
-            />
-            <span
-              className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/10"
-              style={{ animationDelay: "0.5s" }}
-            />
-            <div className="animate-success-pop relative flex h-24 w-24 items-center justify-center rounded-full border border-emerald-300/55 bg-[radial-gradient(circle_at_30%_25%,rgba(110,231,183,0.5),rgba(16,185,129,0.15)_70%)] text-emerald-300 shadow-[0_0_0_6px_rgba(16,185,129,0.08),0_0_60px_-4px_rgba(16,185,129,0.85)]">
-              <Check className="h-14 w-14 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" strokeWidth={2.6} />
-            </div>
-          </div>
+        <main className="relative mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6 py-12 text-center">
+          {/* Stroke-draw checkmark */}
+          <AnimatedCheck size={120} />
 
-          <h1
-            className="animate-success-stagger mt-8 font-display text-[2.1rem] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.5rem]"
-            style={{ animationDelay: "0.2s" }}
-          >
+          <h1 className="mt-9 text-[36px] font-bold leading-[1.05] tracking-[-0.025em] text-white sm:text-[40px]">
             Payment Successful
           </h1>
-          <p
-            className="animate-success-stagger mt-3 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground"
-            style={{ animationDelay: "0.3s" }}
-          >
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-            Your payment has been verified securely via UPI
-          </p>
 
-          {/* Amount + Order ID */}
+          {/* Verified pill with pulsing green dot */}
+          <span className="animate-success-stagger mt-5 inline-flex items-center gap-2 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-3 py-1.5" style={{ animationDelay: "0.35s" }}>
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inset-0 animate-ping rounded-full bg-[#22C55E]/70" />
+              <span className="relative h-2 w-2 rounded-full bg-[#22C55E] shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+            </span>
+            <span className="text-[12px] font-medium tracking-tight text-[#22C55E]">
+              Verified via UPI
+            </span>
+          </span>
+
+          {/* Glassmorphism amount card */}
           <div
-            className="animate-success-stagger mt-8 w-full rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 backdrop-blur-sm"
-            style={{ animationDelay: "0.4s" }}
+            className="animate-success-stagger mt-8 w-full rounded-2xl p-7"
+            style={{
+              animationDelay: "0.45s",
+              background: "rgba(255,255,255,0.05)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.08)",
+            }}
           >
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Amount paid
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-white/45">
+              Amount Paid
             </p>
-            <p className="mt-1.5 font-display text-[2.4rem] font-semibold leading-none tracking-[-0.02em] text-foreground">
-              <span className="text-emerald-300/90">₹</span>
-              {finalAmountNum.toFixed(2)}
+            <p className="mt-2 text-[48px] font-bold leading-none tracking-[-0.03em] text-white">
+              ₹{finalAmountNum.toFixed(2)}
             </p>
-            <div className="mt-5 flex items-center justify-between border-t border-white/[0.05] pt-4">
-              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="mt-6 flex items-center justify-between border-t border-white/[0.08] pt-4">
+              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/45">
                 Order ID
               </span>
-              <span className="font-mono text-[12px] text-foreground/90">{oid}</span>
+              <span className="font-mono text-[12.5px] text-white/90">{oid}</span>
             </div>
           </div>
 
-          {/* Countdown */}
-          <div
-            className="animate-success-stagger mt-8 flex flex-col items-center"
-            style={{ animationDelay: "0.55s" }}
-          >
-            <p className="text-[12.5px] text-muted-foreground">
-              Redirecting to order preparation…
-            </p>
-            <div
-              key={countdown}
-              className="animate-countdown-pop mt-3 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] font-display text-[1.4rem] font-semibold tabular-nums text-emerald-300"
-            >
-              {countdown}
+          {/* Countdown with circular progress ring */}
+          <div className="animate-success-stagger mt-10 flex flex-col items-center" style={{ animationDelay: "0.6s" }}>
+            <div className="relative" style={{ width: ringSize, height: ringSize }}>
+              <svg width={ringSize} height={ringSize} className="-rotate-90">
+                <circle
+                  cx={ringSize / 2}
+                  cy={ringSize / 2}
+                  r={ringRadius}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.08)"
+                  strokeWidth="2"
+                />
+                <circle
+                  cx={ringSize / 2}
+                  cy={ringSize / 2}
+                  r={ringRadius}
+                  fill="none"
+                  stroke="#22C55E"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeDasharray={ringCirc}
+                  strokeDashoffset={ringCirc * (1 - progress)}
+                  style={{ transition: "stroke-dashoffset 1s linear" }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[16px] font-semibold tabular-nums text-white">{countdown}</span>
+              </div>
             </div>
+            <p className="mt-3 text-[12.5px] text-white/55">
+              Redirecting in {countdown}…
+            </p>
           </div>
         </main>
       </div>
     );
   }
+
+
 
   // ------------- Success view -------------
   if (paid && invoice) {
@@ -555,16 +578,15 @@ function PayPage() {
           {/* Hero — confirmation */}
           <section className="animate-success-stagger mx-auto max-w-3xl text-center" style={{ animationDelay: "0.05s" }}>
             <div className="relative mx-auto flex h-16 w-16 items-center justify-center">
-              <span className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/14" />
-              <div className="animate-success-pop relative flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+              <div className="animate-success-pop relative flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(34,197,94,0.4)] bg-[rgba(34,197,94,0.10)] text-[#22C55E]" style={{ boxShadow: "0 0 24px rgba(34,197,94,0.4)" }}>
                 <Check className="h-7 w-7" strokeWidth={2.6} />
               </div>
             </div>
-            <p className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-emerald-300/90">
-              <span className="h-1 w-1 rounded-full bg-emerald-400" />
+            <p className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#22C55E]">
+              <span className="h-1 w-1 rounded-full bg-[#22C55E]" />
               Order Confirmed
             </p>
-            <h1 className="mt-5 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-foreground sm:text-[2.75rem]">
+            <h1 className="mt-5 text-[28px] font-bold leading-[1.1] tracking-[-0.5px] text-foreground sm:text-[32px]">
               Your premium access is being prepared.
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-[14.5px] leading-[1.65] text-muted-foreground sm:text-[15px]">
@@ -588,9 +610,9 @@ function PayPage() {
                 <h2 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   Order summary
                 </h2>
-                <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                  <Sparkles className="h-3 w-3 text-emerald-400/80" />
-                  Digital delivery
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#22C55E]">
+                  <Sparkles className="h-3 w-3" />
+                  Auto-delivered
                 </span>
               </div>
 
@@ -646,15 +668,18 @@ function PayPage() {
                     if (!oid) { e.preventDefault(); return; }
                     if (!waClickedAt) setWaClickedAt(new Date());
                   }}
-                  className={`group inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-[13.5px] font-semibold tracking-[-0.005em] transition-all duration-200 ${
+                  className={`group relative inline-flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl px-4 py-3 text-[13.5px] font-semibold tracking-[-0.005em] transition-all duration-200 ${
                     oid
                       ? "bg-foreground text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_30px_-12px_rgba(0,0,0,0.6)] hover:bg-foreground/90 active:scale-[0.99]"
-                      : "cursor-wait border border-white/[0.06] bg-white/[0.02] text-muted-foreground"
+                      : "cursor-wait border border-[rgba(34,197,94,0.2)] bg-[rgba(34,197,94,0.05)] text-[#22C55E]"
                   }`}
                 >
-                  <Package className="h-4 w-4" />
-                  {oid ? "Track your order" : "Preparing your order…"}
-                  {oid && <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />}
+                  {!oid && (
+                    <span className="pointer-events-none absolute inset-0 animate-shimmer-sweep bg-[linear-gradient(110deg,transparent_30%,rgba(34,197,94,0.18)_50%,transparent_70%)]" />
+                  )}
+                  <Package className="relative h-4 w-4" />
+                  <span className="relative">{oid ? "Track your order" : "Preparing your order…"}</span>
+                  {oid && <ArrowRight className="relative h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />}
                 </a>
                 <button
                   type="button"
@@ -995,16 +1020,16 @@ function TimelineRow({
       )}
       <span className="relative mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center">
         {state === "done" && (
-          <span className="h-3.5 w-3.5 rounded-full bg-emerald-400/90 shadow-[0_0_10px_rgba(16,185,129,0.55)] ring-2 ring-emerald-400/20" />
+          <span className="h-3 w-3 rounded-full bg-[#22C55E] shadow-[0_0_10px_rgba(34,197,94,0.6)]" />
         )}
         {state === "active" && (
-          <>
-            <span className="absolute inset-0 animate-ping rounded-full bg-amber-300/50" />
-            <span className="relative h-3.5 w-3.5 rounded-full border border-amber-300/70 bg-amber-300/20" />
-          </>
+          <span className="relative flex h-3 w-3">
+            <span className="absolute inset-[-4px] animate-timeline-breath rounded-full bg-[#22C55E]/35" />
+            <span className="relative h-3 w-3 rounded-full bg-[#22C55E] shadow-[0_0_12px_rgba(34,197,94,0.85)]" />
+          </span>
         )}
         {state === "pending" && (
-          <span className="h-3 w-3 rounded-full border border-white/15 bg-white/[0.03]" />
+          <span className="h-2.5 w-2.5 rounded-full border border-white/15 bg-white/[0.03]" />
         )}
       </span>
       <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
@@ -1013,7 +1038,7 @@ function TimelineRow({
             state === "done"
               ? "text-[12.5px] font-medium text-foreground/90"
               : state === "active"
-                ? "text-[12.5px] font-medium text-amber-200/90"
+                ? "text-[12.5px] font-medium text-[#22C55E]"
                 : "text-[12.5px] text-muted-foreground/70"
           }
         >
@@ -1029,3 +1054,122 @@ function TimelineRow({
   );
 }
 
+
+/** Animated stroke-draw checkmark — circle ring draws first, then check */
+function AnimatedCheck({ size = 120 }: { size?: number }) {
+  const r = size / 2 - 4;
+  const circ = 2 * Math.PI * r;
+  return (
+    <div
+      className="relative inline-flex items-center justify-center"
+      style={{
+        width: size,
+        height: size,
+        filter: "drop-shadow(0 0 24px rgba(34,197,94,0.45))",
+      }}
+    >
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="rgba(34,197,94,0.06)"
+          stroke="rgba(34,197,94,0.18)"
+          strokeWidth="1"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke="#22C55E"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray={circ}
+          strokeDashoffset={circ}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+          style={{
+            animation: "check-ring-draw 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.05s forwards",
+          }}
+        />
+        <path
+          d={`M ${size * 0.3} ${size * 0.52} L ${size * 0.45} ${size * 0.66} L ${size * 0.7} ${size * 0.38}`}
+          fill="none"
+          stroke="#22C55E"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray="60"
+          strokeDashoffset="60"
+          style={{
+            animation: "check-tick-draw 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.65s forwards",
+          }}
+        />
+      </svg>
+    </div>
+  );
+}
+
+/** Subtle muted gold + green particle confetti — fires once on mount */
+function ConfettiCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const resize = () => {
+      canvas.width = canvas.clientWidth * dpr;
+      canvas.height = canvas.clientHeight * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    resize();
+    const W = canvas.clientWidth;
+    const H = canvas.clientHeight;
+    const colors = ["#22C55E", "#16A34A", "#C9A84C", "#D4B872", "#F0D78C"];
+    type P = { x: number; y: number; vx: number; vy: number; r: number; c: string; a: number; rot: number; vr: number };
+    const parts: P[] = Array.from({ length: 36 }, () => ({
+      x: W / 2 + (Math.random() - 0.5) * 60,
+      y: H * 0.32 + (Math.random() - 0.5) * 20,
+      vx: (Math.random() - 0.5) * 4,
+      vy: -3 - Math.random() * 4,
+      r: 1.5 + Math.random() * 2,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      a: 1,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.2,
+    }));
+    let raf = 0;
+    let frame = 0;
+    const tick = () => {
+      frame++;
+      ctx.clearRect(0, 0, W, H);
+      parts.forEach((p) => {
+        p.vy += 0.08;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.a = Math.max(0, 1 - frame / 180);
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.c;
+        ctx.globalAlpha = p.a;
+        ctx.fillRect(-p.r, -p.r * 0.4, p.r * 2, p.r * 0.8);
+        ctx.restore();
+      });
+      if (frame < 200) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden
+      className="pointer-events-none absolute inset-0 h-full w-full"
+    />
+  );
+}

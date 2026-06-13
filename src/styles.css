@@ -517,6 +517,24 @@
   }
   .animate-countdown-pop { animation: countdown-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 
+  /* SVG stroke-draw checkmark */
+  @keyframes check-ring-draw { to { stroke-dashoffset: 0; } }
+  @keyframes check-tick-draw { to { stroke-dashoffset: 0; } }
+
+  /* Breathing glow for active timeline dot */
+  @keyframes timeline-breath {
+    0%, 100% { transform: scale(1); opacity: 0.55; }
+    50%      { transform: scale(1.25); opacity: 0.9; }
+  }
+  .animate-timeline-breath { animation: timeline-breath 1.8s ease-in-out infinite; }
+
+  /* Shimmer sweep for "Preparing your order…" button */
+  @keyframes shimmer-sweep {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .animate-shimmer-sweep { animation: shimmer-sweep 1.8s linear infinite; }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-orb-drift,
     .animate-orb-drift-slow,
