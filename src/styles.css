@@ -736,3 +736,12 @@
   /* perf-high — opt-in richer accent (slightly slower drift, more presence) */
   .perf-high .ambient-layer { opacity: 1; }
 }
+
+/* Success animation — particle float + spin keyframes */
+@keyframes particle-float {
+  0%, 100% { transform: translate(0, 0); opacity: 0.25; }
+  50%      { transform: translate(0, -12px); opacity: 0.85; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
