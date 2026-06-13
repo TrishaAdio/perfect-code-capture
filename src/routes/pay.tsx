@@ -578,16 +578,15 @@ function PayPage() {
           {/* Hero — confirmation */}
           <section className="animate-success-stagger mx-auto max-w-3xl text-center" style={{ animationDelay: "0.05s" }}>
             <div className="relative mx-auto flex h-16 w-16 items-center justify-center">
-              <span className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/14" />
-              <div className="animate-success-pop relative flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+              <div className="animate-success-pop relative flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(34,197,94,0.4)] bg-[rgba(34,197,94,0.10)] text-[#22C55E]" style={{ boxShadow: "0 0 24px rgba(34,197,94,0.4)" }}>
                 <Check className="h-7 w-7" strokeWidth={2.6} />
               </div>
             </div>
-            <p className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-emerald-300/90">
-              <span className="h-1 w-1 rounded-full bg-emerald-400" />
+            <p className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#22C55E]">
+              <span className="h-1 w-1 rounded-full bg-[#22C55E]" />
               Order Confirmed
             </p>
-            <h1 className="mt-5 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-foreground sm:text-[2.75rem]">
+            <h1 className="mt-5 text-[28px] font-bold leading-[1.1] tracking-[-0.5px] text-foreground sm:text-[32px]">
               Your premium access is being prepared.
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-[14.5px] leading-[1.65] text-muted-foreground sm:text-[15px]">
