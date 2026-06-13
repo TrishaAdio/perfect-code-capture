@@ -1053,13 +1053,11 @@ function TimelineRow({
 
 
 /**
- * Success animation — uses the uploaded MP4 as a pure visual asset.
- * - autoplay, muted, playsInline, no controls, no chrome
- * - mix-blend-mode: screen knocks out the video's dark background so the
- *   animation reads as native page content instead of an embedded video
- * - soft emerald glow + radial ambience underneath casts light onto the page
+ * Success animation — uses the uploaded MP4 as a pure decorative motion element.
+ * Dissolves into the page via radial mask + screen blend, with an emerald
+ * volumetric glow and floating particles for depth. No visible video boundary.
  */
-function SuccessAnimation({ size = 380 }: { size?: number }) {
+function SuccessAnimation({ size = 285 }: { size?: number }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   useEffect(() => {
     const v = videoRef.current;
@@ -1068,34 +1066,40 @@ function SuccessAnimation({ size = 380 }: { size?: number }) {
     const p = v.play();
     if (p && typeof p.catch === "function") p.catch(() => { /* autoplay blocked */ });
   }, []);
+  // Feathered radial mask — animation dissolves into the page edges
+  const featherMask =
+    "radial-gradient(circle at 50% 50%, #000 38%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.35) 72%, transparent 86%)";
   return (
     <div
-      className="relative mx-auto"
+      className="relative mx-auto -mb-6"
       style={{
-        width: "min(100%, " + size + "px)",
+        width: `min(100%, ${size}px)`,
         aspectRatio: "1 / 1",
       }}
       aria-hidden
     >
-      {/* Ambient emerald glow behind the animation */}
+      {/* Volumetric emerald bloom — sits behind, casts light onto headline */}
       <div
-        className="pointer-events-none absolute inset-[-12%] -z-10"
+        className="pointer-events-none absolute inset-[-30%] -z-10"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(34,197,94,0.32) 0%, rgba(34,197,94,0.12) 28%, transparent 62%)",
-          filter: "blur(18px)",
+            "radial-gradient(circle at 50% 50%, rgba(34,197,94,0.32) 0%, rgba(34,197,94,0.14) 22%, rgba(16,185,129,0.06) 45%, transparent 70%)",
+          filter: "blur(28px)",
         }}
       />
-      {/* Slow rotating halo for subtle motion behind the video */}
+      {/* Slow rotating halo — extra ambient motion behind the video */}
       <div
-        className="pointer-events-none absolute inset-[6%] -z-10 rounded-full opacity-60"
+        className="pointer-events-none absolute inset-[-10%] -z-10 rounded-full opacity-55"
         style={{
           background:
-            "conic-gradient(from 0deg, rgba(34,197,94,0.0), rgba(34,197,94,0.18), rgba(34,197,94,0.0) 60%)",
-          animation: "spin 14s linear infinite",
-          filter: "blur(12px)",
+            "conic-gradient(from 0deg, transparent, rgba(34,197,94,0.22), transparent 55%)",
+          animation: "spin 16s linear infinite",
+          filter: "blur(22px)",
         }}
       />
+      {/* Floating particles — pure CSS, no layout impact */}
+      <Particles />
+
       <video
         ref={videoRef}
         src={successAnimationAsset.url}
@@ -1109,12 +1113,52 @@ function SuccessAnimation({ size = 380 }: { size?: number }) {
         className="relative h-full w-full object-contain"
         style={{
           mixBlendMode: "screen",
-          filter: "drop-shadow(0 8px 28px rgba(34,197,94,0.35))",
+          WebkitMaskImage: featherMask,
+          maskImage: featherMask,
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskSize: "100% 100%",
+          maskSize: "100% 100%",
+          filter:
+            "brightness(1.05) contrast(1.08) drop-shadow(0 0 22px rgba(34,197,94,0.45))",
         }}
       />
     </div>
   );
 }
+
+function Particles() {
+  const dots = [
+    { l: "18%", t: "32%", d: "0s", s: 2 },
+    { l: "82%", t: "28%", d: "1.4s", s: 1.5 },
+    { l: "26%", t: "72%", d: "2.2s", s: 1.8 },
+    { l: "74%", t: "68%", d: "0.7s", s: 1.6 },
+    { l: "50%", t: "14%", d: "3.1s", s: 1.4 },
+    { l: "12%", t: "55%", d: "2.6s", s: 1.2 },
+    { l: "88%", t: "52%", d: "1.9s", s: 1.3 },
+  ];
+  return (
+    <div className="pointer-events-none absolute inset-[-15%] -z-10">
+      {dots.map((p, i) => (
+        <span
+          key={i}
+          className="absolute rounded-full bg-[#22C55E]"
+          style={{
+            left: p.l,
+            top: p.t,
+            width: p.s,
+            height: p.s,
+            boxShadow: "0 0 8px rgba(34,197,94,0.9)",
+            opacity: 0.55,
+            animation: `particle-float 6s ease-in-out ${p.d} infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+
 
 
 /** Animated stroke-draw checkmark — circle ring draws first, then check */
