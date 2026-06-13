@@ -437,7 +437,7 @@ function PayPage() {
 
         <main className="relative mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6 py-12 text-center">
           {/* Hero success animation (video used as a visual asset, not a player) */}
-          <SuccessAnimation size={380} />
+          <SuccessAnimation size={285} />
 
           <h1 className="animate-success-stagger mt-2 text-[36px] font-bold leading-[1.05] tracking-[-0.025em] text-white sm:text-[40px]" style={{ animationDelay: "0.25s", textShadow: "0 0 28px rgba(34,197,94,0.18)" }}>
             Payment Successful
@@ -578,7 +578,7 @@ function PayPage() {
         <main className="relative mx-auto w-full max-w-6xl px-6 py-12 sm:py-16">
           {/* Hero — confirmation */}
           <section className="mx-auto max-w-3xl text-center">
-            <SuccessAnimation size={360} />
+            <SuccessAnimation size={270} />
             <p className="animate-success-stagger mt-2 inline-flex items-center gap-1.5 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#22C55E]" style={{ animationDelay: "0.2s" }}>
               <span className="h-1 w-1 rounded-full bg-[#22C55E]" />
               Order Confirmed
