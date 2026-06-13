@@ -1054,3 +1054,122 @@ function TimelineRow({
   );
 }
 
+
+/** Animated stroke-draw checkmark — circle ring draws first, then check */
+function AnimatedCheck({ size = 120 }: { size?: number }) {
+  const r = size / 2 - 4;
+  const circ = 2 * Math.PI * r;
+  return (
+    <div
+      className="relative inline-flex items-center justify-center"
+      style={{
+        width: size,
+        height: size,
+        filter: "drop-shadow(0 0 24px rgba(34,197,94,0.45))",
+      }}
+    >
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="rgba(34,197,94,0.06)"
+          stroke="rgba(34,197,94,0.18)"
+          strokeWidth="1"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke="#22C55E"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray={circ}
+          strokeDashoffset={circ}
+          transform={`rotate(-90 ${size / 2} ${size / 2})`}
+          style={{
+            animation: "check-ring-draw 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.05s forwards",
+          }}
+        />
+        <path
+          d={`M ${size * 0.3} ${size * 0.52} L ${size * 0.45} ${size * 0.66} L ${size * 0.7} ${size * 0.38}`}
+          fill="none"
+          stroke="#22C55E"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray="60"
+          strokeDashoffset="60"
+          style={{
+            animation: "check-tick-draw 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.65s forwards",
+          }}
+        />
+      </svg>
+    </div>
+  );
+}
+
+/** Subtle muted gold + green particle confetti — fires once on mount */
+function ConfettiCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const resize = () => {
+      canvas.width = canvas.clientWidth * dpr;
+      canvas.height = canvas.clientHeight * dpr;
+      ctx.scale(dpr, dpr);
+    };
+    resize();
+    const W = canvas.clientWidth;
+    const H = canvas.clientHeight;
+    const colors = ["#22C55E", "#16A34A", "#C9A84C", "#D4B872", "#F0D78C"];
+    type P = { x: number; y: number; vx: number; vy: number; r: number; c: string; a: number; rot: number; vr: number };
+    const parts: P[] = Array.from({ length: 36 }, () => ({
+      x: W / 2 + (Math.random() - 0.5) * 60,
+      y: H * 0.32 + (Math.random() - 0.5) * 20,
+      vx: (Math.random() - 0.5) * 4,
+      vy: -3 - Math.random() * 4,
+      r: 1.5 + Math.random() * 2,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      a: 1,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.2,
+    }));
+    let raf = 0;
+    let frame = 0;
+    const tick = () => {
+      frame++;
+      ctx.clearRect(0, 0, W, H);
+      parts.forEach((p) => {
+        p.vy += 0.08;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.a = Math.max(0, 1 - frame / 180);
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.c;
+        ctx.globalAlpha = p.a;
+        ctx.fillRect(-p.r, -p.r * 0.4, p.r * 2, p.r * 0.8);
+        ctx.restore();
+      });
+      if (frame < 200) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden
+      className="pointer-events-none absolute inset-0 h-full w-full"
+    />
+  );
+}
