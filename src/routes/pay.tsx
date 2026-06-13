@@ -101,6 +101,26 @@ function PayPage() {
   const [paidAt, setPaidAt] = useState<Date | null>(null);
   const [waClickedAt, setWaClickedAt] = useState<Date | null>(null);
   const [now, setNow] = useState<Date>(() => new Date());
+  const [celebrating, setCelebrating] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+
+  // Show the celebration screen first when payment is confirmed, then auto-advance
+  useEffect(() => {
+    if (!paid) return;
+    setCelebrating(true);
+    setCountdown(3);
+    const tick = setInterval(() => {
+      setCountdown((c) => {
+        if (c <= 1) {
+          clearInterval(tick);
+          setCelebrating(false);
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+    return () => clearInterval(tick);
+  }, [paid]);
 
   // Tick a "now" clock once paid (for relative timestamps)
   useEffect(() => {
