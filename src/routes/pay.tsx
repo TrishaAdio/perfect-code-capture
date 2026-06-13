@@ -1052,6 +1052,71 @@ function TimelineRow({
 }
 
 
+/**
+ * Success animation — uses the uploaded MP4 as a pure visual asset.
+ * - autoplay, muted, playsInline, no controls, no chrome
+ * - mix-blend-mode: screen knocks out the video's dark background so the
+ *   animation reads as native page content instead of an embedded video
+ * - soft emerald glow + radial ambience underneath casts light onto the page
+ */
+function SuccessAnimation({ size = 380 }: { size?: number }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    const p = v.play();
+    if (p && typeof p.catch === "function") p.catch(() => { /* autoplay blocked */ });
+  }, []);
+  return (
+    <div
+      className="relative mx-auto"
+      style={{
+        width: "min(100%, " + size + "px)",
+        aspectRatio: "1 / 1",
+      }}
+      aria-hidden
+    >
+      {/* Ambient emerald glow behind the animation */}
+      <div
+        className="pointer-events-none absolute inset-[-12%] -z-10"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(34,197,94,0.32) 0%, rgba(34,197,94,0.12) 28%, transparent 62%)",
+          filter: "blur(18px)",
+        }}
+      />
+      {/* Slow rotating halo for subtle motion behind the video */}
+      <div
+        className="pointer-events-none absolute inset-[6%] -z-10 rounded-full opacity-60"
+        style={{
+          background:
+            "conic-gradient(from 0deg, rgba(34,197,94,0.0), rgba(34,197,94,0.18), rgba(34,197,94,0.0) 60%)",
+          animation: "spin 14s linear infinite",
+          filter: "blur(12px)",
+        }}
+      />
+      <video
+        ref={videoRef}
+        src={successAnimationAsset.url}
+        autoPlay
+        muted
+        playsInline
+        loop={false}
+        preload="auto"
+        disablePictureInPicture
+        controls={false}
+        className="relative h-full w-full object-contain"
+        style={{
+          mixBlendMode: "screen",
+          filter: "drop-shadow(0 8px 28px rgba(34,197,94,0.35))",
+        }}
+      />
+    </div>
+  );
+}
+
+
 /** Animated stroke-draw checkmark — circle ring draws first, then check */
 function AnimatedCheck({ size = 120 }: { size?: number }) {
   const r = size / 2 - 4;
