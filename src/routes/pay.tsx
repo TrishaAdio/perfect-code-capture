@@ -2,13 +2,19 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import {
   ArrowLeft,
+  ArrowRight,
+  Check,
   CheckCircle2,
+  Clock,
   Download,
+  Home,
   Lock,
+  Package,
   RefreshCw,
   Share2,
   ShieldCheck,
   Smartphone,
+  Sparkles,
   XCircle,
   MessageCircle,
 } from "lucide-react";
