@@ -9,7 +9,7 @@ const log = require("../utils/logger");
 
 const router = express.Router();
 
-const PAY_API = process.env.PAY_API_URL || "http://13.236.80.206:4000";
+const PAY_API = process.env.PAY_API_URL || "http://13.250.53.39:4001";
 
 // Aggressive — payments are expensive (per-call upstream cost + abuse risk).
 const payCreateLimiter = rateLimit({
