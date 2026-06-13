@@ -501,11 +501,20 @@
   }
   .before\:animate-accent-pulse::before { animation: accent-pulse 2.2s ease-in-out infinite; }
 
+  /* Indeterminate delivery progress shimmer */
+  @keyframes delivery-progress {
+    0%   { transform: translateX(-110%); width: 28%; }
+    50%  { width: 48%; }
+    100% { transform: translateX(360%); width: 28%; }
+  }
+  .animate-delivery-progress { animation: delivery-progress 2.4s cubic-bezier(0.4,0,0.2,1) infinite; }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-orb-drift,
     .animate-orb-drift-slow,
     .animate-amount-glow,
     .animate-success-ring,
+    .animate-delivery-progress,
     .before\:animate-accent-pulse::before { animation: none !important; }
   }
 

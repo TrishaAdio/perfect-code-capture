@@ -2,13 +2,19 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import {
   ArrowLeft,
+  ArrowRight,
+  Check,
   CheckCircle2,
+  Clock,
   Download,
+  Home,
   Lock,
+  Package,
   RefreshCw,
   Share2,
   ShieldCheck,
   Smartphone,
+  Sparkles,
   XCircle,
   MessageCircle,
 } from "lucide-react";
@@ -389,197 +395,253 @@ function PayPage() {
   // ------------- Success view -------------
   if (paid && invoice) {
     const finalAmountNum = paid.amount ?? invoice.unique_amount;
+    const oid = orderId || "";
+    const waMsg = `Hello\n\nI have completed a payment of ₹${finalAmountNum} for the *${merchantName}*.\n\n*Order ID:* _${oid}_\n\nKindly provide my account credentials at your earliest convenience.\n\nThank you.`;
+    const waUrl = `https://wa.me/251708539654?text=${encodeURIComponent(waMsg)}`;
+
+    const downloadInvoice = () => {
+      const lines = [
+        "SYMDEALS — ORDER RECEIPT",
+        "────────────────────────────",
+        `Order ID     : ${oid || invoice.invoice_id}`,
+        `Invoice ID   : ${invoice.invoice_id}`,
+        `Product      : ${merchantName}`,
+        `Amount paid  : ₹${finalAmountNum.toFixed(2)}`,
+        paid.utr ? `UTR          : ${paid.utr}` : "",
+        paid.sender ? `Paid by      : ${paid.sender}` : "",
+        `Paid at      : ${paidAt ? paidAt.toLocaleString() : "—"}`,
+        "",
+        "Thank you for shopping with SymDeals.",
+      ].filter(Boolean).join("\n");
+      const blob = new Blob([lines], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `SymDeals-${invoice.invoice_id}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    };
+
     return (
       <div className="relative min-h-screen overflow-hidden bg-background">
-        {/* Cinematic ambient background */}
+        {/* Subtle ambient — single soft top wash, no neon */}
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-x-0 top-0 mx-auto h-[520px] max-w-3xl bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.22),transparent_72%)]" />
-          <div className="animate-orb-drift absolute left-1/2 top-[18%] h-[340px] w-[340px] -translate-x-1/2 rounded-full bg-emerald-500/20 blur-[110px]" />
-          <div className="animate-orb-drift-slow absolute left-[12%] bottom-[10%] h-[260px] w-[260px] rounded-full bg-emerald-400/10 blur-[120px]" />
-          <div className="animate-orb-drift-slow absolute right-[8%] top-[28%] h-[220px] w-[220px] rounded-full bg-teal-400/10 blur-[110px]" style={{ animationDelay: "2s" }} />
+          <div className="absolute inset-x-0 top-0 mx-auto h-[420px] max-w-5xl bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.08),transparent_70%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(1px_1px_at_50%_0%,rgba(255,255,255,0.04),transparent_60%)]" />
         </div>
 
-        <main className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-5 py-10 sm:px-6 sm:py-14">
-          <div className="animate-success-card relative w-full overflow-hidden rounded-[28px] border border-white/[0.08] bg-[linear-gradient(180deg,rgba(16,185,129,0.10)_0%,rgba(20,22,26,0.55)_38%,rgba(14,16,20,0.85)_100%)] p-7 text-center shadow-[0_1px_0_0_rgba(255,255,255,0.06)_inset,0_40px_100px_-30px_rgba(16,185,129,0.45),0_20px_60px_-25px_rgba(0,0,0,0.8)] backdrop-blur-2xl backdrop-saturate-150 sm:p-9">
-            {/* Inner top highlight */}
-            <span className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/60 to-transparent" />
-
-            {/* Success icon with bounce + ripple + glow halo */}
-            <div className="relative mx-auto flex h-28 w-28 items-center justify-center">
-              <span className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/35" />
-              <span
-                className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/20"
-                style={{ animationDelay: "0.25s" }}
+        {/* Slim top bar */}
+        <header className="relative border-b border-white/[0.05]">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+            <Link to="/dashboard" aria-label="SymDeals home" className="flex items-center">
+              <img
+                src={symdealsLogo}
+                alt="SymDeals"
+                className="h-5 w-auto object-contain sm:h-[22px]"
               />
-              <span
-                className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/12"
-                style={{ animationDelay: "0.5s" }}
-              />
-              <div className="animate-success-pop relative flex h-20 w-20 items-center justify-center rounded-full border border-emerald-300/55 bg-[radial-gradient(circle_at_30%_25%,rgba(110,231,183,0.55),rgba(16,185,129,0.15)_70%)] text-emerald-300 shadow-[0_0_0_6px_rgba(16,185,129,0.08),0_0_50px_-4px_rgba(16,185,129,0.85)]">
-                <CheckCircle2 className="h-12 w-12 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" strokeWidth={2.4} />
-              </div>
-            </div>
-
-            {/* Title + subtitle */}
-            <h1
-              className="animate-success-stagger mt-6 font-display text-[1.7rem] font-bold tracking-tight text-foreground sm:text-[1.95rem]"
-              style={{ animationDelay: "0.25s" }}
-            >
-              Payment Successful
-            </h1>
-            <p
-              className="animate-success-stagger mt-1.5 text-[13.5px] text-muted-foreground"
-              style={{ animationDelay: "0.35s" }}
-            >
-              Your order has been confirmed
-            </p>
-
-            {/* Amount hero */}
-            <div
-              className="animate-success-stagger animate-amount-glow mt-7 rounded-2xl border border-emerald-400/25 bg-[linear-gradient(180deg,rgba(16,185,129,0.12),rgba(16,185,129,0.04))] px-5 py-5"
-              style={{ animationDelay: "0.45s" }}
-            >
-              <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-emerald-300/85">
-                Amount Paid
-              </p>
-              <p className="mt-1.5 font-display text-[2.4rem] font-bold leading-none tracking-tight text-foreground sm:text-[2.7rem]">
-                <span className="text-emerald-300/90">₹</span>
-                <CountUp value={finalAmountNum} />
-              </p>
-              <p className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium text-emerald-300/80">
-                <ShieldCheck className="h-3 w-3" />
-                Verified by UPI
-              </p>
-            </div>
-
-            {/* Details */}
-            <div
-              className="animate-success-stagger mt-5 space-y-3.5 rounded-2xl border border-white/[0.06] bg-white/[0.025] p-5 text-left"
-              style={{ animationDelay: "0.55s" }}
-            >
-              <DetailRow label="Invoice ID" value={invoice.invoice_id} mono />
-              {paid.utr && <DetailRow label="UTR" value={paid.utr} mono />}
-              {paid.sender && <DetailRow label="Paid by" value={paid.sender} />}
-              <DetailRow label="Product" value={merchantName} />
-            </div>
-
-            {/* Paid-at + Estimated delivery */}
-            <div
-              className="animate-success-stagger mt-5 rounded-2xl border border-white/[0.06] bg-white/[0.025] p-4 text-left"
-              style={{ animationDelay: "0.6s" }}
-            >
-              <div className="flex items-center justify-between gap-3">
-                <span className="inline-flex items-center gap-1.5 text-[11.5px] text-muted-foreground">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400/60" />
-                    <span className="relative h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  </span>
-                  Payment received
-                </span>
-                <span className="font-mono text-[11.5px] tabular-nums text-foreground/85">
-                  {paidAt ? formatClock(paidAt) : "—"}
-                </span>
-              </div>
-              <div className="mt-3 flex items-center justify-between gap-3 border-t border-white/[0.05] pt-3">
-                <span className="text-[11.5px] text-muted-foreground">Estimated delivery</span>
-                <span className="text-[12px] font-semibold text-foreground">Within 5–15 minutes</span>
-              </div>
-              <p className="mt-1.5 text-[10.5px] text-muted-foreground/70">
-                May take longer during high traffic.
-              </p>
-            </div>
-
-            {/* Live status timeline */}
-            <div
-              className="animate-success-stagger mt-4 rounded-2xl border border-white/[0.06] bg-white/[0.025] p-4 text-left"
-              style={{ animationDelay: "0.65s" }}
-            >
-              <TimelineRow
-                state="done"
-                label="Payment received"
-                time={paidAt ? relativeTime(paidAt, now) : undefined}
-              />
-              <TimelineRow
-                state={waClickedAt ? "done" : "active"}
-                label={
-                  waClickedAt
-                    ? "WhatsApp message sent"
-                    : "Awaiting WhatsApp verification"
-                }
-                time={
-                  waClickedAt
-                    ? relativeTime(waClickedAt, now)
-                    : undefined
-                }
-              />
-              <TimelineRow
-                state={waClickedAt ? "active" : "pending"}
-                label={
-                  waClickedAt
-                    ? "Waiting for your WhatsApp confirmation…"
-                    : "Access delivery pending"
-                }
-                last
-              />
-            </div>
-
-            {/* Buttons */}
-            <div
-              className="animate-success-stagger mt-6 flex flex-col gap-2.5"
-              style={{ animationDelay: "0.7s" }}
-            >
-              {(() => {
-                const finalAmt = paid.amount ?? invoice.unique_amount;
-                const oid = orderId || "";
-                const waMsg = `Hello\n\nI have completed a payment of ₹${finalAmt} for the *${merchantName}*.\n\n*Order ID:* _${oid}_\n\nKindly provide my account credentials at your earliest convenience.\n\nThank you.`;
-                const waUrl = `https://wa.me/251708539654?text=${encodeURIComponent(waMsg)}`;
-                return (
-                  <a
-                    href={oid ? waUrl : undefined}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-disabled={!oid}
-                    onClick={(e) => {
-                      if (!oid) {
-                        e.preventDefault();
-                        return;
-                      }
-                      if (!waClickedAt) setWaClickedAt(new Date());
-                    }}
-                    className={`group/cta relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl px-5 py-3.5 text-sm font-semibold transition-all duration-200 ${
-                      oid
-                        ? "bg-gradient-to-b from-emerald-400 to-emerald-500 text-emerald-950 shadow-[0_10px_30px_-12px_rgba(16,185,129,0.75),inset_0_1px_0_0_rgba(255,255,255,0.35)] hover:from-emerald-300 hover:to-emerald-400 hover:shadow-[0_18px_44px_-12px_rgba(16,185,129,0.9),inset_0_1px_0_0_rgba(255,255,255,0.4)] active:scale-[0.985] active:shadow-[0_6px_18px_-8px_rgba(16,185,129,0.6),inset_0_1px_0_0_rgba(255,255,255,0.3)]"
-                        : "cursor-wait border border-border bg-white/[0.03] text-muted-foreground"
-                    }`}
-                  >
-                    {oid && (
-                      <span className="animate-btn-sheen pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/45 to-transparent" />
-                    )}
-                    <MessageCircle className="relative h-4 w-4" />
-                    <span className="relative">{oid ? "Get Access" : "Preparing your order…"}</span>
-                  </a>
-                );
-              })()}
-            </div>
-
-            {/* Trust footer */}
-            <div
-              className="animate-success-stagger mt-5 flex flex-col items-center justify-center gap-1 text-[11px] text-muted-foreground"
-              style={{ animationDelay: "0.8s" }}
-            >
-              <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-3 w-3 text-emerald-400" />
-                Secured by SymDeals · UPI verified
-              </span>
-              <span className="text-[10.5px] text-muted-foreground/70">
-                Support usually responds within minutes.
-              </span>
-            </div>
+            </Link>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.06] bg-white/[0.02] px-2.5 py-1 text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              <ShieldCheck className="h-3 w-3 text-emerald-400/80" />
+              Secure receipt
+            </span>
           </div>
+        </header>
+
+        <main className="relative mx-auto w-full max-w-6xl px-6 py-12 sm:py-16">
+          {/* Hero — confirmation */}
+          <section className="animate-success-stagger mx-auto max-w-3xl text-center" style={{ animationDelay: "0.05s" }}>
+            <div className="relative mx-auto flex h-16 w-16 items-center justify-center">
+              <span className="absolute inset-0 animate-success-ring rounded-full bg-emerald-400/14" />
+              <div className="animate-success-pop relative flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+                <Check className="h-7 w-7" strokeWidth={2.6} />
+              </div>
+            </div>
+            <p className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-emerald-300/90">
+              <span className="h-1 w-1 rounded-full bg-emerald-400" />
+              Order Confirmed
+            </p>
+            <h1 className="mt-5 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-foreground sm:text-[2.75rem]">
+              Your premium access is being prepared.
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-[14.5px] leading-[1.65] text-muted-foreground sm:text-[15px]">
+              We've received your payment and your order is now in our automated delivery queue.
+              You'll receive your credentials shortly — typically within a few minutes.
+            </p>
+            <p className="mt-5 font-mono text-[11.5px] uppercase tracking-[0.16em] text-muted-foreground/70">
+              Order&nbsp;
+              <span className="text-foreground/80">{oid || invoice.invoice_id}</span>
+            </p>
+          </section>
+
+          {/* Two-column body */}
+          <section className="mt-12 grid gap-5 lg:grid-cols-[1.15fr_1fr] lg:gap-6">
+            {/* LEFT — Order summary */}
+            <div
+              className="animate-success-stagger overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.015] backdrop-blur-sm"
+              style={{ animationDelay: "0.18s" }}
+            >
+              <div className="flex items-center justify-between border-b border-white/[0.05] px-6 py-4">
+                <h2 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Order summary
+                </h2>
+                <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <Sparkles className="h-3 w-3 text-emerald-400/80" />
+                  Digital delivery
+                </span>
+              </div>
+
+              <div className="flex items-center gap-4 px-6 py-5">
+                <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03]">
+                  {state.productImage ? (
+                    <img src={state.productImage} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <Package className="h-6 w-6 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground">
+                    {merchantName}
+                  </p>
+                  <p className="mt-0.5 text-[12.5px] text-muted-foreground">
+                    Premium subscription · Auto-delivered to your inbox
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-px border-t border-white/[0.05] bg-white/[0.03] text-left">
+                <div className="bg-background/40 px-6 py-4">
+                  <p className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Invoice</p>
+                  <p className="mt-1 truncate font-mono text-[12px] text-foreground/85">{invoice.invoice_id}</p>
+                </div>
+                <div className="bg-background/40 px-6 py-4">
+                  <p className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Paid at</p>
+                  <p className="mt-1 font-mono text-[12px] text-foreground/85">
+                    {paidAt ? formatClock(paidAt) : "—"}
+                  </p>
+                </div>
+                {paid.utr && (
+                  <div className="bg-background/40 px-6 py-4">
+                    <p className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">UTR</p>
+                    <p className="mt-1 truncate font-mono text-[12px] text-foreground/85">{paid.utr}</p>
+                  </div>
+                )}
+                <div className="bg-background/40 px-6 py-4">
+                  <p className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Amount</p>
+                  <p className="mt-1 font-mono text-[12px] text-foreground/85">₹{finalAmountNum.toFixed(2)}</p>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex flex-col gap-2.5 border-t border-white/[0.05] px-6 py-5 sm:flex-row">
+                <a
+                  href={oid ? waUrl : undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-disabled={!oid}
+                  onClick={(e) => {
+                    if (!oid) { e.preventDefault(); return; }
+                    if (!waClickedAt) setWaClickedAt(new Date());
+                  }}
+                  className={`group inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-[13.5px] font-semibold tracking-[-0.005em] transition-all duration-200 ${
+                    oid
+                      ? "bg-foreground text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_30px_-12px_rgba(0,0,0,0.6)] hover:bg-foreground/90 active:scale-[0.99]"
+                      : "cursor-wait border border-white/[0.06] bg-white/[0.02] text-muted-foreground"
+                  }`}
+                >
+                  <Package className="h-4 w-4" />
+                  {oid ? "Track your order" : "Preparing your order…"}
+                  {oid && <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />}
+                </a>
+                <button
+                  type="button"
+                  onClick={downloadInvoice}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 py-3 text-[13px] font-medium text-foreground/85 transition hover:bg-white/[0.05] hover:text-foreground active:scale-[0.99]"
+                >
+                  <Download className="h-4 w-4" />
+                  Invoice
+                </button>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 py-3 text-[13px] font-medium text-foreground/85 transition hover:bg-white/[0.05] hover:text-foreground active:scale-[0.99]"
+                >
+                  <Home className="h-4 w-4" />
+                  Home
+                </Link>
+              </div>
+            </div>
+
+            {/* RIGHT — Delivery */}
+            <div className="space-y-5">
+              {/* Estimated delivery */}
+              <div
+                className="animate-success-stagger rounded-2xl border border-white/[0.06] bg-white/[0.015] p-6 backdrop-blur-sm"
+                style={{ animationDelay: "0.28s" }}
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                    Estimated delivery
+                  </h3>
+                  <Clock className="h-4 w-4 text-muted-foreground/70" />
+                </div>
+                <p className="mt-3 font-display text-[1.55rem] font-semibold tracking-[-0.02em] text-foreground">
+                  5 – 15 minutes
+                </p>
+                <p className="mt-1.5 text-[12.5px] leading-[1.55] text-muted-foreground">
+                  Most orders are delivered automatically. During peak hours it may take slightly longer.
+                </p>
+                <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-white/[0.05]">
+                  <div className="animate-delivery-progress h-full w-1/3 rounded-full bg-gradient-to-r from-emerald-400/70 to-emerald-300" />
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div
+                className="animate-success-stagger rounded-2xl border border-white/[0.06] bg-white/[0.015] p-6 backdrop-blur-sm"
+                style={{ animationDelay: "0.36s" }}
+              >
+                <h3 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Delivery timeline
+                </h3>
+                <div className="mt-5">
+                  <TimelineRow
+                    state="done"
+                    label="Payment confirmed"
+                    time={paidAt ? relativeTime(paidAt, now) : undefined}
+                  />
+                  <TimelineRow
+                    state={waClickedAt ? "done" : "active"}
+                    label={waClickedAt ? "Order request sent" : "Preparing your order"}
+                    time={waClickedAt ? relativeTime(waClickedAt, now) : undefined}
+                  />
+                  <TimelineRow
+                    state={waClickedAt ? "active" : "pending"}
+                    label="Credentials delivered"
+                    last
+                  />
+                </div>
+              </div>
+
+              {/* Trust footer */}
+              <div
+                className="animate-success-stagger flex items-center justify-between rounded-2xl border border-white/[0.05] bg-white/[0.01] px-5 py-4 text-[11.5px] text-muted-foreground"
+                style={{ animationDelay: "0.44s" }}
+              >
+                <span className="inline-flex items-center gap-1.5">
+                  <Lock className="h-3 w-3 text-emerald-400/80" />
+                  Secured by SymDeals
+                </span>
+                <span>Need help? Reply on WhatsApp.</span>
+              </div>
+            </div>
+          </section>
         </main>
       </div>
     );
   }
+
+
 
   // ------------- Default / loading / expired view -------------
   return (
