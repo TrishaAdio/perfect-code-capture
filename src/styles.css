@@ -514,6 +514,7 @@
     .animate-orb-drift-slow,
     .animate-amount-glow,
     .animate-success-ring,
+    .animate-delivery-progress,
     .before\:animate-accent-pulse::before { animation: none !important; }
   }
 
