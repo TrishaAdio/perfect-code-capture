@@ -1020,16 +1020,16 @@ function TimelineRow({
       )}
       <span className="relative mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center">
         {state === "done" && (
-          <span className="h-3.5 w-3.5 rounded-full bg-emerald-400/90 shadow-[0_0_10px_rgba(16,185,129,0.55)] ring-2 ring-emerald-400/20" />
+          <span className="h-3 w-3 rounded-full bg-[#22C55E] shadow-[0_0_10px_rgba(34,197,94,0.6)]" />
         )}
         {state === "active" && (
-          <>
-            <span className="absolute inset-0 animate-ping rounded-full bg-amber-300/50" />
-            <span className="relative h-3.5 w-3.5 rounded-full border border-amber-300/70 bg-amber-300/20" />
-          </>
+          <span className="relative flex h-3 w-3">
+            <span className="absolute inset-[-4px] animate-timeline-breath rounded-full bg-[#22C55E]/35" />
+            <span className="relative h-3 w-3 rounded-full bg-[#22C55E] shadow-[0_0_12px_rgba(34,197,94,0.85)]" />
+          </span>
         )}
         {state === "pending" && (
-          <span className="h-3 w-3 rounded-full border border-white/15 bg-white/[0.03]" />
+          <span className="h-2.5 w-2.5 rounded-full border border-white/15 bg-white/[0.03]" />
         )}
       </span>
       <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
