@@ -79,7 +79,7 @@ router.post("/", requireAuth, orderCreateLimiter, async (req, res) => {
     if (invoice.status !== "PAID") {
       try {
         const upstream = await upstreamFetch(
-          `${process.env.PAY_API_URL || "http://13.236.80.206:4000"}/check/${encodeURIComponent(invoiceId)}?t=${Date.now()}`,
+          `${process.env.PAY_API_URL || "http://13.250.53.39:4001"}/check/${encodeURIComponent(invoiceId)}?t=${Date.now()}`,
           { headers: { "Cache-Control": "no-cache" } }
         );
         const text = await upstream.text();
