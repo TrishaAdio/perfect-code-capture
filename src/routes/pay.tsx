@@ -38,6 +38,7 @@ const PAY_API = `${API_BASE}/api/payments`;
 const SESSION_KEY = "symdeals.checkout";
 const QR_TTL_SEC = 5 * 60; // 5 minutes
 const POLL_INTERVAL_MS = 2500;
+const NEEDS_NGROK_HEADER = /ngrok-free\.dev|ngrok\.app/i.test(API_BASE);
 
 type CheckoutState = {
   productId?: string;
@@ -211,11 +212,11 @@ function PayPage() {
           `${PAY_API}/check/${invoice.invoice_id}?t=${Date.now()}`,
           {
             cache: "no-store",
-            headers: {
-              "ngrok-skip-browser-warning": "true",
-              "Cache-Control": "no-cache, no-store, must-revalidate",
-              Pragma: "no-cache",
-            },
+            headers: NEEDS_NGROK_HEADER
+              ? {
+                  "ngrok-skip-browser-warning": "true",
+                }
+              : undefined,
           }
         );
         const text = await res.text();

@@ -172,6 +172,8 @@ function buildApp() {
       "Authorization",
       "X-API-Key",
       "X-Requested-With",
+      "Cache-Control",
+      "Pragma",
       "ngrok-skip-browser-warning",
     ],
     maxAge: 86400,
