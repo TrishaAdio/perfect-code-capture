@@ -668,15 +668,18 @@ function PayPage() {
                     if (!oid) { e.preventDefault(); return; }
                     if (!waClickedAt) setWaClickedAt(new Date());
                   }}
-                  className={`group inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-[13.5px] font-semibold tracking-[-0.005em] transition-all duration-200 ${
+                  className={`group relative inline-flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl px-4 py-3 text-[13.5px] font-semibold tracking-[-0.005em] transition-all duration-200 ${
                     oid
                       ? "bg-foreground text-background shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_10px_30px_-12px_rgba(0,0,0,0.6)] hover:bg-foreground/90 active:scale-[0.99]"
-                      : "cursor-wait border border-white/[0.06] bg-white/[0.02] text-muted-foreground"
+                      : "cursor-wait border border-[rgba(34,197,94,0.2)] bg-[rgba(34,197,94,0.05)] text-[#22C55E]"
                   }`}
                 >
-                  <Package className="h-4 w-4" />
-                  {oid ? "Track your order" : "Preparing your order…"}
-                  {oid && <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />}
+                  {!oid && (
+                    <span className="pointer-events-none absolute inset-0 animate-shimmer-sweep bg-[linear-gradient(110deg,transparent_30%,rgba(34,197,94,0.18)_50%,transparent_70%)]" />
+                  )}
+                  <Package className="relative h-4 w-4" />
+                  <span className="relative">{oid ? "Track your order" : "Preparing your order…"}</span>
+                  {oid && <ArrowRight className="relative h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />}
                 </a>
                 <button
                   type="button"
