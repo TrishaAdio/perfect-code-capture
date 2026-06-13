@@ -1038,7 +1038,7 @@ function TimelineRow({
             state === "done"
               ? "text-[12.5px] font-medium text-foreground/90"
               : state === "active"
-                ? "text-[12.5px] font-medium text-amber-200/90"
+                ? "text-[12.5px] font-medium text-[#22C55E]"
                 : "text-[12.5px] text-muted-foreground/70"
           }
         >
