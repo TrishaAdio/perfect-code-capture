@@ -23,6 +23,7 @@ import { API_BASE, createOrder, createPaymentInvoice } from "@/lib/api";
 import { requireAuthBeforeLoad } from "@/lib/auth-guard";
 import symdealsLogo from "@/assets/symdeals-logo.png";
 import paymentSuccessSfx from "@/assets/payment-success.mp3";
+import successAnimationAsset from "@/assets/success-animation.mp4.asset.json";
 
 export const Route = createFileRoute("/pay")({
   ssr: false,
@@ -435,10 +436,10 @@ function PayPage() {
         <ConfettiCanvas />
 
         <main className="relative mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-6 py-12 text-center">
-          {/* Stroke-draw checkmark */}
-          <AnimatedCheck size={120} />
+          {/* Hero success animation (video used as a visual asset, not a player) */}
+          <SuccessAnimation size={380} />
 
-          <h1 className="mt-9 text-[36px] font-bold leading-[1.05] tracking-[-0.025em] text-white sm:text-[40px]">
+          <h1 className="animate-success-stagger mt-2 text-[36px] font-bold leading-[1.05] tracking-[-0.025em] text-white sm:text-[40px]" style={{ animationDelay: "0.25s", textShadow: "0 0 28px rgba(34,197,94,0.18)" }}>
             Payment Successful
           </h1>
 
@@ -576,13 +577,9 @@ function PayPage() {
 
         <main className="relative mx-auto w-full max-w-6xl px-6 py-12 sm:py-16">
           {/* Hero — confirmation */}
-          <section className="animate-success-stagger mx-auto max-w-3xl text-center" style={{ animationDelay: "0.05s" }}>
-            <div className="relative mx-auto flex h-16 w-16 items-center justify-center">
-              <div className="animate-success-pop relative flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(34,197,94,0.4)] bg-[rgba(34,197,94,0.10)] text-[#22C55E]" style={{ boxShadow: "0 0 24px rgba(34,197,94,0.4)" }}>
-                <Check className="h-7 w-7" strokeWidth={2.6} />
-              </div>
-            </div>
-            <p className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#22C55E]">
+          <section className="mx-auto max-w-3xl text-center">
+            <SuccessAnimation size={360} />
+            <p className="animate-success-stagger mt-2 inline-flex items-center gap-1.5 rounded-full border border-[rgba(34,197,94,0.25)] bg-[rgba(34,197,94,0.08)] px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[#22C55E]" style={{ animationDelay: "0.2s" }}>
               <span className="h-1 w-1 rounded-full bg-[#22C55E]" />
               Order Confirmed
             </p>
@@ -1050,6 +1047,71 @@ function TimelineRow({
           </span>
         )}
       </div>
+    </div>
+  );
+}
+
+
+/**
+ * Success animation — uses the uploaded MP4 as a pure visual asset.
+ * - autoplay, muted, playsInline, no controls, no chrome
+ * - mix-blend-mode: screen knocks out the video's dark background so the
+ *   animation reads as native page content instead of an embedded video
+ * - soft emerald glow + radial ambience underneath casts light onto the page
+ */
+function SuccessAnimation({ size = 380 }: { size?: number }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    const p = v.play();
+    if (p && typeof p.catch === "function") p.catch(() => { /* autoplay blocked */ });
+  }, []);
+  return (
+    <div
+      className="relative mx-auto"
+      style={{
+        width: "min(100%, " + size + "px)",
+        aspectRatio: "1 / 1",
+      }}
+      aria-hidden
+    >
+      {/* Ambient emerald glow behind the animation */}
+      <div
+        className="pointer-events-none absolute inset-[-12%] -z-10"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(34,197,94,0.32) 0%, rgba(34,197,94,0.12) 28%, transparent 62%)",
+          filter: "blur(18px)",
+        }}
+      />
+      {/* Slow rotating halo for subtle motion behind the video */}
+      <div
+        className="pointer-events-none absolute inset-[6%] -z-10 rounded-full opacity-60"
+        style={{
+          background:
+            "conic-gradient(from 0deg, rgba(34,197,94,0.0), rgba(34,197,94,0.18), rgba(34,197,94,0.0) 60%)",
+          animation: "spin 14s linear infinite",
+          filter: "blur(12px)",
+        }}
+      />
+      <video
+        ref={videoRef}
+        src={successAnimationAsset.url}
+        autoPlay
+        muted
+        playsInline
+        loop={false}
+        preload="auto"
+        disablePictureInPicture
+        controls={false}
+        className="relative h-full w-full object-contain"
+        style={{
+          mixBlendMode: "screen",
+          filter: "drop-shadow(0 8px 28px rgba(34,197,94,0.35))",
+        }}
+      />
     </div>
   );
 }
