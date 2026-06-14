@@ -259,7 +259,7 @@ router.get("/verify/:orderId", requireAuth, orderVerifyLimiter, async (req, res)
     try {
       const upstream = await upstreamFetch(
         `${ORDER_API}/verify=${encodeURIComponent(orderId)}?t=${Date.now()}`,
-        { headers: { "Cache-Control": "no-cache" } }
+        { headers: orderApiHeaders({ "Cache-Control": "no-cache" }) }
       );
       const data = await upstream.json().catch(() => null);
       if (data && data.status) {
