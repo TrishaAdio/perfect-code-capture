@@ -419,6 +419,8 @@ export function fetchAdminEarnings(): Promise<{
   stats: AdminEarningsStats;
 }> {
   return request("/api/admin/earnings", { token: getAdminToken() });
+}
+
 
 export type ProductPlan = { months: number; price: number; realPrice?: number };
 
