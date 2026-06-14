@@ -149,13 +149,15 @@ router.post("/", requireAuth, orderCreateLimiter, async (req, res) => {
     // 5) Now (and only now) call the upstream order-creation API. Promo code
     //    is derived server-side; productName/value come from the invoice.
     const promoCode = `SYMDEALS${String(invoiceId).replace(/\D/g, "").slice(-4) || "0000"}`;
+    const userDoc = await User.findById(userId).select("email").lean();
+    const userEmail = (userDoc && userDoc.email) || req.user?.email || "noemail@symdeals.local";
     const url = `${ORDER_API}/create=${encodeURIComponent(claimed.productNameSnapshot)}=${encodeURIComponent(
       promoCode
-    )}=${encodeURIComponent(claimed.expectedAmount)}`;
+    )}=${encodeURIComponent(claimed.expectedAmount)}=${encodeURIComponent(userEmail)}`;
 
     let upstream;
     try {
-      upstream = await upstreamFetch(url, { method: "GET" });
+      upstream = await upstreamFetch(url, { method: "GET", headers: orderApiHeaders() });
     } catch (err) {
       // Roll the invoice back so user can retry without losing the slot.
       await Invoice.updateOne({ invoiceId }, { $set: { used: false } });
