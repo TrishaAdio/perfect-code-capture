@@ -13,7 +13,8 @@ import {
   X,
   ImagePlus,
   CheckCircle2,
-} from "lucide-react";
+  IndianRupee,
+}  from "lucide-react";
 import { toast } from "sonner";
 import symdealsLogo from "@/assets/symdeals-logo.png";
 import {
