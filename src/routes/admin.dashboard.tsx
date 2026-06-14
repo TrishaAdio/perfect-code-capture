@@ -64,6 +64,23 @@ function AdminDashboardPage() {
   const [showForm, setShowForm] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
 
+  const [earnings, setEarnings] = useState<AdminEarningsStats | null>(null);
+  const [earningsLoading, setEarningsLoading] = useState(false);
+  const [earningsError, setEarningsError] = useState<string | null>(null);
+
+  const loadEarnings = async () => {
+    setEarningsLoading(true);
+    setEarningsError(null);
+    try {
+      const res = await fetchAdminEarnings();
+      setEarnings(res.stats);
+    } catch (err) {
+      setEarningsError(err instanceof Error ? err.message : "Failed to load earnings");
+    } finally {
+      setEarningsLoading(false);
+    }
+  };
+
   const load = async () => {
     setLoading(true);
     setError(null);
