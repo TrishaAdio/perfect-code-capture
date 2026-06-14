@@ -125,6 +125,7 @@ function AdminDashboardPage() {
     }
     void load();
     void loadProducts();
+    void loadEarnings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
