@@ -406,6 +406,20 @@ export function fetchAdminWeeklyStats(range: AdminStatsRange = "7d"): Promise<{
   });
 }
 
+export type AdminEarningsStats = {
+  today?: { count?: number; earnings?: number };
+  last_7_days?: { count?: number; earnings?: number };
+  last_30_days?: { count?: number; earnings?: number };
+  total?: { count?: number; earnings?: number };
+  [key: string]: unknown;
+};
+
+export function fetchAdminEarnings(): Promise<{
+  success: true;
+  stats: AdminEarningsStats;
+}> {
+  return request("/api/admin/earnings", { token: getAdminToken() });
+
 export type ProductPlan = { months: number; price: number; realPrice?: number };
 
 export const PRODUCT_CATEGORIES = [
