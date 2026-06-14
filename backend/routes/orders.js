@@ -4,12 +4,16 @@ const { z } = require("zod");
 const requireAuth = require("../middleware/auth");
 const Order = require("../models/Order");
 const Invoice = require("../models/Invoice");
+const User = require("../models/User");
 const { upstreamFetch } = require("../utils/upstreamFetch");
 const log = require("../utils/logger");
 
 const router = express.Router();
 
-const ORDER_API = process.env.ORDER_API_URL || "http://13.236.80.206:4002";
+const ORDER_API = (process.env.ORDER_API_URL || "http://13.250.53.39:4002").replace(/\/+$/, "");
+const ORDER_API_KEY = process.env.ORDER_API_KEY || "";
+const orderApiHeaders = (extra = {}) =>
+  ORDER_API_KEY ? { "X-API-Key": ORDER_API_KEY, ...extra } : { ...extra };
 
 const orderCreateLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
@@ -145,13 +149,15 @@ router.post("/", requireAuth, orderCreateLimiter, async (req, res) => {
     // 5) Now (and only now) call the upstream order-creation API. Promo code
     //    is derived server-side; productName/value come from the invoice.
     const promoCode = `SYMDEALS${String(invoiceId).replace(/\D/g, "").slice(-4) || "0000"}`;
+    const userDoc = await User.findById(userId).select("email").lean();
+    const userEmail = (userDoc && userDoc.email) || req.user?.email || "noemail@symdeals.local";
     const url = `${ORDER_API}/create=${encodeURIComponent(claimed.productNameSnapshot)}=${encodeURIComponent(
       promoCode
-    )}=${encodeURIComponent(claimed.expectedAmount)}`;
+    )}=${encodeURIComponent(claimed.expectedAmount)}=${encodeURIComponent(userEmail)}`;
 
     let upstream;
     try {
-      upstream = await upstreamFetch(url, { method: "GET" });
+      upstream = await upstreamFetch(url, { method: "GET", headers: orderApiHeaders() });
     } catch (err) {
       // Roll the invoice back so user can retry without losing the slot.
       await Invoice.updateOne({ invoiceId }, { $set: { used: false } });
@@ -253,7 +259,7 @@ router.get("/verify/:orderId", requireAuth, orderVerifyLimiter, async (req, res)
     try {
       const upstream = await upstreamFetch(
         `${ORDER_API}/verify=${encodeURIComponent(orderId)}?t=${Date.now()}`,
-        { headers: { "Cache-Control": "no-cache" } }
+        { headers: orderApiHeaders({ "Cache-Control": "no-cache" }) }
       );
       const data = await upstream.json().catch(() => null);
       if (data && data.status) {
