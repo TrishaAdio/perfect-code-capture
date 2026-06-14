@@ -4,12 +4,16 @@ const { z } = require("zod");
 const requireAuth = require("../middleware/auth");
 const Order = require("../models/Order");
 const Invoice = require("../models/Invoice");
+const User = require("../models/User");
 const { upstreamFetch } = require("../utils/upstreamFetch");
 const log = require("../utils/logger");
 
 const router = express.Router();
 
-const ORDER_API = process.env.ORDER_API_URL || "http://13.236.80.206:4002";
+const ORDER_API = (process.env.ORDER_API_URL || "http://13.250.53.39:4002").replace(/\/+$/, "");
+const ORDER_API_KEY = process.env.ORDER_API_KEY || "";
+const orderApiHeaders = (extra = {}) =>
+  ORDER_API_KEY ? { "X-API-Key": ORDER_API_KEY, ...extra } : { ...extra };
 
 const orderCreateLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
