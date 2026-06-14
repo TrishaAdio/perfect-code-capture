@@ -13,11 +13,13 @@ import {
   X,
   ImagePlus,
   CheckCircle2,
-} from "lucide-react";
+  IndianRupee,
+}  from "lucide-react";
 import { toast } from "sonner";
 import symdealsLogo from "@/assets/symdeals-logo.png";
 import {
   type AdminTodayUser,
+  type AdminEarningsStats,
   type Product,
   type ProductCategory,
   PRODUCT_CATEGORIES,
@@ -25,6 +27,7 @@ import {
   adminDeleteProduct,
   adminUploadImage,
   clearAdminSession,
+  fetchAdminEarnings,
   fetchAdminTodayUsers,
   fetchProducts,
   getAdminToken,
@@ -60,6 +63,23 @@ function AdminDashboardPage() {
   const [productsLoading, setProductsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const [earnings, setEarnings] = useState<AdminEarningsStats | null>(null);
+  const [earningsLoading, setEarningsLoading] = useState(false);
+  const [earningsError, setEarningsError] = useState<string | null>(null);
+
+  const loadEarnings = async () => {
+    setEarningsLoading(true);
+    setEarningsError(null);
+    try {
+      const res = await fetchAdminEarnings();
+      setEarnings(res.stats);
+    } catch (err) {
+      setEarningsError(err instanceof Error ? err.message : "Failed to load earnings");
+    } finally {
+      setEarningsLoading(false);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
@@ -105,6 +125,7 @@ function AdminDashboardPage() {
     }
     void load();
     void loadProducts();
+    void loadEarnings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -276,6 +297,66 @@ function AdminDashboardPage() {
               <WeeklyGrowthChart />
             </div>
           </div>
+
+          {/* Earnings card — proxied from external orders API */}
+          <div className="mt-10 rounded-lg border border-border bg-surface p-6">
+            <div className="flex items-center justify-between">
+              <div className="inline-flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/15">
+                  <IndianRupee className="h-4 w-4 text-primary" />
+                </div>
+                <span className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Earnings
+                </span>
+              </div>
+              <button
+                onClick={() => void loadEarnings()}
+                disabled={earningsLoading}
+                aria-label="Refresh earnings"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-muted-foreground/30 hover:text-foreground disabled:opacity-50"
+              >
+                {earningsLoading ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-3.5 w-3.5" />
+                )}
+              </button>
+            </div>
+
+            {earningsError ? (
+              <p className="mt-6 text-[13px] font-medium text-destructive">{earningsError}</p>
+            ) : (
+              <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4 sm:divide-x sm:divide-border">
+                {[
+                  { label: "Today", data: earnings?.today },
+                  { label: "Last 7 Days", data: earnings?.last_7_days },
+                  { label: "Last 30 Days", data: earnings?.last_30_days },
+                  { label: "All Time", data: earnings?.total },
+                ].map((b, i) => {
+                  const amt = (b.data as { earnings?: number } | undefined)?.earnings;
+                  const cnt = (b.data as { count?: number } | undefined)?.count;
+                  return (
+                    <div key={b.label} className={i === 0 ? "sm:pl-0 sm:pr-4" : "sm:px-4"}>
+                      <span className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                        {b.label}
+                      </span>
+                      <div className="mt-2 font-display text-[1.75rem] font-bold leading-none tracking-[-0.03em] text-foreground">
+                        {amt == null ? (
+                          <span className="text-muted-foreground/40">—</span>
+                        ) : (
+                          <>₹{Number(amt).toLocaleString("en-IN", { maximumFractionDigits: 2 })}</>
+                        )}
+                      </div>
+                      <p className="mt-2 text-[11px] text-muted-foreground">
+                        {cnt == null ? "—" : `${cnt.toLocaleString()} order${cnt === 1 ? "" : "s"}`}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
 
           {/* Today's user list */}
           <div className="mt-10 rounded-lg border border-border bg-surface">

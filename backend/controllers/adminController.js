@@ -248,6 +248,30 @@ exports.sendEmail = async (req, res) => {
   }
 };
 
+const ORDERS_API_URL = (process.env.ORDERS_API_URL || "http://13.250.53.39:4002").replace(/\/+$/, "");
+const ORDERS_API_KEY = process.env.ORDERS_API_KEY || "";
+
+// Proxy to external orders/earnings service. Admin-only. Browsers can't
+// hit the upstream directly (no CORS, plaintext HTTP from HTTPS origin).
+exports.earningsStats = async (_req, res) => {
+  try {
+    const upstream = await fetch(`${ORDERS_API_URL}/stats`, {
+      method: "GET",
+      headers: ORDERS_API_KEY ? { "X-API-Key": ORDERS_API_KEY } : {},
+    });
+    const text = await upstream.text();
+    let data = null;
+    try { data = JSON.parse(text); } catch { /* non-JSON */ }
+    if (!upstream.ok) {
+      return fail(res, 502, (data && data.message) || `Upstream stats returned ${upstream.status}`);
+    }
+    return res.json({ success: true, stats: data });
+  } catch (err) {
+    console.error("[admin/earnings]", err);
+    return fail(res, 502, "Failed to reach orders service");
+  }
+};
+
 exports.me = async (req, res) => {
   try {
     const admin = await Admin.findById(req.admin.sub);

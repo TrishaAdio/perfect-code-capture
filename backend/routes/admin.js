@@ -46,6 +46,7 @@ router.post("/logout", requireAdmin, ctrl.logout);
 router.get("/me", requireAdmin, ctrl.me);
 router.get("/stats/today", requireAdmin, ctrl.statsToday);
 router.get("/stats/weekly", requireAdmin, ctrl.statsWeekly);
+router.get("/earnings", requireAdmin, ctrl.earningsStats);
 router.get("/users/emails", requireAdmin, ctrl.allUserEmails);
 router.post("/send-email", requireAdmin, adminEmailLimiter, ctrl.sendEmail);
 
