@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import symdealsLogo from "@/assets/symdeals-logo.png";
 import {
   type AdminTodayUser,
+  type AdminEarningsStats,
   type Product,
   type ProductCategory,
   PRODUCT_CATEGORIES,
@@ -26,6 +27,7 @@ import {
   adminDeleteProduct,
   adminUploadImage,
   clearAdminSession,
+  fetchAdminEarnings,
   fetchAdminTodayUsers,
   fetchProducts,
   getAdminToken,
